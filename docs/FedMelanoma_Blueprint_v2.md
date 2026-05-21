@@ -105,7 +105,7 @@ Preprocessed ISIC Dataset (9,740 records)
     │  → DullRazor hair removal            │
     │                                      │
     │  Metadata Encoding                   │
-    │  → One-hot: 6 + 3 + 4 = 13 dims     │
+    │  → One-hot: 6 + 3 + 4 = 13 dims      │
     │                                      │
     │  Local Training (E=5 epochs)         │
     │  EfficientNet-B3 → 1536-d            │
@@ -122,17 +122,17 @@ Preprocessed ISIC Dataset (9,740 records)
     │  CENTRAL AGGREGATION SERVER          │
     │                                      │
     │  Adaptive Selection Engine           │
-    │  → score_i = α·Rᵢ + β·Dᵢ + γ·Mᵢ   │
+    │  → score_i = α·Rᵢ + β·Dᵢ + γ·Mᵢ      │
     │  → aging penalty for unvisited       │
     │  → cluster coverage constraint       │
     │                                      │
     │  Straggler Detector                  │
-    │  → Wt = T̃_med + k·MAD               │
+    │  → Wt = T̃_med + k·MAD                │
     │  → Late → buffer with staleness sᵢ   │
     │                                      │
     │  Staleness-Weighted Aggregator       │
-    │  → cᵢ = (nᵢ/n)·δ^{sᵢ}·(1+γDᵢ)      │
-    │  → w^{t+1} = w^t + Σ cᵢ·Δwᵢ         │
+    │  → cᵢ = (nᵢ/n)·δ^{sᵢ}·(1+γDᵢ)        │
+    │  → w^{t+1} = w^t + Σ cᵢ·Δwᵢ          │
     └──────────────────────────────────────┘
                 │
     Global Model (checkpointed every 5 rounds)
