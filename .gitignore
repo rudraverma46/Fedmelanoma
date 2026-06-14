@@ -10,5 +10,10 @@ htmlcov/
 
 venv/
 .env
-without_federated/
+without_federated/client/hospital_partitions
+without_federated/client/__pycache__
+without_federated/client/.pytest_cache
+without_federated/client/best_fedmelanoma_model.pth
+
+
 
