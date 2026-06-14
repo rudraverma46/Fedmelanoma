@@ -12,20 +12,12 @@ class MelanomaDataset(Dataset):
     def __init__(self, csv_file, image_dir):
 
         self.df = pd.read_csv(csv_file)
-
         self.image_dir = image_dir
 
         self.transform = transforms.Compose([
             transforms.ToPILImage(),
-
             transforms.Resize((224, 224)),
-
-            transforms.RandomHorizontalFlip(),
-
-            transforms.RandomVerticalFlip(),
-
             transforms.ToTensor(),
-
             transforms.Normalize(
                 mean=[0.485, 0.456, 0.406],
                 std=[0.229, 0.224, 0.225]
@@ -34,14 +26,7 @@ class MelanomaDataset(Dataset):
 
     def encode_metadata(self, row):
 
-        skin_types = [
-            "I",
-            "II",
-            "III",
-            "IV",
-            "V",
-            "VI"
-        ]
+        skin_types = ["I", "II", "III", "IV", "V", "VI"]
 
         image_types = [
             "dermoscopic",
@@ -60,23 +45,32 @@ class MelanomaDataset(Dataset):
         image = [0] * 3
         confirm = [0] * 4
 
-        skin[
-            skin_types.index(
-                row["fitzpatrick_skin_type"]
-            )
-        ] = 1
+        try:
+            skin[
+                skin_types.index(
+                    str(row["fitzpatrick_skin_type"]).strip()
+                )
+            ] = 1
+        except:
+            pass
 
-        image[
-            image_types.index(
-                row["image_type"]
-            )
-        ] = 1
+        try:
+            image[
+                image_types.index(
+                    str(row["image_type"]).strip()
+                )
+            ] = 1
+        except:
+            pass
 
-        confirm[
-            confirm_types.index(
-                row["diagnosis_confirm_type"]
-            )
-        ] = 1
+        try:
+            confirm[
+                confirm_types.index(
+                    str(row["diagnosis_confirm_type"]).strip()
+                )
+            ] = 1
+        except:
+            pass
 
         metadata = skin + image + confirm
 
@@ -86,7 +80,6 @@ class MelanomaDataset(Dataset):
         )
 
     def __len__(self):
-
         return len(self.df)
 
     def __getitem__(self, idx):
@@ -101,9 +94,7 @@ class MelanomaDataset(Dataset):
         image = cv2.imread(image_path)
 
         if image is None:
-            raise FileNotFoundError(
-                f"Image not found: {image_path}"
-            )
+            raise FileNotFoundError(image_path)
 
         image = cv2.cvtColor(
             image,
@@ -116,13 +107,13 @@ class MelanomaDataset(Dataset):
 
         label = (
             1
-            if row["diagnosis_1"] == "Malignant"
+            if str(row["diagnosis_1"]).lower()
+            == "malignant"
             else 0
         )
 
-        label = torch.tensor(
-            label,
-            dtype=torch.long
+        return (
+            image,
+            metadata,
+            torch.tensor(label, dtype=torch.long)
         )
-
-        return image, metadata, label

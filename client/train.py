@@ -1,27 +1,16 @@
+
 import torch
+
 from torch.utils.data import DataLoader
 
 from dataset import MelanomaDataset
 from model import FedMelanomaModel
-from losses import (
+
+from focal_loss import (
     compute_class_weights,
     ClassWeightedFocalLoss
 )
 
-# ==========================================
-# CONFIGURATION
-# ==========================================
-
-TRAIN_CSV = "metadata_train.csv"
-TEST_CSV = "metadata_test.csv"
-
-TRAIN_IMAGE_DIR = "CityGeneral_Multispecialty_Hospital/images/Train"
-TEST_IMAGE_DIR = "CityGeneral_Multispecialty_Hospital/images/Test"
-
-BATCH_SIZE = 32
-EPOCHS = 5
-LEARNING_RATE = 1e-4
-WEIGHT_DECAY = 1e-4
 
 DEVICE = (
     "cuda"
@@ -29,211 +18,155 @@ DEVICE = (
     else "cpu"
 )
 
-print(f"Using Device : {DEVICE}")
 
-# ==========================================
-# DATASETS
-# ==========================================
+def main():
 
-train_dataset = MelanomaDataset(
-    TRAIN_CSV,
-    TRAIN_IMAGE_DIR
-)
-
-test_dataset = MelanomaDataset(
-    TEST_CSV,
-    TEST_IMAGE_DIR
-)
-
-# ==========================================
-# DATALOADERS
-# ==========================================
-
-train_loader = DataLoader(
-    train_dataset,
-    batch_size=BATCH_SIZE,
-    shuffle=True,
-    num_workers=0
-)
-
-test_loader = DataLoader(
-    test_dataset,
-    batch_size=BATCH_SIZE,
-    shuffle=False,
-    num_workers=0
-)
-
-# ==========================================
-# CLASS WEIGHTS
-# ==========================================
-
-train_labels = []
-
-for diagnosis in train_dataset.df["diagnosis_1"]:
-
-    if diagnosis == "Malignant":
-        train_labels.append(1)
-    else:
-        train_labels.append(0)
-
-class_weights = compute_class_weights(
-    train_labels
-).to(DEVICE)
-
-print("Class Weights:")
-print(class_weights)
-
-# ==========================================
-# MODEL
-# ==========================================
-
-model = FedMelanomaModel().to(
-    DEVICE
-)
-
-criterion = ClassWeightedFocalLoss(
-    alpha=class_weights,
-    gamma=2
-)
-
-optimizer = torch.optim.AdamW(
-    model.parameters(),
-    lr=LEARNING_RATE,
-    weight_decay=WEIGHT_DECAY
-)
-
-# ==========================================
-# TRAINING LOOP
-# ==========================================
-
-best_test_acc = 0
-
-for epoch in range(EPOCHS):
-
-    model.train()
-
-    train_loss = 0
-
-    train_correct = 0
-    train_total = 0
-
-    for images, metadata, labels in train_loader:
-
-        images = images.to(DEVICE)
-        metadata = metadata.to(DEVICE)
-        labels = labels.to(DEVICE)
-
-        optimizer.zero_grad()
-
-        logits = model(
-            images,
-            metadata
-        )
-
-        loss = criterion(
-            logits,
-            labels
-        )
-
-        loss.backward()
-
-        optimizer.step()
-
-        train_loss += loss.item()
-
-        predictions = torch.argmax(
-            logits,
-            dim=1
-        )
-
-        train_correct += (
-            predictions == labels
-        ).sum().item()
-
-        train_total += labels.size(0)
-
-    train_accuracy = (
-        100 * train_correct / train_total
+    train_dataset = MelanomaDataset(
+        "metadata_train.csv",
+       "CityGeneral_Multispecialty_Hospital/images/Train"
     )
 
-    # ======================================
-    # TESTING
-    # ======================================
+    test_dataset = MelanomaDataset(
+       "metadata_test.csv"
+,
+       "CityGeneral_Multispecialty_Hospital/images/Test"
+    )
 
-    model.eval()
+    train_loader = DataLoader(
+        train_dataset,
+        batch_size=32,
+        shuffle=True,
+        num_workers=0
+    )
 
-    test_correct = 0
-    test_total = 0
+    test_loader = DataLoader(
+        test_dataset,
+        batch_size=32,
+        shuffle=False,
+        num_workers=0
+    )
 
-    with torch.no_grad():
+    model = FedMelanomaModel().to(
+        DEVICE
+    )
 
-        for images, metadata, labels in test_loader:
+    criterion = ClassWeightedFocalLoss(
+        gamma_f=2.0,
+        reduction="mean"
+    )
+
+    optimizer = torch.optim.AdamW(
+        model.parameters(),
+        lr=1e-4,
+        weight_decay=1e-4
+    )
+
+    train_targets = []
+
+    for label in train_dataset.df[
+        "diagnosis_1"
+    ]:
+
+        train_targets.append(
+            1 if label == "Malignant"
+            else 0
+        )
+
+    class_weights = compute_class_weights(
+        torch.tensor(train_targets)
+    ).to(DEVICE)
+
+    best_acc = 0
+
+    for epoch in range(5):
+
+        model.train()
+
+        train_loss = 0
+
+        for images, meta, labels in train_loader:
 
             images = images.to(DEVICE)
-            metadata = metadata.to(DEVICE)
+            meta = meta.to(DEVICE)
             labels = labels.to(DEVICE)
+
+            optimizer.zero_grad()
 
             logits = model(
                 images,
-                metadata
+                meta
             )
 
-            predictions = torch.argmax(
+            loss = criterion(
                 logits,
-                dim=1
+                labels,
+                class_weights=class_weights
             )
 
-            test_correct += (
-                predictions == labels
-            ).sum().item()
+            loss.backward()
 
-            test_total += labels.size(0)
+            optimizer.step()
 
-    test_accuracy = (
-        100 * test_correct / test_total
-    )
+            train_loss += loss.item()
 
-    print(
-        f"Epoch [{epoch+1}/{EPOCHS}]"
-    )
+        model.eval()
 
-    print(
-        f"Train Loss : {train_loss:.4f}"
-    )
+        correct = 0
+        total = 0
 
-    print(
-        f"Train Accuracy : {train_accuracy:.2f}%"
-    )
+        with torch.no_grad():
 
-    print(
-        f"Test Accuracy : {test_accuracy:.2f}%"
-    )
+            for images, meta, labels in test_loader:
 
-    print("-" * 50)
+                images = images.to(DEVICE)
+                meta = meta.to(DEVICE)
+                labels = labels.to(DEVICE)
 
-    # ======================================
-    # SAVE BEST MODEL
-    # ======================================
+                logits = model(
+                    images,
+                    meta
+                )
 
-    if test_accuracy > best_test_acc:
+                preds = torch.argmax(
+                    logits,
+                    dim=1
+                )
 
-        best_test_acc = test_accuracy
+                correct += (
+                    preds == labels
+                ).sum().item()
 
-        torch.save(
-            model.state_dict(),
-            "best_fedmelanoma_model.pth"
+                total += labels.size(0)
+
+        accuracy = (
+            100 * correct / total
         )
 
         print(
-            f"Best Model Saved "
-            f"(Test Acc = {test_accuracy:.2f}%)"
+            f"Epoch {epoch+1}"
         )
 
-print(
-    f"\nTraining Finished"
-)
+        print(
+            f"Train Loss: {train_loss:.4f}"
+        )
 
-print(
-    f"Best Test Accuracy : "
-    f"{best_test_acc:.2f}%"
-)
+        print(
+            f"Test Accuracy: {accuracy:.2f}%"
+        )
+
+        if accuracy > best_acc:
+
+            best_acc = accuracy
+
+            torch.save(
+                model.state_dict(),
+                "best_fedmelanoma_model.pth"
+            )
+
+    print(
+        f"Best Accuracy: {best_acc:.2f}%"
+    )
+
+
+if __name__ == "__main__":
+    main()

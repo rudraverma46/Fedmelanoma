@@ -6,22 +6,20 @@ import timm
 class MetadataMLP(nn.Module):
 
     def __init__(self):
+
         super().__init__()
 
         self.network = nn.Sequential(
 
-            nn.Linear(13,64),
-
+            nn.Linear(13, 64),
             nn.BatchNorm1d(64),
-
             nn.ReLU(),
 
-            nn.Linear(64,32),
-
+            nn.Linear(64, 32),
             nn.ReLU()
         )
 
-    def forward(self,x):
+    def forward(self, x):
 
         return self.network(x)
 
@@ -43,7 +41,7 @@ class FedMelanomaModel(nn.Module):
         self.dropout = nn.Dropout(0.3)
 
         self.classifier = nn.Linear(
-            1568,
+            1536 + 32,
             2
         )
 
