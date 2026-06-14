@@ -1,0 +1,508 @@
+============================================================
+DATASET STATISTICS
+============================================================
+  Train samples  :    7,788
+    Benign  (0)  :    7,356  (94.5%)
+    Malignant (1):      432  (5.5%)
+  Test  samples  :    1,952
+    Benign  (0)  :    1,843  (94.4%)
+    Malignant (1):      109  (5.6%)
+  Class weights  : Benign=0.0555  Malignant=0.9445
+============================================================
+
+Device : cuda
+Epochs : 100   |   Batch size: 20
+LR     : 0.0001   |   Weight decay: 0.0001
+
+ENTERED TRAINING LOOP
+STARTING EPOCH 1
+Epoch Progress: 0.3% | ETA Epoch: 26.44 min
+Epoch Progress: 2.8% | ETA Epoch: 6.48 min
+Epoch Progress: 5.4% | ETA Epoch: 6.40 min
+Epoch Progress: 7.9% | ETA Epoch: 5.56 min
+Epoch Progress: 10.5% | ETA Epoch: 5.72 min
+Epoch Progress: 13.1% | ETA Epoch: 5.32 min
+Epoch Progress: 15.6% | ETA Epoch: 5.47 min
+Epoch Progress: 18.2% | ETA Epoch: 5.23 min
+Epoch Progress: 20.8% | ETA Epoch: 4.97 min
+Epoch Progress: 23.3% | ETA Epoch: 4.83 min
+Epoch Progress: 25.9% | ETA Epoch: 4.59 min
+Epoch Progress: 28.5% | ETA Epoch: 4.39 min
+Epoch Progress: 31.0% | ETA Epoch: 4.25 min
+Epoch Progress: 33.6% | ETA Epoch: 4.24 min
+Epoch Progress: 36.2% | ETA Epoch: 4.09 min
+Epoch Progress: 38.7% | ETA Epoch: 4.06 min
+Epoch Progress: 41.3% | ETA Epoch: 3.86 min
+Epoch Progress: 43.8% | ETA Epoch: 3.74 min
+Epoch Progress: 46.4% | ETA Epoch: 3.54 min
+Epoch Progress: 49.0% | ETA Epoch: 3.34 min
+Epoch Progress: 51.5% | ETA Epoch: 3.15 min
+Epoch Progress: 54.1% | ETA Epoch: 2.96 min
+Epoch Progress: 56.7% | ETA Epoch: 2.78 min
+Epoch Progress: 59.2% | ETA Epoch: 2.59 min
+Epoch Progress: 61.8% | ETA Epoch: 2.43 min
+Epoch Progress: 64.4% | ETA Epoch: 2.30 min
+Epoch Progress: 66.9% | ETA Epoch: 2.16 min
+Epoch Progress: 69.5% | ETA Epoch: 1.99 min
+Epoch Progress: 72.1% | ETA Epoch: 1.83 min
+Epoch Progress: 74.6% | ETA Epoch: 1.65 min
+Epoch Progress: 77.2% | ETA Epoch: 1.48 min
+Epoch Progress: 79.7% | ETA Epoch: 1.30 min
+Epoch Progress: 82.3% | ETA Epoch: 1.13 min
+Epoch Progress: 84.9% | ETA Epoch: 0.97 min
+Epoch Progress: 87.4% | ETA Epoch: 0.80 min
+Epoch Progress: 90.0% | ETA Epoch: 0.64 min
+Epoch Progress: 92.6% | ETA Epoch: 0.48 min
+Epoch Progress: 95.1% | ETA Epoch: 0.31 min
+Epoch Progress: 97.7% | ETA Epoch: 0.15 min
+Epoch Time: 385.97s | Average Epoch Time: 385.97s
+Estimated Remaining: 636.85 min (10.61 hrs)
+------------------------------------------------------------
+Epoch 1/100
+  Train Loss           : 0.0109
+  Validation Accuracy  : 88.37%
+  Malignant Precision  : 0.3179
+  Malignant Recall     : 0.9450
+  Malignant F1         : 0.4758
+  Validation ROC-AUC   : 0.9682
+------------------------------------------------------------
+
+  Confusion Matrix (Epoch 1):
+             Pred Benign  Pred Malignant
+  True Benign      1622             221
+  True Malignant      6             103
+
+  Classification Report:
+              precision    recall  f1-score   support
+
+      Benign       1.00      0.88      0.93      1843
+   Malignant       0.32      0.94      0.48       109
+
+    accuracy                           0.88      1952
+   macro avg       0.66      0.91      0.71      1952
+weighted avg       0.96      0.88      0.91      1952
+
+  [✓] Checkpoint saved → best_fedmelanoma_model.pth  (ROC-AUC: 0.9682)
+STARTING EPOCH 2
+Epoch Progress: 0.3% | ETA Epoch: 26.32 min
+Epoch Progress: 2.8% | ETA Epoch: 8.58 min
+Epoch Progress: 5.4% | ETA Epoch: 7.86 min
+Epoch Progress: 7.9% | ETA Epoch: 6.96 min
+Epoch Progress: 10.5% | ETA Epoch: 6.61 min
+Epoch Progress: 13.1% | ETA Epoch: 6.39 min
+Epoch Progress: 15.6% | ETA Epoch: 5.89 min
+Epoch Progress: 18.2% | ETA Epoch: 5.93 min
+Epoch Progress: 20.8% | ETA Epoch: 5.82 min
+Epoch Progress: 23.3% | ETA Epoch: 5.85 min
+Epoch Progress: 25.9% | ETA Epoch: 5.58 min
+Epoch Progress: 28.5% | ETA Epoch: 5.47 min
+Epoch Progress: 31.0% | ETA Epoch: 5.12 min
+Epoch Progress: 33.6% | ETA Epoch: 4.86 min
+Epoch Progress: 36.2% | ETA Epoch: 4.63 min
+Epoch Progress: 38.7% | ETA Epoch: 4.37 min
+Epoch Progress: 41.3% | ETA Epoch: 4.09 min
+Epoch Progress: 43.8% | ETA Epoch: 3.85 min
+Epoch Progress: 46.4% | ETA Epoch: 3.60 min
+Epoch Progress: 49.0% | ETA Epoch: 3.38 min
+Epoch Progress: 51.5% | ETA Epoch: 3.15 min
+Epoch Progress: 54.1% | ETA Epoch: 2.96 min
+Epoch Progress: 56.7% | ETA Epoch: 2.75 min
+Epoch Progress: 59.2% | ETA Epoch: 2.59 min
+Epoch Progress: 61.8% | ETA Epoch: 2.40 min
+Epoch Progress: 64.4% | ETA Epoch: 2.22 min
+Epoch Progress: 66.9% | ETA Epoch: 2.03 min
+Epoch Progress: 69.5% | ETA Epoch: 1.86 min
+Epoch Progress: 72.1% | ETA Epoch: 1.68 min
+Epoch Progress: 74.6% | ETA Epoch: 1.51 min
+Epoch Progress: 77.2% | ETA Epoch: 1.35 min
+Epoch Progress: 79.7% | ETA Epoch: 1.20 min
+Epoch Progress: 82.3% | ETA Epoch: 1.03 min
+Epoch Progress: 84.9% | ETA Epoch: 0.88 min
+Epoch Progress: 87.4% | ETA Epoch: 0.72 min
+Epoch Progress: 90.0% | ETA Epoch: 0.58 min
+Epoch Progress: 92.6% | ETA Epoch: 0.43 min
+Epoch Progress: 95.1% | ETA Epoch: 0.28 min
+Epoch Progress: 97.7% | ETA Epoch: 0.13 min
+Epoch Time: 337.47s | Average Epoch Time: 361.72s
+Estimated Remaining: 590.81 min (9.85 hrs)
+------------------------------------------------------------
+Epoch 2/100
+  Train Loss           : 0.0036
+  Validation Accuracy  : 93.55%
+  Malignant Precision  : 0.4612
+  Malignant Recall     : 0.9266
+  Malignant F1         : 0.6159
+  Validation ROC-AUC   : 0.9786
+------------------------------------------------------------
+
+  Confusion Matrix (Epoch 2):
+             Pred Benign  Pred Malignant
+  True Benign      1725             118
+  True Malignant      8             101
+
+  Classification Report:
+              precision    recall  f1-score   support
+
+      Benign       1.00      0.94      0.96      1843
+   Malignant       0.46      0.93      0.62       109
+
+    accuracy                           0.94      1952
+   macro avg       0.73      0.93      0.79      1952
+weighted avg       0.97      0.94      0.95      1952
+
+  [✓] Checkpoint saved → best_fedmelanoma_model.pth  (ROC-AUC: 0.9786)
+STARTING EPOCH 3
+Epoch Progress: 0.3% | ETA Epoch: 22.88 min
+Epoch Progress: 2.8% | ETA Epoch: 6.36 min
+Epoch Progress: 5.4% | ETA Epoch: 5.70 min
+Epoch Progress: 7.9% | ETA Epoch: 4.89 min
+Epoch Progress: 10.5% | ETA Epoch: 4.74 min
+Epoch Progress: 13.1% | ETA Epoch: 4.33 min
+Epoch Progress: 15.6% | ETA Epoch: 4.21 min
+Epoch Progress: 18.2% | ETA Epoch: 4.01 min
+Epoch Progress: 20.8% | ETA Epoch: 3.93 min
+Epoch Progress: 23.3% | ETA Epoch: 3.70 min
+Epoch Progress: 25.9% | ETA Epoch: 3.61 min
+Epoch Progress: 28.5% | ETA Epoch: 3.43 min
+Epoch Progress: 31.0% | ETA Epoch: 3.29 min
+Epoch Progress: 33.6% | ETA Epoch: 3.17 min
+Epoch Progress: 36.2% | ETA Epoch: 3.02 min
+Epoch Progress: 38.7% | ETA Epoch: 2.88 min
+Epoch Progress: 41.3% | ETA Epoch: 2.74 min
+Epoch Progress: 43.8% | ETA Epoch: 2.62 min
+Epoch Progress: 46.4% | ETA Epoch: 2.47 min
+Epoch Progress: 49.0% | ETA Epoch: 2.36 min
+Epoch Progress: 51.5% | ETA Epoch: 2.22 min
+Epoch Progress: 54.1% | ETA Epoch: 2.12 min
+Epoch Progress: 56.7% | ETA Epoch: 2.02 min
+Epoch Progress: 59.2% | ETA Epoch: 1.89 min
+Epoch Progress: 61.8% | ETA Epoch: 1.77 min
+Epoch Progress: 64.4% | ETA Epoch: 1.65 min
+Epoch Progress: 66.9% | ETA Epoch: 1.53 min
+Epoch Progress: 69.5% | ETA Epoch: 1.41 min
+Epoch Progress: 72.1% | ETA Epoch: 1.31 min
+Epoch Progress: 74.6% | ETA Epoch: 1.17 min
+Epoch Progress: 77.2% | ETA Epoch: 1.06 min
+Epoch Progress: 79.7% | ETA Epoch: 0.94 min
+Epoch Progress: 82.3% | ETA Epoch: 0.82 min
+Epoch Progress: 84.9% | ETA Epoch: 0.70 min
+Epoch Progress: 87.4% | ETA Epoch: 0.58 min
+Epoch Progress: 90.0% | ETA Epoch: 0.47 min
+Epoch Progress: 92.6% | ETA Epoch: 0.35 min
+Epoch Progress: 95.1% | ETA Epoch: 0.23 min
+Epoch Progress: 97.7% | ETA Epoch: 0.11 min
+Epoch Time: 280.14s | Average Epoch Time: 334.53s
+Estimated Remaining: 540.82 min (9.01 hrs)
+------------------------------------------------------------
+Epoch 3/100
+  Train Loss           : 0.0022
+  Validation Accuracy  : 93.29%
+  Malignant Precision  : 0.4461
+  Malignant Recall     : 0.8349
+  Malignant F1         : 0.5815
+  Validation ROC-AUC   : 0.9673
+------------------------------------------------------------
+
+  Confusion Matrix (Epoch 3):
+             Pred Benign  Pred Malignant
+  True Benign      1730             113
+  True Malignant     18              91
+
+  Classification Report:
+              precision    recall  f1-score   support
+
+      Benign       0.99      0.94      0.96      1843
+   Malignant       0.45      0.83      0.58       109
+
+    accuracy                           0.93      1952
+   macro avg       0.72      0.89      0.77      1952
+weighted avg       0.96      0.93      0.94      1952
+
+  [EarlyStopping] No ROC-AUC improvement (1/5)
+STARTING EPOCH 4
+Epoch Progress: 0.3% | ETA Epoch: 20.40 min
+Epoch Progress: 2.8% | ETA Epoch: 5.21 min
+Epoch Progress: 5.4% | ETA Epoch: 5.11 min
+Epoch Progress: 7.9% | ETA Epoch: 4.54 min
+Epoch Progress: 10.5% | ETA Epoch: 4.58 min
+Epoch Progress: 13.1% | ETA Epoch: 4.22 min
+Epoch Progress: 15.6% | ETA Epoch: 4.18 min
+Epoch Progress: 18.2% | ETA Epoch: 3.99 min
+Epoch Progress: 20.8% | ETA Epoch: 3.79 min
+Epoch Progress: 23.3% | ETA Epoch: 3.61 min
+Epoch Progress: 25.9% | ETA Epoch: 3.56 min
+Epoch Progress: 28.5% | ETA Epoch: 3.44 min
+Epoch Progress: 31.0% | ETA Epoch: 3.37 min
+Epoch Progress: 33.6% | ETA Epoch: 3.23 min
+Epoch Progress: 36.2% | ETA Epoch: 3.16 min
+Epoch Progress: 38.7% | ETA Epoch: 2.97 min
+Epoch Progress: 41.3% | ETA Epoch: 2.86 min
+Epoch Progress: 43.8% | ETA Epoch: 2.71 min
+Epoch Progress: 46.4% | ETA Epoch: 2.60 min
+Epoch Progress: 49.0% | ETA Epoch: 2.46 min
+Epoch Progress: 51.5% | ETA Epoch: 2.33 min
+Epoch Progress: 54.1% | ETA Epoch: 2.20 min
+Epoch Progress: 56.7% | ETA Epoch: 2.09 min
+Epoch Progress: 59.2% | ETA Epoch: 1.95 min
+Epoch Progress: 61.8% | ETA Epoch: 1.84 min
+Epoch Progress: 64.4% | ETA Epoch: 1.70 min
+Epoch Progress: 66.9% | ETA Epoch: 1.58 min
+Epoch Progress: 69.5% | ETA Epoch: 1.46 min
+Epoch Progress: 72.1% | ETA Epoch: 1.34 min
+Epoch Progress: 74.6% | ETA Epoch: 1.22 min
+Epoch Progress: 77.2% | ETA Epoch: 1.10 min
+Epoch Progress: 79.7% | ETA Epoch: 0.97 min
+Epoch Progress: 82.3% | ETA Epoch: 0.85 min
+Epoch Progress: 84.9% | ETA Epoch: 0.72 min
+Epoch Progress: 87.4% | ETA Epoch: 0.60 min
+Epoch Progress: 90.0% | ETA Epoch: 0.48 min
+Epoch Progress: 92.6% | ETA Epoch: 0.35 min
+Epoch Progress: 95.1% | ETA Epoch: 0.23 min
+Epoch Progress: 97.7% | ETA Epoch: 0.11 min
+Epoch Time: 284.55s | Average Epoch Time: 322.03s
+Estimated Remaining: 515.25 min (8.59 hrs)
+------------------------------------------------------------
+Epoch 4/100
+  Train Loss           : 0.0012
+  Validation Accuracy  : 94.47%
+  Malignant Precision  : 0.5027
+  Malignant Recall     : 0.8624
+  Malignant F1         : 0.6351
+  Validation ROC-AUC   : 0.9683
+------------------------------------------------------------
+
+  Confusion Matrix (Epoch 4):
+             Pred Benign  Pred Malignant
+  True Benign      1750              93
+  True Malignant     15              94
+
+  Classification Report:
+              precision    recall  f1-score   support
+
+      Benign       0.99      0.95      0.97      1843
+   Malignant       0.50      0.86      0.64       109
+
+    accuracy                           0.94      1952
+   macro avg       0.75      0.91      0.80      1952
+weighted avg       0.96      0.94      0.95      1952
+
+  [EarlyStopping] No ROC-AUC improvement (2/5)
+STARTING EPOCH 5
+Epoch Progress: 0.3% | ETA Epoch: 24.15 min
+Epoch Progress: 2.8% | ETA Epoch: 5.87 min
+Epoch Progress: 5.4% | ETA Epoch: 5.20 min
+Epoch Progress: 7.9% | ETA Epoch: 4.85 min
+Epoch Progress: 10.5% | ETA Epoch: 4.54 min
+Epoch Progress: 13.1% | ETA Epoch: 4.28 min
+Epoch Progress: 15.6% | ETA Epoch: 4.11 min
+Epoch Progress: 18.2% | ETA Epoch: 3.96 min
+Epoch Progress: 20.8% | ETA Epoch: 3.82 min
+Epoch Progress: 23.3% | ETA Epoch: 3.66 min
+Epoch Progress: 25.9% | ETA Epoch: 3.49 min
+Epoch Progress: 28.5% | ETA Epoch: 3.40 min
+Epoch Progress: 31.0% | ETA Epoch: 3.24 min
+Epoch Progress: 33.6% | ETA Epoch: 3.12 min
+Epoch Progress: 36.2% | ETA Epoch: 2.98 min
+Epoch Progress: 38.7% | ETA Epoch: 2.86 min
+Epoch Progress: 41.3% | ETA Epoch: 2.74 min
+Epoch Progress: 43.8% | ETA Epoch: 2.63 min
+Epoch Progress: 46.4% | ETA Epoch: 2.50 min
+Epoch Progress: 49.0% | ETA Epoch: 2.39 min
+Epoch Progress: 51.5% | ETA Epoch: 2.26 min
+Epoch Progress: 54.1% | ETA Epoch: 2.15 min
+Epoch Progress: 56.7% | ETA Epoch: 2.02 min
+Epoch Progress: 59.2% | ETA Epoch: 1.91 min
+Epoch Progress: 61.8% | ETA Epoch: 1.79 min
+Epoch Progress: 64.4% | ETA Epoch: 1.67 min
+Epoch Progress: 66.9% | ETA Epoch: 1.55 min
+Epoch Progress: 69.5% | ETA Epoch: 1.45 min
+Epoch Progress: 72.1% | ETA Epoch: 1.32 min
+Epoch Progress: 74.6% | ETA Epoch: 1.21 min
+Epoch Progress: 77.2% | ETA Epoch: 1.08 min
+Epoch Progress: 79.7% | ETA Epoch: 0.96 min
+Epoch Progress: 82.3% | ETA Epoch: 0.84 min
+Epoch Progress: 84.9% | ETA Epoch: 0.72 min
+Epoch Progress: 87.4% | ETA Epoch: 0.59 min
+Epoch Progress: 90.0% | ETA Epoch: 0.47 min
+Epoch Progress: 92.6% | ETA Epoch: 0.35 min
+Epoch Progress: 95.1% | ETA Epoch: 0.23 min
+Epoch Progress: 97.7% | ETA Epoch: 0.11 min
+Epoch Time: 283.37s | Average Epoch Time: 314.30s
+Estimated Remaining: 497.64 min (8.29 hrs)
+------------------------------------------------------------
+Epoch 5/100
+  Train Loss           : 0.0006
+  Validation Accuracy  : 95.80%
+  Malignant Precision  : 0.5918
+  Malignant Recall     : 0.7982
+  Malignant F1         : 0.6797
+  Validation ROC-AUC   : 0.9649
+------------------------------------------------------------
+
+  Confusion Matrix (Epoch 5):
+             Pred Benign  Pred Malignant
+  True Benign      1783              60
+  True Malignant     22              87
+
+  Classification Report:
+              precision    recall  f1-score   support
+
+      Benign       0.99      0.97      0.98      1843
+   Malignant       0.59      0.80      0.68       109
+
+    accuracy                           0.96      1952
+   macro avg       0.79      0.88      0.83      1952
+weighted avg       0.97      0.96      0.96      1952
+
+  [EarlyStopping] No ROC-AUC improvement (3/5)
+STARTING EPOCH 6
+Epoch Progress: 0.3% | ETA Epoch: 18.30 min
+Epoch Progress: 2.8% | ETA Epoch: 5.89 min
+Epoch Progress: 5.4% | ETA Epoch: 5.40 min
+Epoch Progress: 7.9% | ETA Epoch: 4.60 min
+Epoch Progress: 10.5% | ETA Epoch: 4.48 min
+Epoch Progress: 13.1% | ETA Epoch: 4.20 min
+Epoch Progress: 15.6% | ETA Epoch: 4.30 min
+Epoch Progress: 18.2% | ETA Epoch: 4.05 min
+Epoch Progress: 20.8% | ETA Epoch: 4.03 min
+Epoch Progress: 23.3% | ETA Epoch: 3.88 min
+Epoch Progress: 25.9% | ETA Epoch: 3.73 min
+Epoch Progress: 28.5% | ETA Epoch: 3.61 min
+Epoch Progress: 31.0% | ETA Epoch: 3.46 min
+Epoch Progress: 33.6% | ETA Epoch: 3.31 min
+Epoch Progress: 36.2% | ETA Epoch: 3.22 min
+Epoch Progress: 38.7% | ETA Epoch: 3.05 min
+Epoch Progress: 41.3% | ETA Epoch: 2.92 min
+Epoch Progress: 43.8% | ETA Epoch: 2.75 min
+Epoch Progress: 46.4% | ETA Epoch: 2.65 min
+Epoch Progress: 49.0% | ETA Epoch: 2.52 min
+Epoch Progress: 51.5% | ETA Epoch: 2.40 min
+Epoch Progress: 54.1% | ETA Epoch: 2.26 min
+Epoch Progress: 56.7% | ETA Epoch: 2.14 min
+Epoch Progress: 59.2% | ETA Epoch: 2.00 min
+Epoch Progress: 61.8% | ETA Epoch: 1.88 min
+Epoch Progress: 64.4% | ETA Epoch: 1.74 min
+Epoch Progress: 66.9% | ETA Epoch: 1.62 min
+Epoch Progress: 69.5% | ETA Epoch: 1.49 min
+Epoch Progress: 72.1% | ETA Epoch: 1.37 min
+Epoch Progress: 74.6% | ETA Epoch: 1.24 min
+Epoch Progress: 77.2% | ETA Epoch: 1.12 min
+Epoch Progress: 79.7% | ETA Epoch: 0.98 min
+Epoch Progress: 82.3% | ETA Epoch: 0.86 min
+Epoch Progress: 84.9% | ETA Epoch: 0.73 min
+Epoch Progress: 87.4% | ETA Epoch: 0.60 min
+Epoch Progress: 90.0% | ETA Epoch: 0.49 min
+Epoch Progress: 92.6% | ETA Epoch: 0.36 min
+Epoch Progress: 95.1% | ETA Epoch: 0.24 min
+Epoch Progress: 97.7% | ETA Epoch: 0.11 min
+Epoch Time: 289.40s | Average Epoch Time: 310.15s
+Estimated Remaining: 485.90 min (8.10 hrs)
+------------------------------------------------------------
+Epoch 6/100
+  Train Loss           : 0.0005
+  Validation Accuracy  : 94.93%
+  Malignant Precision  : 0.5325
+  Malignant Recall     : 0.7523
+  Malignant F1         : 0.6236
+  Validation ROC-AUC   : 0.9569
+------------------------------------------------------------
+
+  Confusion Matrix (Epoch 6):
+             Pred Benign  Pred Malignant
+  True Benign      1771              72
+  True Malignant     27              82
+
+  Classification Report:
+              precision    recall  f1-score   support
+
+      Benign       0.98      0.96      0.97      1843
+   Malignant       0.53      0.75      0.62       109
+
+    accuracy                           0.95      1952
+   macro avg       0.76      0.86      0.80      1952
+weighted avg       0.96      0.95      0.95      1952
+
+  [EarlyStopping] No ROC-AUC improvement (4/5)
+STARTING EPOCH 7
+Epoch Progress: 0.3% | ETA Epoch: 17.56 min
+Epoch Progress: 2.8% | ETA Epoch: 5.42 min
+Epoch Progress: 5.4% | ETA Epoch: 5.30 min
+Epoch Progress: 7.9% | ETA Epoch: 4.80 min
+Epoch Progress: 10.5% | ETA Epoch: 4.64 min
+Epoch Progress: 13.1% | ETA Epoch: 4.26 min
+Epoch Progress: 15.6% | ETA Epoch: 4.14 min
+Epoch Progress: 18.2% | ETA Epoch: 3.95 min
+Epoch Progress: 20.8% | ETA Epoch: 3.74 min
+Epoch Progress: 23.3% | ETA Epoch: 3.63 min
+Epoch Progress: 25.9% | ETA Epoch: 3.49 min
+Epoch Progress: 28.5% | ETA Epoch: 3.42 min
+Epoch Progress: 31.0% | ETA Epoch: 3.28 min
+Epoch Progress: 33.6% | ETA Epoch: 3.15 min
+Epoch Progress: 36.2% | ETA Epoch: 3.02 min
+Epoch Progress: 38.7% | ETA Epoch: 2.87 min
+Epoch Progress: 41.3% | ETA Epoch: 2.77 min
+Epoch Progress: 43.8% | ETA Epoch: 2.62 min
+Epoch Progress: 46.4% | ETA Epoch: 2.52 min
+Epoch Progress: 49.0% | ETA Epoch: 2.38 min
+Epoch Progress: 51.5% | ETA Epoch: 2.28 min
+Epoch Progress: 54.1% | ETA Epoch: 2.15 min
+Epoch Progress: 56.7% | ETA Epoch: 2.02 min
+Epoch Progress: 59.2% | ETA Epoch: 1.90 min
+Epoch Progress: 61.8% | ETA Epoch: 1.79 min
+Epoch Progress: 64.4% | ETA Epoch: 1.66 min
+Epoch Progress: 66.9% | ETA Epoch: 1.56 min
+Epoch Progress: 69.5% | ETA Epoch: 1.43 min
+Epoch Progress: 72.1% | ETA Epoch: 1.32 min
+Epoch Progress: 74.6% | ETA Epoch: 1.19 min
+Epoch Progress: 77.2% | ETA Epoch: 1.08 min
+Epoch Progress: 79.7% | ETA Epoch: 0.95 min
+Epoch Progress: 82.3% | ETA Epoch: 0.83 min
+Epoch Progress: 84.9% | ETA Epoch: 0.71 min
+Epoch Progress: 87.4% | ETA Epoch: 0.59 min
+Epoch Progress: 90.0% | ETA Epoch: 0.47 min
+Epoch Progress: 92.6% | ETA Epoch: 0.35 min
+Epoch Progress: 95.1% | ETA Epoch: 0.23 min
+Epoch Progress: 97.7% | ETA Epoch: 0.11 min
+Epoch Time: 282.26s | Average Epoch Time: 306.17s
+Estimated Remaining: 474.56 min (7.91 hrs)
+------------------------------------------------------------
+Epoch 7/100
+  Train Loss           : 0.0006
+  Validation Accuracy  : 95.13%
+  Malignant Precision  : 0.5422
+  Malignant Recall     : 0.8257
+  Malignant F1         : 0.6545
+  Validation ROC-AUC   : 0.9669
+------------------------------------------------------------
+
+  Confusion Matrix (Epoch 7):
+             Pred Benign  Pred Malignant
+  True Benign      1767              76
+  True Malignant     19              90
+
+  Classification Report:
+              precision    recall  f1-score   support
+
+      Benign       0.99      0.96      0.97      1843
+   Malignant       0.54      0.83      0.65       109
+
+    accuracy                           0.95      1952
+   macro avg       0.77      0.89      0.81      1952
+weighted avg       0.96      0.95      0.96      1952
+
+  [EarlyStopping] No ROC-AUC improvement (5/5)
+
+[!] Early stopping triggered after epoch 7. No ROC-AUC improvement for 5 consecutive epochs.
+
+============================================================
+TRAINING COMPLETE – BEST VALIDATION METRICS
+============================================================
+  Best Accuracy  : 93.55%
+  Best Precision : 0.4612
+  Best Recall    : 0.9266
+  Best F1        : 0.6159
+  Best ROC-AUC   : 0.9786
+  Checkpoint     : best_fedmelanoma_model.pth
+============================================================
+
+[INFO] Training curves saved → training_curves.png
