@@ -1,1 +1,12 @@
 server_prototype_1/
+__pycache__/
+*.py[cod]
+*$py.class
+
+.pytest_cache/
+.mypy_cache/
+coverage.xml
+htmlcov/
+
+venv/
+.env
