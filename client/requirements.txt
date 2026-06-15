@@ -1,0 +1,28 @@
+# ============================================================
+# FedMelanoma – Python dependencies
+# PyTorch ecosystem
+# ============================================================
+
+# Core deep learning framework
+# Install the CUDA variant from https://pytorch.org/get-started/locally/
+# e.g. pip install torch==2.2.0 torchvision==0.17.0 --index-url https://download.pytorch.org/whl/cu121
+torch>=2.2.0
+torchvision>=0.17.0
+
+# EfficientNet backbone (timm.create_model used in model.py)
+timm>=1.0.0
+
+# Image loading (cv2 used in dataset.py)
+opencv-python>=4.9.0
+
+# CSV / DataFrame handling (dataset.df in dataset.py)
+pandas>=2.2.0
+
+# Numerical computing (numpy arrays used throughout)
+numpy>=1.26.0
+
+# Evaluation metrics (accuracy, F1, ROC-AUC, confusion matrix)
+scikit-learn>=1.4.0
+
+# Optional: training curve plots in train_melanoma.py
+matplotlib>=3.8.0
