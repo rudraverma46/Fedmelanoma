@@ -31,7 +31,7 @@ class FedMelanomaModel(nn.Module):
         super().__init__()
 
         self.backbone = timm.create_model(
-            "efficientnet_b3",
+            "resnet152",
             pretrained=True,
             num_classes=0
         )
@@ -41,7 +41,7 @@ class FedMelanomaModel(nn.Module):
         self.dropout = nn.Dropout(0.3)
 
         self.classifier = nn.Linear(
-            1536 + 32,
+            self.backbone.num_features + 32,
             2
         )
 
@@ -67,10 +67,13 @@ class FedMelanomaModel(nn.Module):
             dim=1
         )
 
-        fused = self.dropout(fused)
+        fused = self.dropout(
+            fused
+        )
 
         logits = self.classifier(
             fused
         )
 
         return logits
+    
