@@ -58,6 +58,7 @@ from __future__ import annotations
 import copy
 from dataclasses import dataclass
 from typing import Dict, List, Tuple
+import time
 
 import torch
 import torch.nn as nn
@@ -112,6 +113,8 @@ def local_train_fedprox(
     weight_decay: float,
     param_keys: List[str],
     buffer_keys: List[str],
+    progress_label: str = "",
+    progress_every: int = 5,
 ) -> LocalTrainResult:
     """
     Run FedProx local training for one client for one federated round.
@@ -171,9 +174,11 @@ def local_train_fedprox(
     tau = 0
     running_loss = 0.0
     n_batches = 0
+    total_batches_per_epoch = len(dataloader)
+    start_time = time.time()
 
-    for _epoch in range(local_epochs):
-        for images, meta, labels in dataloader:
+    for epoch_idx in range(local_epochs):
+        for batch_idx, (images, meta, labels) in enumerate(dataloader):
             images = images.to(device)
             meta = meta.to(device)
             labels = labels.to(device)
@@ -199,6 +204,15 @@ def local_train_fedprox(
             tau += 1
             running_loss += float(task_loss.detach().item())
             n_batches += 1
+
+            if progress_label and (batch_idx % progress_every == 0):
+                elapsed = time.time() - start_time
+                print(
+                    f"      [{progress_label}] epoch {epoch_idx + 1}/{local_epochs}  "
+                    f"batch {batch_idx + 1}/{total_batches_per_epoch}  "
+                    f"avg_loss={running_loss / max(n_batches, 1):.4f}  "
+                    f"elapsed={elapsed:.0f}s"
+                )
 
     final_state = model.state_dict()
 

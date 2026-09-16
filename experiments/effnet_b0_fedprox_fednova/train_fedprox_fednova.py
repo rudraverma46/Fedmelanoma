@@ -247,6 +247,15 @@ def build_hospital_loaders(data_root: Path, batch_size: int, num_workers: int, l
 # ===========================================================================
 
 def main() -> None:
+    # Force line-buffered stdout even when redirected to a file, so progress
+    # is visible in real time instead of sitting in Python's output buffer
+    # until it fills or the process exits (the cause of an apparently silent
+    # hour-long run that was, in fact, progressing normally).
+    try:
+        sys.stdout.reconfigure(line_buffering=True)
+    except Exception:
+        pass
+
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--data-root", type=str, default="hospital_partitions",
                         help="Path to the hospital_partitions directory (10 hospital subfolders).")
@@ -334,6 +343,8 @@ def main() -> None:
                 weight_decay=args.weight_decay,
                 param_keys=param_keys,
                 buffer_keys=buffer_keys,
+                progress_label=f"R{round_idx} {hospital}",
+                progress_every=5,
             )
             client_results.append(result)
             client_names.append(hospital)
