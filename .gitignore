@@ -1,0 +1,94 @@
+# ============================
+# Python
+# ============================
+
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Virtual Environments
+.venv/
+venv/
+env/
+ENV/
+
+# Conda
+.conda/
+conda-meta/
+
+# IDE
+.vscode/
+.idea/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Logs
+logs/
+*.log
+
+# Training Outputs
+checkpoints/
+results/
+runs/
+wandb/
+tensorboard/
+
+# PyTorch
+*.pth
+*.pt
+*.ckpt
+
+# Dataset
+data/
+datasets/
+hospital_partitions/
+*.csv
+*.zip
+*.tar
+*.tar.gz
+
+# Temporary Files
+*.tmp
+*.bak
+*.swp
+.DS_Store
+Thumbs.db
+
+# Cache
+.cache/
+
+# Profiling
+.prof
+
+# Testing
+.pytest_cache/
+
+# Coverage
+.coverage
+htmlcov/
+
+# Local configuration
+.env
+.env.*
+
+# OS
+*~
+
+# Generated experiment outputs
+experiments/output/
+
+# ============================
+# Dataset
+# ============================
+
+hospital_partitions/

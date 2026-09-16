@@ -1,0 +1,72 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "fedmelanoma"
+version = "4.0.0"
+description = "FedMelanoma: exposure-aware federated learning for melanoma detection (Blueprint v4)"
+license = "Apache-2.0"
+dependencies = [
+    "flwr[simulation]==1.13.1",
+    "torch==2.2.1",
+    "torchvision==0.17.1",
+    "timm==1.0.19",
+    "numpy==1.26.4",
+    "scipy==1.13.1",
+    "pandas==2.2.2",
+    "scikit-learn==1.5.1",
+    "matplotlib==3.9.1",
+    "opencv-python==4.10.0.84",
+    "tqdm==4.66.5",
+]
+
+[tool.hatch.build.targets.wheel]
+# Flat repo-root layout: client/, server/, models/ are already proper
+# packages (each has __init__.py) and hospital_registry.py / emd.py are
+# already-working top-level modules imported via plain absolute imports
+# (e.g. `from server.selector import ...`, `from emd import ...`)
+# elsewhere in this repo. Packaging "." keeps that import structure
+# identical after `pip install -e .` -- no file was moved or renamed to
+# make this pyproject.toml work.
+packages = ["."]
+
+[tool.flwr.app]
+publisher = "fedmelanoma"
+
+[tool.flwr.app.components]
+# Points at the real, unmodified FedMelanomaStrategy / FedMelanomaClient
+# wiring added in server/server.py and client/client.py -- not FedAvg,
+# not a placeholder.
+serverapp = "server.server:app"
+clientapp = "client.client:app"
+
+[tool.flwr.app.config]
+# Overridable per-run via `flwr run . --run-config 'key="value"'`.
+# Defaults below are the Blueprint v4 canonical values (Section 10):
+# total_rounds=50, clients_per_round(C)=6, local_epochs(E)=5.
+num-server-rounds = 50
+clients-per-round = 6
+local-epochs = 5
+# Root directory server_fn/client_fn discover hospitals under (Blueprint
+# Phase 1/2). Relative paths resolve against the working directory `flwr
+# run` is invoked from. Override for a dataset mounted elsewhere, e.g.:
+#   flwr run . --run-config 'partitions-root="/data/hospital_partitions"'
+partitions-root = "hospital_partitions"
+
+[tool.flwr.federations]
+default = "local-simulation"
+
+[tool.flwr.federations.local-simulation]
+# Blueprint Section 1.3 / 3.1: K = 10 hospital clients. This MUST equal
+# the number of hospital folders actually present under
+# hospital_partitions/ once the dataset is added (client_fn's
+# partition-id bounds check and FedMelanomaStrategy's 1:1 hospital<->
+# ClientProxy mapping both require it). `flwr run`'s `--run-config` flag
+# only overrides `[tool.flwr.app.config]`, not federation options -- if
+# the real dataset ships with a hospital count other than 10, edit this
+# number directly (or add another `[tool.flwr.federations.<name>]`
+# section with the right count and pass that name to `flwr run . <name>`).
+options.num-supernodes = 10
+options.backend.client-resources.num-cpus = 8
+options.backend.client-resources.num-gpus = 1.0

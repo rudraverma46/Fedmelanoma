@@ -1,0 +1,30 @@
+# ============================
+# FedMelanoma Requirements
+# ============================
+
+# Flower Federated Learning
+# [simulation] pulls in ray==2.10.0, required by `flwr run`'s local-simulation
+# federation (server/server.py's ServerApp + client/client.py's ClientApp).
+flwr[simulation]==1.13.1
+
+# Deep Learning
+torch==2.2.1
+torchvision==0.17.1
+timm==1.0.19
+
+# Scientific Computing
+numpy==1.26.4
+scipy==1.13.1
+pandas==2.2.2
+
+# Machine Learning
+scikit-learn==1.5.1
+
+# Visualization
+matplotlib==3.9.1
+
+# Computer Vision
+opencv-python==4.10.0.84
+
+# Utilities
+tqdm==4.66.5
