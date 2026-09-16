@@ -27,10 +27,13 @@ Reuses, unmodified:
     client/dataset.py      -> MelanomaDataset (image + 13-d metadata + label)
     client/focal_loss.py   -> ClassWeightedFocalLoss, compute_class_weights
 
-Loaded by explicit file path (importlib) rather than via sys.path, so this
-script has no dependency on cwd and cannot accidentally shadow the local
-model.py (which is an EfficientNet-B0 variant, distinct from
-client/model.py's canonical EfficientNet-B3).
+Loaded via a controlled sys.path insertion (this experiment's own directory
+first, so `import model` resolves to this folder's EfficientNet-B0 variant,
+not client/model.py's canonical EfficientNet-B3) rather than importlib's
+spec_from_file_location loader — the latter creates modules under a
+synthetic, non-re-importable name, which breaks Windows' spawn-based
+DataLoader multiprocessing (num_workers > 0) when it tries to pickle
+dataset objects across the process boundary.
 
 Simplifications versus the exact paper setup (documented, not hidden)
 -----------------------------------------------------------------------
@@ -55,7 +58,6 @@ Usage
 from __future__ import annotations
 
 import argparse
-import importlib.util
 import json
 import sys
 import time
@@ -79,11 +81,29 @@ from sklearn.metrics import (
 # ---------------------------------------------------------------------------
 # Local imports
 # ---------------------------------------------------------------------------
+# NOTE ON WINDOWS MULTIPROCESSING (num_workers > 0):
+#   torch's DataLoader workers are spawned as fresh child processes on
+#   Windows (no fork()), which re-import this script's module graph to
+#   reconstruct picklable objects. That means dataset.py / focal_loss.py
+#   MUST be reachable via ordinary sys.path imports (real, re-importable
+#   module names) rather than importlib.util.spec_from_file_location()
+#   loaded under a synthetic name — pickle needs to `import <module_name>`
+#   by name in the child process, and a synthetic name isn't importable
+#   there even though it exists in the parent's sys.modules. Using
+#   sys.path.insert() here (top-level code, so it re-runs when the child
+#   re-executes this script) is the standard fix for this exact failure
+#   mode (PicklingError: "import of module '<name>' failed").
 THIS_DIR = Path(__file__).resolve().parent
 REPO_ROOT = THIS_DIR.parent.parent
 CLIENT_DIR = REPO_ROOT / "client"
 
-sys.path.insert(0, str(THIS_DIR))  # so `import model` / `import fedprox_fednova` resolve locally
+# THIS_DIR must win over CLIENT_DIR for `import model` (this experiment's
+# EfficientNet-B0 model.py must not be shadowed by client/model.py's
+# EfficientNet-B3 canonical version) — insert CLIENT_DIR first, THIS_DIR
+# last, so THIS_DIR ends up first in sys.path.
+sys.path.insert(0, str(CLIENT_DIR))
+sys.path.insert(0, str(THIS_DIR))
+
 from model import FedMelanomaModelB0  # noqa: E402
 from fedprox_fednova import (  # noqa: E402
     split_state_keys,
@@ -91,25 +111,8 @@ from fedprox_fednova import (  # noqa: E402
     fednova_aggregate,
     clone_state_dict_cpu,
 )
-
-
-def _load_module_from_path(name: str, path: Path):
-    """Load a module by explicit file path, bypassing sys.path entirely.
-
-    Used for client/dataset.py and client/focal_loss.py so this script has
-    no dependency on cwd and cannot collide with the local model.py.
-    """
-    spec = importlib.util.spec_from_file_location(name, str(path))
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-    return module
-
-
-dataset_mod = _load_module_from_path("fedmel_dataset", CLIENT_DIR / "dataset.py")
-focal_mod = _load_module_from_path("fedmel_focal_loss", CLIENT_DIR / "focal_loss.py")
-MelanomaDataset = dataset_mod.MelanomaDataset
-ClassWeightedFocalLoss = focal_mod.ClassWeightedFocalLoss
-compute_class_weights = focal_mod.compute_class_weights
+from dataset import MelanomaDataset  # noqa: E402
+from focal_loss import ClassWeightedFocalLoss, compute_class_weights  # noqa: E402
 
 
 # ---------------------------------------------------------------------------
