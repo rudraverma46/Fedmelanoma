@@ -421,16 +421,32 @@ def main() -> None:
             "client_avg_losses": {n: r.avg_loss for n, r in zip(client_names, client_results)},
         })
 
+        round_payload = {
+            "round": round_idx,
+            "model_state_dict": global_state,
+            "metrics": metrics,
+            "args": vars(args),
+        }
+
+        # --- "Latest" checkpoint: written EVERY round, regardless of score ---
+        # Crash recovery must resume from the most recent round, not the
+        # best-scoring one. Saving only on improvement means a crash after
+        # several non-improving rounds silently discards all of them, since
+        # --resume-from would rewind to whichever round last set a record.
+        # Written to a sibling path so it never clobbers the best checkpoint.
+        latest_path = str(Path(args.checkpoint_path).with_name(
+            Path(args.checkpoint_path).stem + "_latest" + Path(args.checkpoint_path).suffix
+        ))
+        torch.save(round_payload, latest_path)
+
         if metrics["roc_auc"] > best_roc_auc:
             best_roc_auc = metrics["roc_auc"]
             best_metrics = metrics
-            torch.save({
-                "round": round_idx,
-                "model_state_dict": global_state,
-                "metrics": metrics,
-                "args": vars(args),
-            }, args.checkpoint_path)
+            torch.save(round_payload, args.checkpoint_path)
             print(f"  [Checkpoint] New best ROC-AUC={best_roc_auc:.4f} -> saved to {args.checkpoint_path}")
+        else:
+            print(f"  [Checkpoint] No ROC-AUC improvement (best={best_roc_auc:.4f}); "
+                  f"latest-round weights saved to {latest_path}")
 
         # Persist running log after every round (safe to interrupt)
         with open(args.log_path, "w") as f:
