@@ -1,0 +1,1157 @@
+======================================================================
+  EfficientNet-B0 + Hybrid FedProx/FedNova — Federated Training
+  Reproducing: Springer ICACECS 2025 (~93.56% reported accuracy)
+======================================================================
+  Data root      : C:\Users\vishe\Desktop\hospital_partitions
+  Device         : cpu
+  Rounds (T)     : 10
+  Local epochs(E): 2
+  FedProx mu     : 0.01
+  Batch size     : 16
+======================================================================
+
+[Data] Loading 10 hospital partitions...
+  [Data] CityGeneral_Multispecialty_Hospital: n_train=  564  n_test=  141  malignant%= 4.61
+  [Data] GoldenSun_Public_Health_Screening_Camp: n_train=  198  n_test=   50  malignant%= 3.54
+  [Data] Greenfield_Rural_Community_Health_Center: n_train=  200  n_test=   51  malignant%= 6.00
+  [Data] Lakeside_Regional_Mixed_Hospital: n_train=  516  n_test=  130  malignant%= 3.29
+  [Data] MetroSkin_Dermatology_Research_Clinic: n_train= 1549  n_test=  388  malignant%= 6.26
+  [Data] NorthCare_Tertiary_Melanoma_Institute: n_train= 1602  n_test=  401  malignant%= 7.05
+  [Data] Pinewood_Oncology_Biopsy_Center: n_train= 1716  n_test=  429  malignant%= 6.53
+  [Data] SunRay_Community_Outreach_Clinic: n_train=  223  n_test=   56  malignant%= 2.69
+  [Data] TeleDerm_National_Screening_Network: n_train=  155  n_test=   39  malignant%= 2.58
+  [Data] Westbridge_Academic_Dermoscopy_Unit: n_train= 1065  n_test=  267  malignant%= 3.57
+[Data] Global test set: 1952 samples across 10 hospitals.
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+
+[Model] EfficientNet-B0 fusion model: 4,013,278 total params (219 trainable tensors, 150 buffer tensors).
+
+[Resume] Loading checkpoint: ./round5_checkpoint.pth
+[Resume] Checkpoint was round 5 (accuracy=94.72%, roc_auc=0.9628). Resuming at round 6.
+[Resume] Loading prior history: ./round5_log.json
+[Resume] Carried forward 5 completed round(s) of history.
+
+------------------------------------------------------------
+  ROUND 6/10
+------------------------------------------------------------
+      [R6 CityGeneral_Multispecialty_Hospital] epoch 1/2  batch 1/36  avg_loss=0.0024  elapsed=5s
+      [R6 CityGeneral_Multispecialty_Hospital] epoch 1/2  batch 6/36  avg_loss=0.0069  elapsed=31s
+      [R6 CityGeneral_Multispecialty_Hospital] epoch 1/2  batch 11/36  avg_loss=0.0041  elapsed=50s
+      [R6 CityGeneral_Multispecialty_Hospital] epoch 1/2  batch 16/36  avg_loss=0.0036  elapsed=68s
+      [R6 CityGeneral_Multispecialty_Hospital] epoch 1/2  batch 21/36  avg_loss=0.0031  elapsed=89s
+      [R6 CityGeneral_Multispecialty_Hospital] epoch 1/2  batch 26/36  avg_loss=0.0030  elapsed=113s
+      [R6 CityGeneral_Multispecialty_Hospital] epoch 1/2  batch 31/36  avg_loss=0.0029  elapsed=139s
+      [R6 CityGeneral_Multispecialty_Hospital] epoch 1/2  batch 36/36  avg_loss=0.0026  elapsed=157s
+      [R6 CityGeneral_Multispecialty_Hospital] epoch 2/2  batch 1/36  avg_loss=0.0026  elapsed=162s
+      [R6 CityGeneral_Multispecialty_Hospital] epoch 2/2  batch 6/36  avg_loss=0.0024  elapsed=184s
+      [R6 CityGeneral_Multispecialty_Hospital] epoch 2/2  batch 11/36  avg_loss=0.0023  elapsed=207s
+      [R6 CityGeneral_Multispecialty_Hospital] epoch 2/2  batch 16/36  avg_loss=0.0022  elapsed=231s
+      [R6 CityGeneral_Multispecialty_Hospital] epoch 2/2  batch 21/36  avg_loss=0.0021  elapsed=256s
+      [R6 CityGeneral_Multispecialty_Hospital] epoch 2/2  batch 26/36  avg_loss=0.0020  elapsed=279s
+      [R6 CityGeneral_Multispecialty_Hospital] epoch 2/2  batch 31/36  avg_loss=0.0019  elapsed=302s
+      [R6 CityGeneral_Multispecialty_Hospital] epoch 2/2  batch 36/36  avg_loss=0.0019  elapsed=321s
+    CityGeneral_Multispecialty_Hospital           avg_loss=0.0019  tau=  72  n=564
+      [R6 GoldenSun_Public_Health_Screening_Camp] epoch 1/2  batch 1/13  avg_loss=0.0026  elapsed=5s
+      [R6 GoldenSun_Public_Health_Screening_Camp] epoch 1/2  batch 6/13  avg_loss=0.0008  elapsed=29s
+      [R6 GoldenSun_Public_Health_Screening_Camp] epoch 1/2  batch 11/13  avg_loss=0.0016  elapsed=50s
+      [R6 GoldenSun_Public_Health_Screening_Camp] epoch 2/2  batch 1/13  avg_loss=0.0015  elapsed=59s
+      [R6 GoldenSun_Public_Health_Screening_Camp] epoch 2/2  batch 6/13  avg_loss=0.0013  elapsed=83s
+      [R6 GoldenSun_Public_Health_Screening_Camp] epoch 2/2  batch 11/13  avg_loss=0.0011  elapsed=108s
+    GoldenSun_Public_Health_Screening_Camp        avg_loss=0.0013  tau=  26  n=198
+      [R6 Greenfield_Rural_Community_Health_Center] epoch 1/2  batch 1/13  avg_loss=0.0007  elapsed=4s
+      [R6 Greenfield_Rural_Community_Health_Center] epoch 1/2  batch 6/13  avg_loss=0.0021  elapsed=31s
+      [R6 Greenfield_Rural_Community_Health_Center] epoch 1/2  batch 11/13  avg_loss=0.0029  elapsed=55s
+      [R6 Greenfield_Rural_Community_Health_Center] epoch 2/2  batch 1/13  avg_loss=0.0028  elapsed=68s
+      [R6 Greenfield_Rural_Community_Health_Center] epoch 2/2  batch 6/13  avg_loss=0.0023  elapsed=91s
+      [R6 Greenfield_Rural_Community_Health_Center] epoch 2/2  batch 11/13  avg_loss=0.0019  elapsed=114s
+    Greenfield_Rural_Community_Health_Center      avg_loss=0.0019  tau=  26  n=200
+      [R6 Lakeside_Regional_Mixed_Hospital] epoch 1/2  batch 1/33  avg_loss=0.0012  elapsed=3s
+      [R6 Lakeside_Regional_Mixed_Hospital] epoch 1/2  batch 6/33  avg_loss=0.0006  elapsed=21s
+      [R6 Lakeside_Regional_Mixed_Hospital] epoch 1/2  batch 11/33  avg_loss=0.0014  elapsed=42s
+      [R6 Lakeside_Regional_Mixed_Hospital] epoch 1/2  batch 16/33  avg_loss=0.0025  elapsed=64s
+      [R6 Lakeside_Regional_Mixed_Hospital] epoch 1/2  batch 21/33  avg_loss=0.0022  elapsed=83s
+      [R6 Lakeside_Regional_Mixed_Hospital] epoch 1/2  batch 26/33  avg_loss=0.0025  elapsed=105s
+      [R6 Lakeside_Regional_Mixed_Hospital] epoch 1/2  batch 31/33  avg_loss=0.0028  elapsed=130s
+      [R6 Lakeside_Regional_Mixed_Hospital] epoch 2/2  batch 1/33  avg_loss=0.0027  elapsed=139s
+      [R6 Lakeside_Regional_Mixed_Hospital] epoch 2/2  batch 6/33  avg_loss=0.0025  elapsed=161s
+      [R6 Lakeside_Regional_Mixed_Hospital] epoch 2/2  batch 11/33  avg_loss=0.0023  elapsed=182s
+      [R6 Lakeside_Regional_Mixed_Hospital] epoch 2/2  batch 16/33  avg_loss=0.0022  elapsed=202s
+      [R6 Lakeside_Regional_Mixed_Hospital] epoch 2/2  batch 21/33  avg_loss=0.0020  elapsed=224s
+      [R6 Lakeside_Regional_Mixed_Hospital] epoch 2/2  batch 26/33  avg_loss=0.0020  elapsed=246s
+      [R6 Lakeside_Regional_Mixed_Hospital] epoch 2/2  batch 31/33  avg_loss=0.0019  elapsed=266s
+    Lakeside_Regional_Mixed_Hospital              avg_loss=0.0018  tau=  66  n=516
+      [R6 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 1/97  avg_loss=0.0015  elapsed=6s
+      [R6 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 6/97  avg_loss=0.0102  elapsed=26s
+      [R6 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 11/97  avg_loss=0.0076  elapsed=47s
+      [R6 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 16/97  avg_loss=0.0071  elapsed=69s
+      [R6 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 21/97  avg_loss=0.0065  elapsed=92s
+      [R6 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 26/97  avg_loss=0.0064  elapsed=118s
+      [R6 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 31/97  avg_loss=0.0067  elapsed=139s
+      [R6 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 36/97  avg_loss=0.0066  elapsed=158s
+      [R6 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 41/97  avg_loss=0.0069  elapsed=179s
+      [R6 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 46/97  avg_loss=0.0073  elapsed=200s
+      [R6 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 51/97  avg_loss=0.0070  elapsed=222s
+      [R6 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 56/97  avg_loss=0.0068  elapsed=243s
+      [R6 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 61/97  avg_loss=0.0067  elapsed=268s
+      [R6 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 66/97  avg_loss=0.0064  elapsed=290s
+      [R6 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 71/97  avg_loss=0.0063  elapsed=314s
+      [R6 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 76/97  avg_loss=0.0062  elapsed=329s
+      [R6 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 81/97  avg_loss=0.0061  elapsed=346s
+      [R6 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 86/97  avg_loss=0.0060  elapsed=370s
+      [R6 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 91/97  avg_loss=0.0058  elapsed=388s
+      [R6 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 96/97  avg_loss=0.0063  elapsed=405s
+      [R6 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 1/97  avg_loss=0.0062  elapsed=414s
+      [R6 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 6/97  avg_loss=0.0061  elapsed=438s
+      [R6 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 11/97  avg_loss=0.0059  elapsed=454s
+      [R6 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 16/97  avg_loss=0.0059  elapsed=468s
+      [R6 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 21/97  avg_loss=0.0058  elapsed=482s
+      [R6 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 26/97  avg_loss=0.0057  elapsed=498s
+      [R6 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 31/97  avg_loss=0.0056  elapsed=514s
+      [R6 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 36/97  avg_loss=0.0056  elapsed=529s
+      [R6 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 41/97  avg_loss=0.0055  elapsed=544s
+      [R6 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 46/97  avg_loss=0.0055  elapsed=559s
+      [R6 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 51/97  avg_loss=0.0054  elapsed=573s
+      [R6 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 56/97  avg_loss=0.0053  elapsed=587s
+      [R6 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 61/97  avg_loss=0.0054  elapsed=600s
+      [R6 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 66/97  avg_loss=0.0053  elapsed=616s
+      [R6 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 71/97  avg_loss=0.0052  elapsed=630s
+      [R6 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 76/97  avg_loss=0.0051  elapsed=645s
+      [R6 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 81/97  avg_loss=0.0052  elapsed=659s
+      [R6 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 86/97  avg_loss=0.0052  elapsed=674s
+      [R6 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 91/97  avg_loss=0.0051  elapsed=689s
+      [R6 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 96/97  avg_loss=0.0051  elapsed=712s
+    MetroSkin_Dermatology_Research_Clinic         avg_loss=0.0051  tau= 194  n=1549
+      [R6 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 1/101  avg_loss=0.0009  elapsed=6s
+      [R6 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 6/101  avg_loss=0.0149  elapsed=27s
+      [R6 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 11/101  avg_loss=0.0097  elapsed=49s
+      [R6 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 16/101  avg_loss=0.0098  elapsed=75s
+      [R6 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 21/101  avg_loss=0.0089  elapsed=100s
+      [R6 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 26/101  avg_loss=0.0078  elapsed=124s
+      [R6 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 31/101  avg_loss=0.0080  elapsed=146s
+      [R6 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 36/101  avg_loss=0.0078  elapsed=167s
+      [R6 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 41/101  avg_loss=0.0075  elapsed=187s
+      [R6 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 46/101  avg_loss=0.0074  elapsed=207s
+      [R6 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 51/101  avg_loss=0.0070  elapsed=230s
+      [R6 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 56/101  avg_loss=0.0068  elapsed=256s
+      [R6 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 61/101  avg_loss=0.0067  elapsed=278s
+      [R6 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 66/101  avg_loss=0.0070  elapsed=301s
+      [R6 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 71/101  avg_loss=0.0080  elapsed=321s
+      [R6 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 76/101  avg_loss=0.0078  elapsed=341s
+      [R6 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 81/101  avg_loss=0.0077  elapsed=364s
+      [R6 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 86/101  avg_loss=0.0075  elapsed=387s
+      [R6 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 91/101  avg_loss=0.0072  elapsed=408s
+      [R6 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 96/101  avg_loss=0.0073  elapsed=431s
+      [R6 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 101/101  avg_loss=0.0071  elapsed=454s
+      [R6 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 1/101  avg_loss=0.0070  elapsed=458s
+      [R6 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 6/101  avg_loss=0.0068  elapsed=483s
+      [R6 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 11/101  avg_loss=0.0067  elapsed=505s
+      [R6 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 16/101  avg_loss=0.0065  elapsed=528s
+      [R6 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 21/101  avg_loss=0.0064  elapsed=554s
+      [R6 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 26/101  avg_loss=0.0063  elapsed=577s
+      [R6 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 31/101  avg_loss=0.0062  elapsed=602s
+      [R6 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 36/101  avg_loss=0.0061  elapsed=623s
+      [R6 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 41/101  avg_loss=0.0060  elapsed=643s
+      [R6 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 46/101  avg_loss=0.0060  elapsed=665s
+      [R6 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 51/101  avg_loss=0.0061  elapsed=680s
+      [R6 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 56/101  avg_loss=0.0060  elapsed=694s
+      [R6 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 61/101  avg_loss=0.0060  elapsed=708s
+      [R6 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 66/101  avg_loss=0.0059  elapsed=723s
+      [R6 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 71/101  avg_loss=0.0059  elapsed=737s
+      [R6 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 76/101  avg_loss=0.0058  elapsed=752s
+      [R6 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 81/101  avg_loss=0.0058  elapsed=765s
+      [R6 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 86/101  avg_loss=0.0057  elapsed=779s
+      [R6 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 91/101  avg_loss=0.0056  elapsed=794s
+      [R6 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 96/101  avg_loss=0.0055  elapsed=808s
+      [R6 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 101/101  avg_loss=0.0054  elapsed=820s
+    NorthCare_Tertiary_Melanoma_Institute         avg_loss=0.0054  tau= 202  n=1602
+      [R6 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 1/108  avg_loss=0.0007  elapsed=3s
+      [R6 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 6/108  avg_loss=0.0140  elapsed=17s
+      [R6 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 11/108  avg_loss=0.0098  elapsed=33s
+      [R6 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 16/108  avg_loss=0.0074  elapsed=50s
+      [R6 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 21/108  avg_loss=0.0067  elapsed=71s
+      [R6 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 26/108  avg_loss=0.0101  elapsed=87s
+      [R6 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 31/108  avg_loss=0.0092  elapsed=104s
+      [R6 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 36/108  avg_loss=0.0085  elapsed=128s
+      [R6 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 41/108  avg_loss=0.0078  elapsed=152s
+      [R6 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 46/108  avg_loss=0.0076  elapsed=174s
+      [R6 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 51/108  avg_loss=0.0071  elapsed=202s
+      [R6 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 56/108  avg_loss=0.0067  elapsed=227s
+      [R6 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 61/108  avg_loss=0.0065  elapsed=246s
+      [R6 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 66/108  avg_loss=0.0076  elapsed=265s
+      [R6 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 71/108  avg_loss=0.0072  elapsed=285s
+      [R6 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 76/108  avg_loss=0.0075  elapsed=311s
+      [R6 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 81/108  avg_loss=0.0086  elapsed=336s
+      [R6 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 86/108  avg_loss=0.0090  elapsed=360s
+      [R6 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 91/108  avg_loss=0.0089  elapsed=385s
+      [R6 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 96/108  avg_loss=0.0087  elapsed=413s
+      [R6 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 101/108  avg_loss=0.0086  elapsed=441s
+      [R6 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 106/108  avg_loss=0.0084  elapsed=470s
+      [R6 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 1/108  avg_loss=0.0083  elapsed=484s
+      [R6 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 6/108  avg_loss=0.0082  elapsed=507s
+      [R6 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 11/108  avg_loss=0.0081  elapsed=526s
+      [R6 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 16/108  avg_loss=0.0079  elapsed=545s
+      [R6 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 21/108  avg_loss=0.0077  elapsed=562s
+      [R6 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 26/108  avg_loss=0.0076  elapsed=581s
+      [R6 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 31/108  avg_loss=0.0074  elapsed=600s
+      [R6 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 36/108  avg_loss=0.0073  elapsed=618s
+      [R6 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 41/108  avg_loss=0.0072  elapsed=638s
+      [R6 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 46/108  avg_loss=0.0071  elapsed=656s
+      [R6 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 51/108  avg_loss=0.0070  elapsed=674s
+      [R6 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 56/108  avg_loss=0.0068  elapsed=693s
+      [R6 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 61/108  avg_loss=0.0068  elapsed=711s
+      [R6 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 66/108  avg_loss=0.0067  elapsed=728s
+      [R6 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 71/108  avg_loss=0.0066  elapsed=747s
+      [R6 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 76/108  avg_loss=0.0065  elapsed=765s
+      [R6 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 81/108  avg_loss=0.0064  elapsed=782s
+      [R6 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 86/108  avg_loss=0.0063  elapsed=800s
+      [R6 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 91/108  avg_loss=0.0063  elapsed=819s
+      [R6 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 96/108  avg_loss=0.0063  elapsed=836s
+      [R6 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 101/108  avg_loss=0.0063  elapsed=853s
+      [R6 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 106/108  avg_loss=0.0062  elapsed=872s
+    Pinewood_Oncology_Biopsy_Center               avg_loss=0.0061  tau= 216  n=1716
+      [R6 SunRay_Community_Outreach_Clinic] epoch 1/2  batch 1/14  avg_loss=0.0003  elapsed=4s
+      [R6 SunRay_Community_Outreach_Clinic] epoch 1/2  batch 6/14  avg_loss=0.0017  elapsed=25s
+      [R6 SunRay_Community_Outreach_Clinic] epoch 1/2  batch 11/14  avg_loss=0.0012  elapsed=45s
+      [R6 SunRay_Community_Outreach_Clinic] epoch 2/2  batch 1/14  avg_loss=0.0011  elapsed=61s
+      [R6 SunRay_Community_Outreach_Clinic] epoch 2/2  batch 6/14  avg_loss=0.0010  elapsed=81s
+      [R6 SunRay_Community_Outreach_Clinic] epoch 2/2  batch 11/14  avg_loss=0.0009  elapsed=100s
+    SunRay_Community_Outreach_Clinic              avg_loss=0.0008  tau=  28  n=223
+      [R6 TeleDerm_National_Screening_Network] epoch 1/2  batch 1/10  avg_loss=0.0013  elapsed=4s
+      [R6 TeleDerm_National_Screening_Network] epoch 1/2  batch 6/10  avg_loss=0.0007  elapsed=24s
+      [R6 TeleDerm_National_Screening_Network] epoch 2/2  batch 1/10  avg_loss=0.0007  elapsed=43s
+      [R6 TeleDerm_National_Screening_Network] epoch 2/2  batch 6/10  avg_loss=0.0006  elapsed=62s
+    TeleDerm_National_Screening_Network           avg_loss=0.0005  tau=  20  n=155
+      [R6 Westbridge_Academic_Dermoscopy_Unit] epoch 1/2  batch 1/67  avg_loss=0.0005  elapsed=3s
+      [R6 Westbridge_Academic_Dermoscopy_Unit] epoch 1/2  batch 6/67  avg_loss=0.0007  elapsed=25s
+      [R6 Westbridge_Academic_Dermoscopy_Unit] epoch 1/2  batch 11/67  avg_loss=0.0026  elapsed=45s
+      [R6 Westbridge_Academic_Dermoscopy_Unit] epoch 1/2  batch 16/67  avg_loss=0.0024  elapsed=66s
+      [R6 Westbridge_Academic_Dermoscopy_Unit] epoch 1/2  batch 21/67  avg_loss=0.0030  elapsed=85s
+      [R6 Westbridge_Academic_Dermoscopy_Unit] epoch 1/2  batch 26/67  avg_loss=0.0029  elapsed=105s
+      [R6 Westbridge_Academic_Dermoscopy_Unit] epoch 1/2  batch 31/67  avg_loss=0.0028  elapsed=125s
+      [R6 Westbridge_Academic_Dermoscopy_Unit] epoch 1/2  batch 36/67  avg_loss=0.0029  elapsed=145s
+      [R6 Westbridge_Academic_Dermoscopy_Unit] epoch 1/2  batch 41/67  avg_loss=0.0032  elapsed=165s
+      [R6 Westbridge_Academic_Dermoscopy_Unit] epoch 1/2  batch 46/67  avg_loss=0.0030  elapsed=184s
+      [R6 Westbridge_Academic_Dermoscopy_Unit] epoch 1/2  batch 51/67  avg_loss=0.0029  elapsed=204s
+      [R6 Westbridge_Academic_Dermoscopy_Unit] epoch 1/2  batch 56/67  avg_loss=0.0027  elapsed=222s
+      [R6 Westbridge_Academic_Dermoscopy_Unit] epoch 1/2  batch 61/67  avg_loss=0.0027  elapsed=240s
+      [R6 Westbridge_Academic_Dermoscopy_Unit] epoch 1/2  batch 66/67  avg_loss=0.0027  elapsed=260s
+      [R6 Westbridge_Academic_Dermoscopy_Unit] epoch 2/2  batch 1/67  avg_loss=0.0027  elapsed=266s
+      [R6 Westbridge_Academic_Dermoscopy_Unit] epoch 2/2  batch 6/67  avg_loss=0.0026  elapsed=283s
+      [R6 Westbridge_Academic_Dermoscopy_Unit] epoch 2/2  batch 11/67  avg_loss=0.0025  elapsed=304s
+      [R6 Westbridge_Academic_Dermoscopy_Unit] epoch 2/2  batch 16/67  avg_loss=0.0026  elapsed=326s
+      [R6 Westbridge_Academic_Dermoscopy_Unit] epoch 2/2  batch 21/67  avg_loss=0.0025  elapsed=343s
+      [R6 Westbridge_Academic_Dermoscopy_Unit] epoch 2/2  batch 26/67  avg_loss=0.0024  elapsed=363s
+      [R6 Westbridge_Academic_Dermoscopy_Unit] epoch 2/2  batch 31/67  avg_loss=0.0024  elapsed=381s
+      [R6 Westbridge_Academic_Dermoscopy_Unit] epoch 2/2  batch 36/67  avg_loss=0.0024  elapsed=399s
+      [R6 Westbridge_Academic_Dermoscopy_Unit] epoch 2/2  batch 41/67  avg_loss=0.0023  elapsed=418s
+      [R6 Westbridge_Academic_Dermoscopy_Unit] epoch 2/2  batch 46/67  avg_loss=0.0023  elapsed=436s
+      [R6 Westbridge_Academic_Dermoscopy_Unit] epoch 2/2  batch 51/67  avg_loss=0.0022  elapsed=454s
+      [R6 Westbridge_Academic_Dermoscopy_Unit] epoch 2/2  batch 56/67  avg_loss=0.0022  elapsed=472s
+      [R6 Westbridge_Academic_Dermoscopy_Unit] epoch 2/2  batch 61/67  avg_loss=0.0021  elapsed=492s
+      [R6 Westbridge_Academic_Dermoscopy_Unit] epoch 2/2  batch 66/67  avg_loss=0.0020  elapsed=510s
+    Westbridge_Academic_Dermoscopy_Unit           avg_loss=0.0020  tau= 134  n=1065
+  [Aggregation] FedNova tau_eff=158.17 (effective normalized step count for this round)
+  [Eval] Accuracy=94.36%  Precision=0.4969  Recall=0.7339  F1=0.5926  ROC-AUC=0.9663  (round took 4183.6s)
+  [Checkpoint] New best ROC-AUC=0.9663 -> saved to ./full_run_checkpoint.pth
+
+------------------------------------------------------------
+  ROUND 7/10
+------------------------------------------------------------
+      [R7 CityGeneral_Multispecialty_Hospital] epoch 1/2  batch 1/36  avg_loss=0.0012  elapsed=3s
+      [R7 CityGeneral_Multispecialty_Hospital] epoch 1/2  batch 6/36  avg_loss=0.0009  elapsed=18s
+      [R7 CityGeneral_Multispecialty_Hospital] epoch 1/2  batch 11/36  avg_loss=0.0013  elapsed=32s
+      [R7 CityGeneral_Multispecialty_Hospital] epoch 1/2  batch 16/36  avg_loss=0.0017  elapsed=45s
+      [R7 CityGeneral_Multispecialty_Hospital] epoch 1/2  batch 21/36  avg_loss=0.0016  elapsed=61s
+      [R7 CityGeneral_Multispecialty_Hospital] epoch 1/2  batch 26/36  avg_loss=0.0014  elapsed=76s
+      [R7 CityGeneral_Multispecialty_Hospital] epoch 1/2  batch 31/36  avg_loss=0.0015  elapsed=90s
+      [R7 CityGeneral_Multispecialty_Hospital] epoch 1/2  batch 36/36  avg_loss=0.0015  elapsed=101s
+      [R7 CityGeneral_Multispecialty_Hospital] epoch 2/2  batch 1/36  avg_loss=0.0014  elapsed=104s
+      [R7 CityGeneral_Multispecialty_Hospital] epoch 2/2  batch 6/36  avg_loss=0.0013  elapsed=117s
+      [R7 CityGeneral_Multispecialty_Hospital] epoch 2/2  batch 11/36  avg_loss=0.0013  elapsed=137s
+      [R7 CityGeneral_Multispecialty_Hospital] epoch 2/2  batch 16/36  avg_loss=0.0012  elapsed=161s
+      [R7 CityGeneral_Multispecialty_Hospital] epoch 2/2  batch 21/36  avg_loss=0.0012  elapsed=186s
+      [R7 CityGeneral_Multispecialty_Hospital] epoch 2/2  batch 26/36  avg_loss=0.0013  elapsed=205s
+      [R7 CityGeneral_Multispecialty_Hospital] epoch 2/2  batch 31/36  avg_loss=0.0013  elapsed=224s
+      [R7 CityGeneral_Multispecialty_Hospital] epoch 2/2  batch 36/36  avg_loss=0.0013  elapsed=243s
+    CityGeneral_Multispecialty_Hospital           avg_loss=0.0013  tau=  72  n=564
+      [R7 GoldenSun_Public_Health_Screening_Camp] epoch 1/2  batch 1/13  avg_loss=0.0008  elapsed=4s
+      [R7 GoldenSun_Public_Health_Screening_Camp] epoch 1/2  batch 6/13  avg_loss=0.0005  elapsed=26s
+      [R7 GoldenSun_Public_Health_Screening_Camp] epoch 1/2  batch 11/13  avg_loss=0.0006  elapsed=44s
+      [R7 GoldenSun_Public_Health_Screening_Camp] epoch 2/2  batch 1/13  avg_loss=0.0087  elapsed=55s
+      [R7 GoldenSun_Public_Health_Screening_Camp] epoch 2/2  batch 6/13  avg_loss=0.0065  elapsed=76s
+      [R7 GoldenSun_Public_Health_Screening_Camp] epoch 2/2  batch 11/13  avg_loss=0.0053  elapsed=93s
+    GoldenSun_Public_Health_Screening_Camp        avg_loss=0.0049  tau=  26  n=198
+      [R7 Greenfield_Rural_Community_Health_Center] epoch 1/2  batch 1/13  avg_loss=0.0011  elapsed=3s
+      [R7 Greenfield_Rural_Community_Health_Center] epoch 1/2  batch 6/13  avg_loss=0.0026  elapsed=21s
+      [R7 Greenfield_Rural_Community_Health_Center] epoch 1/2  batch 11/13  avg_loss=0.0023  elapsed=37s
+      [R7 Greenfield_Rural_Community_Health_Center] epoch 2/2  batch 1/13  avg_loss=0.0024  elapsed=46s
+      [R7 Greenfield_Rural_Community_Health_Center] epoch 2/2  batch 6/13  avg_loss=0.0020  elapsed=62s
+      [R7 Greenfield_Rural_Community_Health_Center] epoch 2/2  batch 11/13  avg_loss=0.0017  elapsed=80s
+    Greenfield_Rural_Community_Health_Center      avg_loss=0.0017  tau=  26  n=200
+      [R7 Lakeside_Regional_Mixed_Hospital] epoch 1/2  batch 1/33  avg_loss=0.0006  elapsed=3s
+      [R7 Lakeside_Regional_Mixed_Hospital] epoch 1/2  batch 6/33  avg_loss=0.0010  elapsed=19s
+      [R7 Lakeside_Regional_Mixed_Hospital] epoch 1/2  batch 11/33  avg_loss=0.0025  elapsed=36s
+      [R7 Lakeside_Regional_Mixed_Hospital] epoch 1/2  batch 16/33  avg_loss=0.0040  elapsed=52s
+      [R7 Lakeside_Regional_Mixed_Hospital] epoch 1/2  batch 21/33  avg_loss=0.0036  elapsed=69s
+      [R7 Lakeside_Regional_Mixed_Hospital] epoch 1/2  batch 26/33  avg_loss=0.0031  elapsed=86s
+      [R7 Lakeside_Regional_Mixed_Hospital] epoch 1/2  batch 31/33  avg_loss=0.0028  elapsed=102s
+      [R7 Lakeside_Regional_Mixed_Hospital] epoch 2/2  batch 1/33  avg_loss=0.0027  elapsed=110s
+      [R7 Lakeside_Regional_Mixed_Hospital] epoch 2/2  batch 6/33  avg_loss=0.0024  elapsed=125s
+      [R7 Lakeside_Regional_Mixed_Hospital] epoch 2/2  batch 11/33  avg_loss=0.0022  elapsed=140s
+      [R7 Lakeside_Regional_Mixed_Hospital] epoch 2/2  batch 16/33  avg_loss=0.0020  elapsed=156s
+      [R7 Lakeside_Regional_Mixed_Hospital] epoch 2/2  batch 21/33  avg_loss=0.0019  elapsed=171s
+      [R7 Lakeside_Regional_Mixed_Hospital] epoch 2/2  batch 26/33  avg_loss=0.0018  elapsed=188s
+      [R7 Lakeside_Regional_Mixed_Hospital] epoch 2/2  batch 31/33  avg_loss=0.0018  elapsed=204s
+    Lakeside_Regional_Mixed_Hospital              avg_loss=0.0017  tau=  66  n=516
+      [R7 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 1/97  avg_loss=0.0005  elapsed=3s
+      [R7 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 6/97  avg_loss=0.0020  elapsed=20s
+      [R7 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 11/97  avg_loss=0.0079  elapsed=35s
+      [R7 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 16/97  avg_loss=0.0082  elapsed=50s
+      [R7 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 21/97  avg_loss=0.0068  elapsed=65s
+      [R7 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 26/97  avg_loss=0.0082  elapsed=79s
+      [R7 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 31/97  avg_loss=0.0077  elapsed=95s
+      [R7 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 36/97  avg_loss=0.0073  elapsed=111s
+      [R7 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 41/97  avg_loss=0.0070  elapsed=127s
+      [R7 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 46/97  avg_loss=0.0071  elapsed=143s
+      [R7 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 51/97  avg_loss=0.0071  elapsed=158s
+      [R7 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 56/97  avg_loss=0.0069  elapsed=173s
+      [R7 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 61/97  avg_loss=0.0068  elapsed=188s
+      [R7 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 66/97  avg_loss=0.0066  elapsed=203s
+      [R7 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 71/97  avg_loss=0.0064  elapsed=218s
+      [R7 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 76/97  avg_loss=0.0062  elapsed=234s
+      [R7 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 81/97  avg_loss=0.0060  elapsed=249s
+      [R7 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 86/97  avg_loss=0.0061  elapsed=264s
+      [R7 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 91/97  avg_loss=0.0062  elapsed=282s
+      [R7 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 96/97  avg_loss=0.0060  elapsed=298s
+      [R7 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 1/97  avg_loss=0.0059  elapsed=305s
+      [R7 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 6/97  avg_loss=0.0058  elapsed=321s
+      [R7 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 11/97  avg_loss=0.0057  elapsed=336s
+      [R7 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 16/97  avg_loss=0.0056  elapsed=352s
+      [R7 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 21/97  avg_loss=0.0055  elapsed=367s
+      [R7 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 26/97  avg_loss=0.0054  elapsed=381s
+      [R7 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 31/97  avg_loss=0.0052  elapsed=396s
+      [R7 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 36/97  avg_loss=0.0051  elapsed=409s
+      [R7 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 41/97  avg_loss=0.0050  elapsed=428s
+      [R7 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 46/97  avg_loss=0.0050  elapsed=443s
+      [R7 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 51/97  avg_loss=0.0049  elapsed=459s
+      [R7 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 56/97  avg_loss=0.0047  elapsed=475s
+      [R7 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 61/97  avg_loss=0.0047  elapsed=490s
+      [R7 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 66/97  avg_loss=0.0046  elapsed=505s
+      [R7 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 71/97  avg_loss=0.0046  elapsed=520s
+      [R7 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 76/97  avg_loss=0.0045  elapsed=534s
+      [R7 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 81/97  avg_loss=0.0044  elapsed=547s
+      [R7 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 86/97  avg_loss=0.0044  elapsed=562s
+      [R7 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 91/97  avg_loss=0.0043  elapsed=576s
+      [R7 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 96/97  avg_loss=0.0043  elapsed=591s
+    MetroSkin_Dermatology_Research_Clinic         avg_loss=0.0043  tau= 194  n=1549
+      [R7 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 1/101  avg_loss=0.0054  elapsed=3s
+      [R7 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 6/101  avg_loss=0.0072  elapsed=18s
+      [R7 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 11/101  avg_loss=0.0050  elapsed=33s
+      [R7 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 16/101  avg_loss=0.0047  elapsed=49s
+      [R7 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 21/101  avg_loss=0.0043  elapsed=66s
+      [R7 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 26/101  avg_loss=0.0047  elapsed=82s
+      [R7 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 31/101  avg_loss=0.0043  elapsed=97s
+      [R7 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 36/101  avg_loss=0.0038  elapsed=113s
+      [R7 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 41/101  avg_loss=0.0047  elapsed=129s
+      [R7 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 46/101  avg_loss=0.0046  elapsed=145s
+      [R7 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 51/101  avg_loss=0.0050  elapsed=161s
+      [R7 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 56/101  avg_loss=0.0066  elapsed=175s
+      [R7 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 61/101  avg_loss=0.0069  elapsed=191s
+      [R7 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 66/101  avg_loss=0.0065  elapsed=206s
+      [R7 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 71/101  avg_loss=0.0063  elapsed=221s
+      [R7 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 76/101  avg_loss=0.0067  elapsed=237s
+      [R7 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 81/101  avg_loss=0.0066  elapsed=253s
+      [R7 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 86/101  avg_loss=0.0065  elapsed=268s
+      [R7 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 91/101  avg_loss=0.0063  elapsed=284s
+      [R7 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 96/101  avg_loss=0.0062  elapsed=300s
+      [R7 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 101/101  avg_loss=0.0061  elapsed=312s
+      [R7 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 1/101  avg_loss=0.0062  elapsed=314s
+      [R7 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 6/101  avg_loss=0.0061  elapsed=328s
+      [R7 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 11/101  avg_loss=0.0060  elapsed=342s
+      [R7 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 16/101  avg_loss=0.0058  elapsed=359s
+      [R7 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 21/101  avg_loss=0.0057  elapsed=373s
+      [R7 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 26/101  avg_loss=0.0055  elapsed=388s
+      [R7 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 31/101  avg_loss=0.0054  elapsed=402s
+      [R7 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 36/101  avg_loss=0.0053  elapsed=417s
+      [R7 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 41/101  avg_loss=0.0052  elapsed=433s
+      [R7 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 46/101  avg_loss=0.0052  elapsed=448s
+      [R7 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 51/101  avg_loss=0.0051  elapsed=463s
+      [R7 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 56/101  avg_loss=0.0050  elapsed=479s
+      [R7 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 61/101  avg_loss=0.0049  elapsed=494s
+      [R7 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 66/101  avg_loss=0.0048  elapsed=509s
+      [R7 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 71/101  avg_loss=0.0049  elapsed=523s
+      [R7 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 76/101  avg_loss=0.0048  elapsed=539s
+      [R7 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 81/101  avg_loss=0.0048  elapsed=553s
+      [R7 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 86/101  avg_loss=0.0048  elapsed=567s
+      [R7 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 91/101  avg_loss=0.0048  elapsed=580s
+      [R7 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 96/101  avg_loss=0.0048  elapsed=594s
+      [R7 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 101/101  avg_loss=0.0047  elapsed=606s
+    NorthCare_Tertiary_Melanoma_Institute         avg_loss=0.0047  tau= 202  n=1602
+      [R7 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 1/108  avg_loss=0.0061  elapsed=3s
+      [R7 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 6/108  avg_loss=0.0042  elapsed=18s
+      [R7 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 11/108  avg_loss=0.0067  elapsed=34s
+      [R7 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 16/108  avg_loss=0.0091  elapsed=51s
+      [R7 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 21/108  avg_loss=0.0088  elapsed=67s
+      [R7 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 26/108  avg_loss=0.0077  elapsed=84s
+      [R7 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 31/108  avg_loss=0.0071  elapsed=99s
+      [R7 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 36/108  avg_loss=0.0065  elapsed=114s
+      [R7 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 41/108  avg_loss=0.0061  elapsed=129s
+      [R7 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 46/108  avg_loss=0.0058  elapsed=142s
+      [R7 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 51/108  avg_loss=0.0057  elapsed=157s
+      [R7 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 56/108  avg_loss=0.0059  elapsed=171s
+      [R7 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 61/108  avg_loss=0.0056  elapsed=184s
+      [R7 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 66/108  avg_loss=0.0055  elapsed=199s
+      [R7 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 71/108  avg_loss=0.0054  elapsed=214s
+      [R7 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 76/108  avg_loss=0.0063  elapsed=229s
+      [R7 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 81/108  avg_loss=0.0063  elapsed=244s
+      [R7 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 86/108  avg_loss=0.0067  elapsed=260s
+      [R7 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 91/108  avg_loss=0.0066  elapsed=275s
+      [R7 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 96/108  avg_loss=0.0065  elapsed=291s
+      [R7 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 101/108  avg_loss=0.0064  elapsed=307s
+      [R7 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 106/108  avg_loss=0.0064  elapsed=323s
+      [R7 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 1/108  avg_loss=0.0068  elapsed=329s
+      [R7 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 6/108  avg_loss=0.0066  elapsed=343s
+      [R7 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 11/108  avg_loss=0.0065  elapsed=357s
+      [R7 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 16/108  avg_loss=0.0063  elapsed=371s
+      [R7 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 21/108  avg_loss=0.0062  elapsed=386s
+      [R7 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 26/108  avg_loss=0.0061  elapsed=400s
+      [R7 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 31/108  avg_loss=0.0061  elapsed=412s
+      [R7 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 36/108  avg_loss=0.0061  elapsed=426s
+      [R7 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 41/108  avg_loss=0.0060  elapsed=441s
+      [R7 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 46/108  avg_loss=0.0058  elapsed=455s
+      [R7 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 51/108  avg_loss=0.0057  elapsed=469s
+      [R7 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 56/108  avg_loss=0.0056  elapsed=483s
+      [R7 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 61/108  avg_loss=0.0055  elapsed=498s
+      [R7 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 66/108  avg_loss=0.0054  elapsed=514s
+      [R7 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 71/108  avg_loss=0.0053  elapsed=529s
+      [R7 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 76/108  avg_loss=0.0052  elapsed=543s
+      [R7 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 81/108  avg_loss=0.0052  elapsed=558s
+      [R7 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 86/108  avg_loss=0.0051  elapsed=571s
+      [R7 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 91/108  avg_loss=0.0051  elapsed=585s
+      [R7 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 96/108  avg_loss=0.0051  elapsed=599s
+      [R7 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 101/108  avg_loss=0.0050  elapsed=613s
+      [R7 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 106/108  avg_loss=0.0049  elapsed=627s
+    Pinewood_Oncology_Biopsy_Center               avg_loss=0.0049  tau= 216  n=1716
+      [R7 SunRay_Community_Outreach_Clinic] epoch 1/2  batch 1/14  avg_loss=0.0004  elapsed=3s
+      [R7 SunRay_Community_Outreach_Clinic] epoch 1/2  batch 6/14  avg_loss=0.0007  elapsed=18s
+      [R7 SunRay_Community_Outreach_Clinic] epoch 1/2  batch 11/14  avg_loss=0.0007  elapsed=34s
+      [R7 SunRay_Community_Outreach_Clinic] epoch 2/2  batch 1/14  avg_loss=0.0006  elapsed=46s
+      [R7 SunRay_Community_Outreach_Clinic] epoch 2/2  batch 6/14  avg_loss=0.0005  elapsed=62s
+      [R7 SunRay_Community_Outreach_Clinic] epoch 2/2  batch 11/14  avg_loss=0.0004  elapsed=77s
+    SunRay_Community_Outreach_Clinic              avg_loss=0.0004  tau=  28  n=223
+      [R7 TeleDerm_National_Screening_Network] epoch 1/2  batch 1/10  avg_loss=0.0005  elapsed=3s
+      [R7 TeleDerm_National_Screening_Network] epoch 1/2  batch 6/10  avg_loss=0.0007  elapsed=20s
+      [R7 TeleDerm_National_Screening_Network] epoch 2/2  batch 1/10  avg_loss=0.0006  elapsed=37s
+      [R7 TeleDerm_National_Screening_Network] epoch 2/2  batch 6/10  avg_loss=0.0005  elapsed=53s
+    TeleDerm_National_Screening_Network           avg_loss=0.0004  tau=  20  n=155
+      [R7 Westbridge_Academic_Dermoscopy_Unit] epoch 1/2  batch 1/67  avg_loss=0.0014  elapsed=3s
+      [R7 Westbridge_Academic_Dermoscopy_Unit] epoch 1/2  batch 6/67  avg_loss=0.0025  elapsed=17s
+      [R7 Westbridge_Academic_Dermoscopy_Unit] epoch 1/2  batch 11/67  avg_loss=0.0016  elapsed=33s
+      [R7 Westbridge_Academic_Dermoscopy_Unit] epoch 1/2  batch 16/67  avg_loss=0.0016  elapsed=49s
+      [R7 Westbridge_Academic_Dermoscopy_Unit] epoch 1/2  batch 21/67  avg_loss=0.0015  elapsed=64s
+      [R7 Westbridge_Academic_Dermoscopy_Unit] epoch 1/2  batch 26/67  avg_loss=0.0015  elapsed=80s
+      [R7 Westbridge_Academic_Dermoscopy_Unit] epoch 1/2  batch 31/67  avg_loss=0.0019  elapsed=96s
+      [R7 Westbridge_Academic_Dermoscopy_Unit] epoch 1/2  batch 36/67  avg_loss=0.0018  elapsed=111s
+      [R7 Westbridge_Academic_Dermoscopy_Unit] epoch 1/2  batch 41/67  avg_loss=0.0017  elapsed=126s
+      [R7 Westbridge_Academic_Dermoscopy_Unit] epoch 1/2  batch 46/67  avg_loss=0.0017  elapsed=142s
+      [R7 Westbridge_Academic_Dermoscopy_Unit] epoch 1/2  batch 51/67  avg_loss=0.0016  elapsed=158s
+      [R7 Westbridge_Academic_Dermoscopy_Unit] epoch 1/2  batch 56/67  avg_loss=0.0017  elapsed=173s
+      [R7 Westbridge_Academic_Dermoscopy_Unit] epoch 1/2  batch 61/67  avg_loss=0.0017  elapsed=190s
+      [R7 Westbridge_Academic_Dermoscopy_Unit] epoch 1/2  batch 66/67  avg_loss=0.0017  elapsed=207s
+      [R7 Westbridge_Academic_Dermoscopy_Unit] epoch 2/2  batch 1/67  avg_loss=0.0017  elapsed=211s
+      [R7 Westbridge_Academic_Dermoscopy_Unit] epoch 2/2  batch 6/67  avg_loss=0.0016  elapsed=226s
+      [R7 Westbridge_Academic_Dermoscopy_Unit] epoch 2/2  batch 11/67  avg_loss=0.0016  elapsed=242s
+      [R7 Westbridge_Academic_Dermoscopy_Unit] epoch 2/2  batch 16/67  avg_loss=0.0015  elapsed=259s
+      [R7 Westbridge_Academic_Dermoscopy_Unit] epoch 2/2  batch 21/67  avg_loss=0.0015  elapsed=278s
+      [R7 Westbridge_Academic_Dermoscopy_Unit] epoch 2/2  batch 26/67  avg_loss=0.0014  elapsed=293s
+      [R7 Westbridge_Academic_Dermoscopy_Unit] epoch 2/2  batch 31/67  avg_loss=0.0014  elapsed=307s
+      [R7 Westbridge_Academic_Dermoscopy_Unit] epoch 2/2  batch 36/67  avg_loss=0.0014  elapsed=322s
+      [R7 Westbridge_Academic_Dermoscopy_Unit] epoch 2/2  batch 41/67  avg_loss=0.0014  elapsed=336s
+      [R7 Westbridge_Academic_Dermoscopy_Unit] epoch 2/2  batch 46/67  avg_loss=0.0014  elapsed=350s
+      [R7 Westbridge_Academic_Dermoscopy_Unit] epoch 2/2  batch 51/67  avg_loss=0.0013  elapsed=365s
+      [R7 Westbridge_Academic_Dermoscopy_Unit] epoch 2/2  batch 56/67  avg_loss=0.0013  elapsed=380s
+      [R7 Westbridge_Academic_Dermoscopy_Unit] epoch 2/2  batch 61/67  avg_loss=0.0013  elapsed=396s
+      [R7 Westbridge_Academic_Dermoscopy_Unit] epoch 2/2  batch 66/67  avg_loss=0.0013  elapsed=412s
+    Westbridge_Academic_Dermoscopy_Unit           avg_loss=0.0013  tau= 134  n=1065
+  [Aggregation] FedNova tau_eff=158.17 (effective normalized step count for this round)
+  [Eval] Accuracy=94.77%  Precision=0.5215  Recall=0.7798  F1=0.6250  ROC-AUC=0.9668  (round took 3293.9s)
+  [Checkpoint] New best ROC-AUC=0.9668 -> saved to ./full_run_checkpoint.pth
+
+------------------------------------------------------------
+  ROUND 8/10
+------------------------------------------------------------
+      [R8 CityGeneral_Multispecialty_Hospital] epoch 1/2  batch 1/36  avg_loss=0.0001  elapsed=3s
+      [R8 CityGeneral_Multispecialty_Hospital] epoch 1/2  batch 6/36  avg_loss=0.0008  elapsed=20s
+      [R8 CityGeneral_Multispecialty_Hospital] epoch 1/2  batch 11/36  avg_loss=0.0010  elapsed=35s
+      [R8 CityGeneral_Multispecialty_Hospital] epoch 1/2  batch 16/36  avg_loss=0.0010  elapsed=50s
+      [R8 CityGeneral_Multispecialty_Hospital] epoch 1/2  batch 21/36  avg_loss=0.0009  elapsed=64s
+      [R8 CityGeneral_Multispecialty_Hospital] epoch 1/2  batch 26/36  avg_loss=0.0009  elapsed=78s
+      [R8 CityGeneral_Multispecialty_Hospital] epoch 1/2  batch 31/36  avg_loss=0.0009  elapsed=93s
+      [R8 CityGeneral_Multispecialty_Hospital] epoch 1/2  batch 36/36  avg_loss=0.0008  elapsed=105s
+      [R8 CityGeneral_Multispecialty_Hospital] epoch 2/2  batch 1/36  avg_loss=0.0008  elapsed=108s
+      [R8 CityGeneral_Multispecialty_Hospital] epoch 2/2  batch 6/36  avg_loss=0.0008  elapsed=122s
+      [R8 CityGeneral_Multispecialty_Hospital] epoch 2/2  batch 11/36  avg_loss=0.0007  elapsed=137s
+      [R8 CityGeneral_Multispecialty_Hospital] epoch 2/2  batch 16/36  avg_loss=0.0007  elapsed=151s
+      [R8 CityGeneral_Multispecialty_Hospital] epoch 2/2  batch 21/36  avg_loss=0.0007  elapsed=166s
+      [R8 CityGeneral_Multispecialty_Hospital] epoch 2/2  batch 26/36  avg_loss=0.0007  elapsed=180s
+      [R8 CityGeneral_Multispecialty_Hospital] epoch 2/2  batch 31/36  avg_loss=0.0007  elapsed=196s
+      [R8 CityGeneral_Multispecialty_Hospital] epoch 2/2  batch 36/36  avg_loss=0.0007  elapsed=209s
+    CityGeneral_Multispecialty_Hospital           avg_loss=0.0007  tau=  72  n=564
+      [R8 GoldenSun_Public_Health_Screening_Camp] epoch 1/2  batch 1/13  avg_loss=0.0023  elapsed=3s
+      [R8 GoldenSun_Public_Health_Screening_Camp] epoch 1/2  batch 6/13  avg_loss=0.0008  elapsed=21s
+      [R8 GoldenSun_Public_Health_Screening_Camp] epoch 1/2  batch 11/13  avg_loss=0.0006  elapsed=38s
+      [R8 GoldenSun_Public_Health_Screening_Camp] epoch 2/2  batch 1/13  avg_loss=0.0005  elapsed=45s
+      [R8 GoldenSun_Public_Health_Screening_Camp] epoch 2/2  batch 6/13  avg_loss=0.0004  elapsed=60s
+      [R8 GoldenSun_Public_Health_Screening_Camp] epoch 2/2  batch 11/13  avg_loss=0.0003  elapsed=76s
+    GoldenSun_Public_Health_Screening_Camp        avg_loss=0.0004  tau=  26  n=198
+      [R8 Greenfield_Rural_Community_Health_Center] epoch 1/2  batch 1/13  avg_loss=0.0001  elapsed=3s
+      [R8 Greenfield_Rural_Community_Health_Center] epoch 1/2  batch 6/13  avg_loss=0.0008  elapsed=19s
+      [R8 Greenfield_Rural_Community_Health_Center] epoch 1/2  batch 11/13  avg_loss=0.0008  elapsed=34s
+      [R8 Greenfield_Rural_Community_Health_Center] epoch 2/2  batch 1/13  avg_loss=0.0007  elapsed=43s
+      [R8 Greenfield_Rural_Community_Health_Center] epoch 2/2  batch 6/13  avg_loss=0.0006  elapsed=58s
+      [R8 Greenfield_Rural_Community_Health_Center] epoch 2/2  batch 11/13  avg_loss=0.0006  elapsed=73s
+    Greenfield_Rural_Community_Health_Center      avg_loss=0.0006  tau=  26  n=200
+      [R8 Lakeside_Regional_Mixed_Hospital] epoch 1/2  batch 1/33  avg_loss=0.0017  elapsed=3s
+      [R8 Lakeside_Regional_Mixed_Hospital] epoch 1/2  batch 6/33  avg_loss=0.0043  elapsed=18s
+      [R8 Lakeside_Regional_Mixed_Hospital] epoch 1/2  batch 11/33  avg_loss=0.0026  elapsed=33s
+      [R8 Lakeside_Regional_Mixed_Hospital] epoch 1/2  batch 16/33  avg_loss=0.0024  elapsed=49s
+      [R8 Lakeside_Regional_Mixed_Hospital] epoch 1/2  batch 21/33  avg_loss=0.0020  elapsed=66s
+      [R8 Lakeside_Regional_Mixed_Hospital] epoch 1/2  batch 26/33  avg_loss=0.0018  elapsed=83s
+      [R8 Lakeside_Regional_Mixed_Hospital] epoch 1/2  batch 31/33  avg_loss=0.0017  elapsed=99s
+      [R8 Lakeside_Regional_Mixed_Hospital] epoch 2/2  batch 1/33  avg_loss=0.0017  elapsed=106s
+      [R8 Lakeside_Regional_Mixed_Hospital] epoch 2/2  batch 6/33  avg_loss=0.0015  elapsed=121s
+      [R8 Lakeside_Regional_Mixed_Hospital] epoch 2/2  batch 11/33  avg_loss=0.0014  elapsed=137s
+      [R8 Lakeside_Regional_Mixed_Hospital] epoch 2/2  batch 16/33  avg_loss=0.0013  elapsed=152s
+      [R8 Lakeside_Regional_Mixed_Hospital] epoch 2/2  batch 21/33  avg_loss=0.0012  elapsed=165s
+      [R8 Lakeside_Regional_Mixed_Hospital] epoch 2/2  batch 26/33  avg_loss=0.0012  elapsed=178s
+      [R8 Lakeside_Regional_Mixed_Hospital] epoch 2/2  batch 31/33  avg_loss=0.0011  elapsed=193s
+    Lakeside_Regional_Mixed_Hospital              avg_loss=0.0012  tau=  66  n=516
+      [R8 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 1/97  avg_loss=0.0003  elapsed=3s
+      [R8 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 6/97  avg_loss=0.0060  elapsed=17s
+      [R8 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 11/97  avg_loss=0.0054  elapsed=32s
+      [R8 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 16/97  avg_loss=0.0070  elapsed=47s
+      [R8 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 21/97  avg_loss=0.0064  elapsed=63s
+      [R8 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 26/97  avg_loss=0.0059  elapsed=78s
+      [R8 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 31/97  avg_loss=0.0056  elapsed=93s
+      [R8 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 36/97  avg_loss=0.0054  elapsed=109s
+      [R8 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 41/97  avg_loss=0.0050  elapsed=124s
+      [R8 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 46/97  avg_loss=0.0050  elapsed=140s
+      [R8 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 51/97  avg_loss=0.0046  elapsed=155s
+      [R8 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 56/97  avg_loss=0.0045  elapsed=171s
+      [R8 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 61/97  avg_loss=0.0046  elapsed=185s
+      [R8 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 66/97  avg_loss=0.0045  elapsed=199s
+      [R8 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 71/97  avg_loss=0.0043  elapsed=213s
+      [R8 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 76/97  avg_loss=0.0046  elapsed=226s
+      [R8 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 81/97  avg_loss=0.0044  elapsed=241s
+      [R8 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 86/97  avg_loss=0.0043  elapsed=255s
+      [R8 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 91/97  avg_loss=0.0044  elapsed=270s
+      [R8 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 96/97  avg_loss=0.0043  elapsed=285s
+      [R8 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 1/97  avg_loss=0.0043  elapsed=291s
+      [R8 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 6/97  avg_loss=0.0042  elapsed=305s
+      [R8 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 11/97  avg_loss=0.0041  elapsed=321s
+      [R8 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 16/97  avg_loss=0.0040  elapsed=335s
+      [R8 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 21/97  avg_loss=0.0039  elapsed=350s
+      [R8 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 26/97  avg_loss=0.0039  elapsed=364s
+      [R8 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 31/97  avg_loss=0.0038  elapsed=378s
+      [R8 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 36/97  avg_loss=0.0038  elapsed=392s
+      [R8 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 41/97  avg_loss=0.0037  elapsed=406s
+      [R8 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 46/97  avg_loss=0.0037  elapsed=419s
+      [R8 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 51/97  avg_loss=0.0036  elapsed=432s
+      [R8 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 56/97  avg_loss=0.0035  elapsed=445s
+      [R8 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 61/97  avg_loss=0.0035  elapsed=458s
+      [R8 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 66/97  avg_loss=0.0035  elapsed=472s
+      [R8 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 71/97  avg_loss=0.0034  elapsed=485s
+      [R8 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 76/97  avg_loss=0.0034  elapsed=499s
+      [R8 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 81/97  avg_loss=0.0033  elapsed=513s
+      [R8 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 86/97  avg_loss=0.0033  elapsed=528s
+      [R8 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 91/97  avg_loss=0.0033  elapsed=543s
+      [R8 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 96/97  avg_loss=0.0033  elapsed=558s
+    MetroSkin_Dermatology_Research_Clinic         avg_loss=0.0033  tau= 194  n=1549
+      [R8 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 1/101  avg_loss=0.0026  elapsed=3s
+      [R8 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 6/101  avg_loss=0.0068  elapsed=19s
+      [R8 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 11/101  avg_loss=0.0065  elapsed=34s
+      [R8 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 16/101  avg_loss=0.0067  elapsed=48s
+      [R8 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 21/101  avg_loss=0.0063  elapsed=61s
+      [R8 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 26/101  avg_loss=0.0056  elapsed=74s
+      [R8 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 31/101  avg_loss=0.0053  elapsed=88s
+      [R8 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 36/101  avg_loss=0.0054  elapsed=101s
+      [R8 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 41/101  avg_loss=0.0053  elapsed=116s
+      [R8 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 46/101  avg_loss=0.0051  elapsed=129s
+      [R8 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 51/101  avg_loss=0.0051  elapsed=144s
+      [R8 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 56/101  avg_loss=0.0050  elapsed=158s
+      [R8 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 61/101  avg_loss=0.0050  elapsed=173s
+      [R8 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 66/101  avg_loss=0.0049  elapsed=188s
+      [R8 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 71/101  avg_loss=0.0047  elapsed=204s
+      [R8 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 76/101  avg_loss=0.0045  elapsed=221s
+      [R8 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 81/101  avg_loss=0.0043  elapsed=237s
+      [R8 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 86/101  avg_loss=0.0046  elapsed=253s
+      [R8 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 91/101  avg_loss=0.0044  elapsed=269s
+      [R8 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 96/101  avg_loss=0.0043  elapsed=283s
+      [R8 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 101/101  avg_loss=0.0042  elapsed=296s
+      [R8 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 1/101  avg_loss=0.0042  elapsed=299s
+      [R8 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 6/101  avg_loss=0.0041  elapsed=313s
+      [R8 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 11/101  avg_loss=0.0041  elapsed=325s
+      [R8 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 16/101  avg_loss=0.0041  elapsed=338s
+      [R8 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 21/101  avg_loss=0.0039  elapsed=352s
+      [R8 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 26/101  avg_loss=0.0039  elapsed=365s
+      [R8 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 31/101  avg_loss=0.0038  elapsed=378s
+      [R8 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 36/101  avg_loss=0.0038  elapsed=393s
+      [R8 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 41/101  avg_loss=0.0037  elapsed=407s
+      [R8 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 46/101  avg_loss=0.0037  elapsed=422s
+      [R8 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 51/101  avg_loss=0.0037  elapsed=436s
+      [R8 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 56/101  avg_loss=0.0037  elapsed=451s
+      [R8 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 61/101  avg_loss=0.0037  elapsed=465s
+      [R8 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 66/101  avg_loss=0.0036  elapsed=479s
+      [R8 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 71/101  avg_loss=0.0036  elapsed=494s
+      [R8 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 76/101  avg_loss=0.0036  elapsed=509s
+      [R8 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 81/101  avg_loss=0.0038  elapsed=523s
+      [R8 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 86/101  avg_loss=0.0038  elapsed=536s
+      [R8 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 91/101  avg_loss=0.0037  elapsed=550s
+      [R8 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 96/101  avg_loss=0.0038  elapsed=562s
+      [R8 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 101/101  avg_loss=0.0037  elapsed=574s
+    NorthCare_Tertiary_Melanoma_Institute         avg_loss=0.0037  tau= 202  n=1602
+      [R8 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 1/108  avg_loss=0.0004  elapsed=3s
+      [R8 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 6/108  avg_loss=0.0018  elapsed=17s
+      [R8 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 11/108  avg_loss=0.0033  elapsed=30s
+      [R8 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 16/108  avg_loss=0.0044  elapsed=44s
+      [R8 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 21/108  avg_loss=0.0038  elapsed=58s
+      [R8 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 26/108  avg_loss=0.0038  elapsed=73s
+      [R8 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 31/108  avg_loss=0.0043  elapsed=88s
+      [R8 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 36/108  avg_loss=0.0044  elapsed=104s
+      [R8 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 41/108  avg_loss=0.0044  elapsed=120s
+      [R8 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 46/108  avg_loss=0.0043  elapsed=135s
+      [R8 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 51/108  avg_loss=0.0043  elapsed=151s
+      [R8 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 56/108  avg_loss=0.0041  elapsed=166s
+      [R8 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 61/108  avg_loss=0.0040  elapsed=179s
+      [R8 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 66/108  avg_loss=0.0040  elapsed=193s
+      [R8 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 71/108  avg_loss=0.0039  elapsed=207s
+      [R8 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 76/108  avg_loss=0.0039  elapsed=220s
+      [R8 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 81/108  avg_loss=0.0037  elapsed=235s
+      [R8 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 86/108  avg_loss=0.0038  elapsed=249s
+      [R8 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 91/108  avg_loss=0.0038  elapsed=263s
+      [R8 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 96/108  avg_loss=0.0039  elapsed=276s
+      [R8 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 101/108  avg_loss=0.0038  elapsed=292s
+      [R8 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 106/108  avg_loss=0.0038  elapsed=306s
+      [R8 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 1/108  avg_loss=0.0038  elapsed=313s
+      [R8 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 6/108  avg_loss=0.0037  elapsed=328s
+      [R8 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 11/108  avg_loss=0.0036  elapsed=344s
+      [R8 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 16/108  avg_loss=0.0036  elapsed=358s
+      [R8 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 21/108  avg_loss=0.0035  elapsed=372s
+      [R8 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 26/108  avg_loss=0.0035  elapsed=386s
+      [R8 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 31/108  avg_loss=0.0034  elapsed=400s
+      [R8 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 36/108  avg_loss=0.0034  elapsed=413s
+      [R8 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 41/108  avg_loss=0.0034  elapsed=425s
+      [R8 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 46/108  avg_loss=0.0033  elapsed=438s
+      [R8 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 51/108  avg_loss=0.0033  elapsed=451s
+      [R8 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 56/108  avg_loss=0.0032  elapsed=465s
+      [R8 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 61/108  avg_loss=0.0032  elapsed=479s
+      [R8 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 66/108  avg_loss=0.0031  elapsed=493s
+      [R8 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 71/108  avg_loss=0.0031  elapsed=507s
+      [R8 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 76/108  avg_loss=0.0031  elapsed=521s
+      [R8 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 81/108  avg_loss=0.0030  elapsed=535s
+      [R8 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 86/108  avg_loss=0.0030  elapsed=549s
+      [R8 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 91/108  avg_loss=0.0031  elapsed=563s
+      [R8 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 96/108  avg_loss=0.0031  elapsed=578s
+      [R8 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 101/108  avg_loss=0.0031  elapsed=593s
+      [R8 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 106/108  avg_loss=0.0031  elapsed=607s
+    Pinewood_Oncology_Biopsy_Center               avg_loss=0.0031  tau= 216  n=1716
+      [R8 SunRay_Community_Outreach_Clinic] epoch 1/2  batch 1/14  avg_loss=0.0002  elapsed=3s
+      [R8 SunRay_Community_Outreach_Clinic] epoch 1/2  batch 6/14  avg_loss=0.0002  elapsed=19s
+      [R8 SunRay_Community_Outreach_Clinic] epoch 1/2  batch 11/14  avg_loss=0.0003  elapsed=34s
+      [R8 SunRay_Community_Outreach_Clinic] epoch 2/2  batch 1/14  avg_loss=0.0003  elapsed=46s
+      [R8 SunRay_Community_Outreach_Clinic] epoch 2/2  batch 6/14  avg_loss=0.0002  elapsed=60s
+      [R8 SunRay_Community_Outreach_Clinic] epoch 2/2  batch 11/14  avg_loss=0.0002  elapsed=75s
+    SunRay_Community_Outreach_Clinic              avg_loss=0.0002  tau=  28  n=223
+      [R8 TeleDerm_National_Screening_Network] epoch 1/2  batch 1/10  avg_loss=0.0001  elapsed=3s
+      [R8 TeleDerm_National_Screening_Network] epoch 1/2  batch 6/10  avg_loss=0.0002  elapsed=19s
+      [R8 TeleDerm_National_Screening_Network] epoch 2/2  batch 1/10  avg_loss=0.0003  elapsed=33s
+      [R8 TeleDerm_National_Screening_Network] epoch 2/2  batch 6/10  avg_loss=0.0002  elapsed=48s
+    TeleDerm_National_Screening_Network           avg_loss=0.0002  tau=  20  n=155
+      [R8 Westbridge_Academic_Dermoscopy_Unit] epoch 1/2  batch 1/67  avg_loss=0.0003  elapsed=3s
+      [R8 Westbridge_Academic_Dermoscopy_Unit] epoch 1/2  batch 6/67  avg_loss=0.0016  elapsed=19s
+      [R8 Westbridge_Academic_Dermoscopy_Unit] epoch 1/2  batch 11/67  avg_loss=0.0014  elapsed=35s
+      [R8 Westbridge_Academic_Dermoscopy_Unit] epoch 1/2  batch 16/67  avg_loss=0.0011  elapsed=51s
+      [R8 Westbridge_Academic_Dermoscopy_Unit] epoch 1/2  batch 21/67  avg_loss=0.0016  elapsed=67s
+      [R8 Westbridge_Academic_Dermoscopy_Unit] epoch 1/2  batch 26/67  avg_loss=0.0015  elapsed=84s
+      [R8 Westbridge_Academic_Dermoscopy_Unit] epoch 1/2  batch 31/67  avg_loss=0.0014  elapsed=100s
+      [R8 Westbridge_Academic_Dermoscopy_Unit] epoch 1/2  batch 36/67  avg_loss=0.0014  elapsed=115s
+      [R8 Westbridge_Academic_Dermoscopy_Unit] epoch 1/2  batch 41/67  avg_loss=0.0018  elapsed=130s
+      [R8 Westbridge_Academic_Dermoscopy_Unit] epoch 1/2  batch 46/67  avg_loss=0.0018  elapsed=146s
+      [R8 Westbridge_Academic_Dermoscopy_Unit] epoch 1/2  batch 51/67  avg_loss=0.0017  elapsed=163s
+      [R8 Westbridge_Academic_Dermoscopy_Unit] epoch 1/2  batch 56/67  avg_loss=0.0017  elapsed=178s
+      [R8 Westbridge_Academic_Dermoscopy_Unit] epoch 1/2  batch 61/67  avg_loss=0.0018  elapsed=192s
+      [R8 Westbridge_Academic_Dermoscopy_Unit] epoch 1/2  batch 66/67  avg_loss=0.0017  elapsed=207s
+      [R8 Westbridge_Academic_Dermoscopy_Unit] epoch 2/2  batch 1/67  avg_loss=0.0016  elapsed=212s
+      [R8 Westbridge_Academic_Dermoscopy_Unit] epoch 2/2  batch 6/67  avg_loss=0.0016  elapsed=227s
+      [R8 Westbridge_Academic_Dermoscopy_Unit] epoch 2/2  batch 11/67  avg_loss=0.0015  elapsed=242s
+      [R8 Westbridge_Academic_Dermoscopy_Unit] epoch 2/2  batch 16/67  avg_loss=0.0014  elapsed=257s
+      [R8 Westbridge_Academic_Dermoscopy_Unit] epoch 2/2  batch 21/67  avg_loss=0.0015  elapsed=272s
+      [R8 Westbridge_Academic_Dermoscopy_Unit] epoch 2/2  batch 26/67  avg_loss=0.0014  elapsed=288s
+      [R8 Westbridge_Academic_Dermoscopy_Unit] epoch 2/2  batch 31/67  avg_loss=0.0013  elapsed=303s
+      [R8 Westbridge_Academic_Dermoscopy_Unit] epoch 2/2  batch 36/67  avg_loss=0.0013  elapsed=319s
+      [R8 Westbridge_Academic_Dermoscopy_Unit] epoch 2/2  batch 41/67  avg_loss=0.0013  elapsed=335s
+      [R8 Westbridge_Academic_Dermoscopy_Unit] epoch 2/2  batch 46/67  avg_loss=0.0013  elapsed=349s
+      [R8 Westbridge_Academic_Dermoscopy_Unit] epoch 2/2  batch 51/67  avg_loss=0.0012  elapsed=364s
+      [R8 Westbridge_Academic_Dermoscopy_Unit] epoch 2/2  batch 56/67  avg_loss=0.0012  elapsed=379s
+      [R8 Westbridge_Academic_Dermoscopy_Unit] epoch 2/2  batch 61/67  avg_loss=0.0012  elapsed=393s
+      [R8 Westbridge_Academic_Dermoscopy_Unit] epoch 2/2  batch 66/67  avg_loss=0.0012  elapsed=407s
+    Westbridge_Academic_Dermoscopy_Unit           avg_loss=0.0012  tau= 134  n=1065
+  [Aggregation] FedNova tau_eff=158.17 (effective normalized step count for this round)
+  [Eval] Accuracy=94.88%  Precision=0.5287  Recall=0.7615  F1=0.6241  ROC-AUC=0.9643  (round took 3177.7s)
+
+------------------------------------------------------------
+  ROUND 9/10
+------------------------------------------------------------
+      [R9 CityGeneral_Multispecialty_Hospital] epoch 1/2  batch 1/36  avg_loss=0.0007  elapsed=4s
+      [R9 CityGeneral_Multispecialty_Hospital] epoch 1/2  batch 6/36  avg_loss=0.0005  elapsed=26s
+      [R9 CityGeneral_Multispecialty_Hospital] epoch 1/2  batch 11/36  avg_loss=0.0005  elapsed=51s
+      [R9 CityGeneral_Multispecialty_Hospital] epoch 1/2  batch 16/36  avg_loss=0.0005  elapsed=74s
+      [R9 CityGeneral_Multispecialty_Hospital] epoch 1/2  batch 21/36  avg_loss=0.0007  elapsed=96s
+      [R9 CityGeneral_Multispecialty_Hospital] epoch 1/2  batch 26/36  avg_loss=0.0007  elapsed=116s
+      [R9 CityGeneral_Multispecialty_Hospital] epoch 1/2  batch 31/36  avg_loss=0.0007  elapsed=137s
+      [R9 CityGeneral_Multispecialty_Hospital] epoch 1/2  batch 36/36  avg_loss=0.0008  elapsed=152s
+      [R9 CityGeneral_Multispecialty_Hospital] epoch 2/2  batch 1/36  avg_loss=0.0008  elapsed=155s
+      [R9 CityGeneral_Multispecialty_Hospital] epoch 2/2  batch 6/36  avg_loss=0.0007  elapsed=171s
+      [R9 CityGeneral_Multispecialty_Hospital] epoch 2/2  batch 11/36  avg_loss=0.0006  elapsed=188s
+      [R9 CityGeneral_Multispecialty_Hospital] epoch 2/2  batch 16/36  avg_loss=0.0006  elapsed=204s
+      [R9 CityGeneral_Multispecialty_Hospital] epoch 2/2  batch 21/36  avg_loss=0.0006  elapsed=220s
+      [R9 CityGeneral_Multispecialty_Hospital] epoch 2/2  batch 26/36  avg_loss=0.0006  elapsed=238s
+      [R9 CityGeneral_Multispecialty_Hospital] epoch 2/2  batch 31/36  avg_loss=0.0006  elapsed=259s
+      [R9 CityGeneral_Multispecialty_Hospital] epoch 2/2  batch 36/36  avg_loss=0.0005  elapsed=277s
+    CityGeneral_Multispecialty_Hospital           avg_loss=0.0005  tau=  72  n=564
+      [R9 GoldenSun_Public_Health_Screening_Camp] epoch 1/2  batch 1/13  avg_loss=0.0002  elapsed=5s
+      [R9 GoldenSun_Public_Health_Screening_Camp] epoch 1/2  batch 6/13  avg_loss=0.0004  elapsed=25s
+      [R9 GoldenSun_Public_Health_Screening_Camp] epoch 1/2  batch 11/13  avg_loss=0.0003  elapsed=45s
+      [R9 GoldenSun_Public_Health_Screening_Camp] epoch 2/2  batch 1/13  avg_loss=0.0003  elapsed=55s
+      [R9 GoldenSun_Public_Health_Screening_Camp] epoch 2/2  batch 6/13  avg_loss=0.0003  elapsed=75s
+      [R9 GoldenSun_Public_Health_Screening_Camp] epoch 2/2  batch 11/13  avg_loss=0.0002  elapsed=93s
+    GoldenSun_Public_Health_Screening_Camp        avg_loss=0.0002  tau=  26  n=198
+      [R9 Greenfield_Rural_Community_Health_Center] epoch 1/2  batch 1/13  avg_loss=0.0007  elapsed=3s
+      [R9 Greenfield_Rural_Community_Health_Center] epoch 1/2  batch 6/13  avg_loss=0.0003  elapsed=19s
+      [R9 Greenfield_Rural_Community_Health_Center] epoch 1/2  batch 11/13  avg_loss=0.0003  elapsed=34s
+      [R9 Greenfield_Rural_Community_Health_Center] epoch 2/2  batch 1/13  avg_loss=0.0002  elapsed=42s
+      [R9 Greenfield_Rural_Community_Health_Center] epoch 2/2  batch 6/13  avg_loss=0.0002  elapsed=58s
+      [R9 Greenfield_Rural_Community_Health_Center] epoch 2/2  batch 11/13  avg_loss=0.0004  elapsed=74s
+    Greenfield_Rural_Community_Health_Center      avg_loss=0.0004  tau=  26  n=200
+      [R9 Lakeside_Regional_Mixed_Hospital] epoch 1/2  batch 1/33  avg_loss=0.0005  elapsed=3s
+      [R9 Lakeside_Regional_Mixed_Hospital] epoch 1/2  batch 6/33  avg_loss=0.0005  elapsed=18s
+      [R9 Lakeside_Regional_Mixed_Hospital] epoch 1/2  batch 11/33  avg_loss=0.0023  elapsed=33s
+      [R9 Lakeside_Regional_Mixed_Hospital] epoch 1/2  batch 16/33  avg_loss=0.0018  elapsed=48s
+      [R9 Lakeside_Regional_Mixed_Hospital] epoch 1/2  batch 21/33  avg_loss=0.0016  elapsed=64s
+      [R9 Lakeside_Regional_Mixed_Hospital] epoch 1/2  batch 26/33  avg_loss=0.0014  elapsed=79s
+      [R9 Lakeside_Regional_Mixed_Hospital] epoch 1/2  batch 31/33  avg_loss=0.0013  elapsed=95s
+      [R9 Lakeside_Regional_Mixed_Hospital] epoch 2/2  batch 1/33  avg_loss=0.0012  elapsed=102s
+      [R9 Lakeside_Regional_Mixed_Hospital] epoch 2/2  batch 6/33  avg_loss=0.0011  elapsed=117s
+      [R9 Lakeside_Regional_Mixed_Hospital] epoch 2/2  batch 11/33  avg_loss=0.0010  elapsed=130s
+      [R9 Lakeside_Regional_Mixed_Hospital] epoch 2/2  batch 16/33  avg_loss=0.0009  elapsed=144s
+      [R9 Lakeside_Regional_Mixed_Hospital] epoch 2/2  batch 21/33  avg_loss=0.0009  elapsed=157s
+      [R9 Lakeside_Regional_Mixed_Hospital] epoch 2/2  batch 26/33  avg_loss=0.0008  elapsed=170s
+      [R9 Lakeside_Regional_Mixed_Hospital] epoch 2/2  batch 31/33  avg_loss=0.0008  elapsed=183s
+    Lakeside_Regional_Mixed_Hospital              avg_loss=0.0008  tau=  66  n=516
+      [R9 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 1/97  avg_loss=0.0050  elapsed=2s
+      [R9 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 6/97  avg_loss=0.0017  elapsed=16s
+      [R9 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 11/97  avg_loss=0.0104  elapsed=30s
+      [R9 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 16/97  avg_loss=0.0082  elapsed=44s
+      [R9 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 21/97  avg_loss=0.0075  elapsed=57s
+      [R9 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 26/97  avg_loss=0.0064  elapsed=71s
+      [R9 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 31/97  avg_loss=0.0056  elapsed=88s
+      [R9 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 36/97  avg_loss=0.0052  elapsed=104s
+      [R9 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 41/97  avg_loss=0.0050  elapsed=119s
+      [R9 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 46/97  avg_loss=0.0048  elapsed=134s
+      [R9 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 51/97  avg_loss=0.0048  elapsed=148s
+      [R9 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 56/97  avg_loss=0.0047  elapsed=162s
+      [R9 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 61/97  avg_loss=0.0045  elapsed=176s
+      [R9 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 66/97  avg_loss=0.0043  elapsed=190s
+      [R9 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 71/97  avg_loss=0.0042  elapsed=204s
+      [R9 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 76/97  avg_loss=0.0041  elapsed=218s
+      [R9 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 81/97  avg_loss=0.0040  elapsed=231s
+      [R9 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 86/97  avg_loss=0.0039  elapsed=244s
+      [R9 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 91/97  avg_loss=0.0038  elapsed=259s
+      [R9 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 96/97  avg_loss=0.0039  elapsed=273s
+      [R9 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 1/97  avg_loss=0.0040  elapsed=278s
+      [R9 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 6/97  avg_loss=0.0039  elapsed=292s
+      [R9 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 11/97  avg_loss=0.0038  elapsed=306s
+      [R9 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 16/97  avg_loss=0.0037  elapsed=321s
+      [R9 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 21/97  avg_loss=0.0036  elapsed=336s
+      [R9 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 26/97  avg_loss=0.0036  elapsed=350s
+      [R9 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 31/97  avg_loss=0.0035  elapsed=363s
+      [R9 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 36/97  avg_loss=0.0034  elapsed=376s
+      [R9 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 41/97  avg_loss=0.0035  elapsed=390s
+      [R9 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 46/97  avg_loss=0.0035  elapsed=403s
+      [R9 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 51/97  avg_loss=0.0035  elapsed=417s
+      [R9 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 56/97  avg_loss=0.0035  elapsed=430s
+      [R9 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 61/97  avg_loss=0.0036  elapsed=442s
+      [R9 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 66/97  avg_loss=0.0036  elapsed=455s
+      [R9 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 71/97  avg_loss=0.0035  elapsed=468s
+      [R9 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 76/97  avg_loss=0.0035  elapsed=481s
+      [R9 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 81/97  avg_loss=0.0034  elapsed=495s
+      [R9 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 86/97  avg_loss=0.0034  elapsed=509s
+      [R9 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 91/97  avg_loss=0.0034  elapsed=523s
+      [R9 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 96/97  avg_loss=0.0033  elapsed=538s
+    MetroSkin_Dermatology_Research_Clinic         avg_loss=0.0033  tau= 194  n=1549
+      [R9 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 1/101  avg_loss=0.0010  elapsed=3s
+      [R9 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 6/101  avg_loss=0.0020  elapsed=17s
+      [R9 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 11/101  avg_loss=0.0024  elapsed=32s
+      [R9 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 16/101  avg_loss=0.0026  elapsed=47s
+      [R9 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 21/101  avg_loss=0.0026  elapsed=62s
+      [R9 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 26/101  avg_loss=0.0024  elapsed=76s
+      [R9 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 31/101  avg_loss=0.0029  elapsed=91s
+      [R9 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 36/101  avg_loss=0.0028  elapsed=104s
+      [R9 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 41/101  avg_loss=0.0027  elapsed=119s
+      [R9 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 46/101  avg_loss=0.0027  elapsed=132s
+      [R9 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 51/101  avg_loss=0.0027  elapsed=146s
+      [R9 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 56/101  avg_loss=0.0033  elapsed=159s
+      [R9 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 61/101  avg_loss=0.0033  elapsed=173s
+      [R9 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 66/101  avg_loss=0.0033  elapsed=186s
+      [R9 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 71/101  avg_loss=0.0034  elapsed=199s
+      [R9 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 76/101  avg_loss=0.0034  elapsed=214s
+      [R9 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 81/101  avg_loss=0.0034  elapsed=229s
+      [R9 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 86/101  avg_loss=0.0033  elapsed=242s
+      [R9 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 91/101  avg_loss=0.0033  elapsed=258s
+      [R9 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 96/101  avg_loss=0.0032  elapsed=273s
+      [R9 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 101/101  avg_loss=0.0031  elapsed=286s
+      [R9 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 1/101  avg_loss=0.0032  elapsed=289s
+      [R9 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 6/101  avg_loss=0.0031  elapsed=303s
+      [R9 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 11/101  avg_loss=0.0031  elapsed=315s
+      [R9 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 16/101  avg_loss=0.0030  elapsed=328s
+      [R9 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 21/101  avg_loss=0.0030  elapsed=342s
+      [R9 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 26/101  avg_loss=0.0029  elapsed=354s
+      [R9 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 31/101  avg_loss=0.0029  elapsed=367s
+      [R9 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 36/101  avg_loss=0.0028  elapsed=381s
+      [R9 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 41/101  avg_loss=0.0028  elapsed=395s
+      [R9 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 46/101  avg_loss=0.0028  elapsed=408s
+      [R9 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 51/101  avg_loss=0.0027  elapsed=423s
+      [R9 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 56/101  avg_loss=0.0027  elapsed=436s
+      [R9 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 61/101  avg_loss=0.0026  elapsed=450s
+      [R9 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 66/101  avg_loss=0.0027  elapsed=463s
+      [R9 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 71/101  avg_loss=0.0027  elapsed=478s
+      [R9 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 76/101  avg_loss=0.0026  elapsed=493s
+      [R9 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 81/101  avg_loss=0.0026  elapsed=508s
+      [R9 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 86/101  avg_loss=0.0026  elapsed=522s
+      [R9 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 91/101  avg_loss=0.0025  elapsed=537s
+      [R9 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 96/101  avg_loss=0.0025  elapsed=550s
+      [R9 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 101/101  avg_loss=0.0025  elapsed=561s
+    NorthCare_Tertiary_Melanoma_Institute         avg_loss=0.0025  tau= 202  n=1602
+      [R9 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 1/108  avg_loss=0.0100  elapsed=3s
+      [R9 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 6/108  avg_loss=0.0044  elapsed=16s
+      [R9 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 11/108  avg_loss=0.0045  elapsed=31s
+      [R9 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 16/108  avg_loss=0.0033  elapsed=45s
+      [R9 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 21/108  avg_loss=0.0032  elapsed=59s
+      [R9 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 26/108  avg_loss=0.0033  elapsed=74s
+      [R9 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 31/108  avg_loss=0.0033  elapsed=87s
+      [R9 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 36/108  avg_loss=0.0030  elapsed=101s
+      [R9 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 41/108  avg_loss=0.0029  elapsed=116s
+      [R9 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 46/108  avg_loss=0.0029  elapsed=131s
+      [R9 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 51/108  avg_loss=0.0031  elapsed=147s
+      [R9 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 56/108  avg_loss=0.0030  elapsed=161s
+      [R9 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 61/108  avg_loss=0.0030  elapsed=175s
+      [R9 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 66/108  avg_loss=0.0030  elapsed=191s
+      [R9 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 71/108  avg_loss=0.0029  elapsed=206s
+      [R9 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 76/108  avg_loss=0.0030  elapsed=219s
+      [R9 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 81/108  avg_loss=0.0030  elapsed=232s
+      [R9 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 86/108  avg_loss=0.0031  elapsed=246s
+      [R9 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 91/108  avg_loss=0.0030  elapsed=260s
+      [R9 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 96/108  avg_loss=0.0029  elapsed=273s
+      [R9 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 101/108  avg_loss=0.0032  elapsed=287s
+      [R9 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 106/108  avg_loss=0.0031  elapsed=301s
+      [R9 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 1/108  avg_loss=0.0031  elapsed=308s
+      [R9 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 6/108  avg_loss=0.0032  elapsed=320s
+      [R9 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 11/108  avg_loss=0.0030  elapsed=334s
+      [R9 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 16/108  avg_loss=0.0030  elapsed=347s
+      [R9 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 21/108  avg_loss=0.0029  elapsed=362s
+      [R9 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 26/108  avg_loss=0.0029  elapsed=376s
+      [R9 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 31/108  avg_loss=0.0029  elapsed=391s
+      [R9 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 36/108  avg_loss=0.0029  elapsed=405s
+      [R9 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 41/108  avg_loss=0.0029  elapsed=419s
+      [R9 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 46/108  avg_loss=0.0029  elapsed=433s
+      [R9 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 51/108  avg_loss=0.0028  elapsed=447s
+      [R9 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 56/108  avg_loss=0.0028  elapsed=461s
+      [R9 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 61/108  avg_loss=0.0029  elapsed=474s
+      [R9 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 66/108  avg_loss=0.0029  elapsed=486s
+      [R9 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 71/108  avg_loss=0.0029  elapsed=499s
+      [R9 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 76/108  avg_loss=0.0029  elapsed=513s
+      [R9 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 81/108  avg_loss=0.0029  elapsed=526s
+      [R9 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 86/108  avg_loss=0.0028  elapsed=539s
+      [R9 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 91/108  avg_loss=0.0028  elapsed=553s
+      [R9 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 96/108  avg_loss=0.0029  elapsed=566s
+      [R9 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 101/108  avg_loss=0.0028  elapsed=581s
+      [R9 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 106/108  avg_loss=0.0028  elapsed=595s
+    Pinewood_Oncology_Biopsy_Center               avg_loss=0.0028  tau= 216  n=1716
+      [R9 SunRay_Community_Outreach_Clinic] epoch 1/2  batch 1/14  avg_loss=0.0004  elapsed=3s
+      [R9 SunRay_Community_Outreach_Clinic] epoch 1/2  batch 6/14  avg_loss=0.0005  elapsed=19s
+      [R9 SunRay_Community_Outreach_Clinic] epoch 1/2  batch 11/14  avg_loss=0.0003  elapsed=34s
+      [R9 SunRay_Community_Outreach_Clinic] epoch 2/2  batch 1/14  avg_loss=0.0004  elapsed=47s
+      [R9 SunRay_Community_Outreach_Clinic] epoch 2/2  batch 6/14  avg_loss=0.0003  elapsed=61s
+      [R9 SunRay_Community_Outreach_Clinic] epoch 2/2  batch 11/14  avg_loss=0.0015  elapsed=77s
+    SunRay_Community_Outreach_Clinic              avg_loss=0.0014  tau=  28  n=223
+      [R9 TeleDerm_National_Screening_Network] epoch 1/2  batch 1/10  avg_loss=0.0001  elapsed=3s
+      [R9 TeleDerm_National_Screening_Network] epoch 1/2  batch 6/10  avg_loss=0.0004  elapsed=18s
+      [R9 TeleDerm_National_Screening_Network] epoch 2/2  batch 1/10  avg_loss=0.0003  elapsed=33s
+      [R9 TeleDerm_National_Screening_Network] epoch 2/2  batch 6/10  avg_loss=0.0002  elapsed=47s
+    TeleDerm_National_Screening_Network           avg_loss=0.0002  tau=  20  n=155
+      [R9 Westbridge_Academic_Dermoscopy_Unit] epoch 1/2  batch 1/67  avg_loss=0.0010  elapsed=2s
+      [R9 Westbridge_Academic_Dermoscopy_Unit] epoch 1/2  batch 6/67  avg_loss=0.0025  elapsed=16s
+      [R9 Westbridge_Academic_Dermoscopy_Unit] epoch 1/2  batch 11/67  avg_loss=0.0016  elapsed=31s
+      [R9 Westbridge_Academic_Dermoscopy_Unit] epoch 1/2  batch 16/67  avg_loss=0.0014  elapsed=46s
+      [R9 Westbridge_Academic_Dermoscopy_Unit] epoch 1/2  batch 21/67  avg_loss=0.0015  elapsed=62s
+      [R9 Westbridge_Academic_Dermoscopy_Unit] epoch 1/2  batch 26/67  avg_loss=0.0013  elapsed=77s
+      [R9 Westbridge_Academic_Dermoscopy_Unit] epoch 1/2  batch 31/67  avg_loss=0.0015  elapsed=92s
+      [R9 Westbridge_Academic_Dermoscopy_Unit] epoch 1/2  batch 36/67  avg_loss=0.0015  elapsed=107s
+      [R9 Westbridge_Academic_Dermoscopy_Unit] epoch 1/2  batch 41/67  avg_loss=0.0013  elapsed=124s
+      [R9 Westbridge_Academic_Dermoscopy_Unit] epoch 1/2  batch 46/67  avg_loss=0.0013  elapsed=138s
+      [R9 Westbridge_Academic_Dermoscopy_Unit] epoch 1/2  batch 51/67  avg_loss=0.0012  elapsed=152s
+      [R9 Westbridge_Academic_Dermoscopy_Unit] epoch 1/2  batch 56/67  avg_loss=0.0011  elapsed=167s
+      [R9 Westbridge_Academic_Dermoscopy_Unit] epoch 1/2  batch 61/67  avg_loss=0.0012  elapsed=181s
+      [R9 Westbridge_Academic_Dermoscopy_Unit] epoch 1/2  batch 66/67  avg_loss=0.0011  elapsed=195s
+      [R9 Westbridge_Academic_Dermoscopy_Unit] epoch 2/2  batch 1/67  avg_loss=0.0011  elapsed=200s
+      [R9 Westbridge_Academic_Dermoscopy_Unit] epoch 2/2  batch 6/67  avg_loss=0.0011  elapsed=214s
+      [R9 Westbridge_Academic_Dermoscopy_Unit] epoch 2/2  batch 11/67  avg_loss=0.0010  elapsed=229s
+      [R9 Westbridge_Academic_Dermoscopy_Unit] epoch 2/2  batch 16/67  avg_loss=0.0010  elapsed=245s
+      [R9 Westbridge_Academic_Dermoscopy_Unit] epoch 2/2  batch 21/67  avg_loss=0.0010  elapsed=260s
+      [R9 Westbridge_Academic_Dermoscopy_Unit] epoch 2/2  batch 26/67  avg_loss=0.0010  elapsed=274s
+      [R9 Westbridge_Academic_Dermoscopy_Unit] epoch 2/2  batch 31/67  avg_loss=0.0009  elapsed=290s
+      [R9 Westbridge_Academic_Dermoscopy_Unit] epoch 2/2  batch 36/67  avg_loss=0.0009  elapsed=305s
+      [R9 Westbridge_Academic_Dermoscopy_Unit] epoch 2/2  batch 41/67  avg_loss=0.0009  elapsed=320s
+      [R9 Westbridge_Academic_Dermoscopy_Unit] epoch 2/2  batch 46/67  avg_loss=0.0009  elapsed=335s
+      [R9 Westbridge_Academic_Dermoscopy_Unit] epoch 2/2  batch 51/67  avg_loss=0.0009  elapsed=349s
+      [R9 Westbridge_Academic_Dermoscopy_Unit] epoch 2/2  batch 56/67  avg_loss=0.0009  elapsed=362s
+      [R9 Westbridge_Academic_Dermoscopy_Unit] epoch 2/2  batch 61/67  avg_loss=0.0009  elapsed=376s
+      [R9 Westbridge_Academic_Dermoscopy_Unit] epoch 2/2  batch 66/67  avg_loss=0.0009  elapsed=392s
+    Westbridge_Academic_Dermoscopy_Unit           avg_loss=0.0009  tau= 134  n=1065
+  [Aggregation] FedNova tau_eff=158.17 (effective normalized step count for this round)
+  [Eval] Accuracy=95.08%  Precision=0.5436  Recall=0.7431  F1=0.6279  ROC-AUC=0.9591  (round took 3134.2s)
+
+------------------------------------------------------------
+  ROUND 10/10
+------------------------------------------------------------
+      [R10 CityGeneral_Multispecialty_Hospital] epoch 1/2  batch 1/36  avg_loss=0.0003  elapsed=3s
+      [R10 CityGeneral_Multispecialty_Hospital] epoch 1/2  batch 6/36  avg_loss=0.0002  elapsed=18s
+      [R10 CityGeneral_Multispecialty_Hospital] epoch 1/2  batch 11/36  avg_loss=0.0003  elapsed=33s
+      [R10 CityGeneral_Multispecialty_Hospital] epoch 1/2  batch 16/36  avg_loss=0.0003  elapsed=49s
+      [R10 CityGeneral_Multispecialty_Hospital] epoch 1/2  batch 21/36  avg_loss=0.0003  elapsed=63s
+      [R10 CityGeneral_Multispecialty_Hospital] epoch 1/2  batch 26/36  avg_loss=0.0003  elapsed=79s
+      [R10 CityGeneral_Multispecialty_Hospital] epoch 1/2  batch 31/36  avg_loss=0.0008  elapsed=94s
+      [R10 CityGeneral_Multispecialty_Hospital] epoch 1/2  batch 36/36  avg_loss=0.0007  elapsed=108s
+      [R10 CityGeneral_Multispecialty_Hospital] epoch 2/2  batch 1/36  avg_loss=0.0007  elapsed=111s
+      [R10 CityGeneral_Multispecialty_Hospital] epoch 2/2  batch 6/36  avg_loss=0.0006  elapsed=126s
+      [R10 CityGeneral_Multispecialty_Hospital] epoch 2/2  batch 11/36  avg_loss=0.0006  elapsed=142s
+      [R10 CityGeneral_Multispecialty_Hospital] epoch 2/2  batch 16/36  avg_loss=0.0006  elapsed=155s
+      [R10 CityGeneral_Multispecialty_Hospital] epoch 2/2  batch 21/36  avg_loss=0.0005  elapsed=170s
+      [R10 CityGeneral_Multispecialty_Hospital] epoch 2/2  batch 26/36  avg_loss=0.0005  elapsed=183s
+      [R10 CityGeneral_Multispecialty_Hospital] epoch 2/2  batch 31/36  avg_loss=0.0005  elapsed=197s
+      [R10 CityGeneral_Multispecialty_Hospital] epoch 2/2  batch 36/36  avg_loss=0.0006  elapsed=209s
+    CityGeneral_Multispecialty_Hospital           avg_loss=0.0006  tau=  72  n=564
+      [R10 GoldenSun_Public_Health_Screening_Camp] epoch 1/2  batch 1/13  avg_loss=0.0007  elapsed=3s
+      [R10 GoldenSun_Public_Health_Screening_Camp] epoch 1/2  batch 6/13  avg_loss=0.0006  elapsed=18s
+      [R10 GoldenSun_Public_Health_Screening_Camp] epoch 1/2  batch 11/13  avg_loss=0.0004  elapsed=33s
+      [R10 GoldenSun_Public_Health_Screening_Camp] epoch 2/2  batch 1/13  avg_loss=0.0003  elapsed=40s
+      [R10 GoldenSun_Public_Health_Screening_Camp] epoch 2/2  batch 6/13  avg_loss=0.0003  elapsed=56s
+      [R10 GoldenSun_Public_Health_Screening_Camp] epoch 2/2  batch 11/13  avg_loss=0.0002  elapsed=71s
+    GoldenSun_Public_Health_Screening_Camp        avg_loss=0.0002  tau=  26  n=198
+      [R10 Greenfield_Rural_Community_Health_Center] epoch 1/2  batch 1/13  avg_loss=0.0020  elapsed=3s
+      [R10 Greenfield_Rural_Community_Health_Center] epoch 1/2  batch 6/13  avg_loss=0.0007  elapsed=20s
+      [R10 Greenfield_Rural_Community_Health_Center] epoch 1/2  batch 11/13  avg_loss=0.0005  elapsed=37s
+      [R10 Greenfield_Rural_Community_Health_Center] epoch 2/2  batch 1/13  avg_loss=0.0004  elapsed=45s
+      [R10 Greenfield_Rural_Community_Health_Center] epoch 2/2  batch 6/13  avg_loss=0.0004  elapsed=62s
+      [R10 Greenfield_Rural_Community_Health_Center] epoch 2/2  batch 11/13  avg_loss=0.0003  elapsed=78s
+    Greenfield_Rural_Community_Health_Center      avg_loss=0.0003  tau=  26  n=200
+      [R10 Lakeside_Regional_Mixed_Hospital] epoch 1/2  batch 1/33  avg_loss=0.0001  elapsed=3s
+      [R10 Lakeside_Regional_Mixed_Hospital] epoch 1/2  batch 6/33  avg_loss=0.0009  elapsed=17s
+      [R10 Lakeside_Regional_Mixed_Hospital] epoch 1/2  batch 11/33  avg_loss=0.0007  elapsed=33s
+      [R10 Lakeside_Regional_Mixed_Hospital] epoch 1/2  batch 16/33  avg_loss=0.0024  elapsed=48s
+      [R10 Lakeside_Regional_Mixed_Hospital] epoch 1/2  batch 21/33  avg_loss=0.0020  elapsed=63s
+      [R10 Lakeside_Regional_Mixed_Hospital] epoch 1/2  batch 26/33  avg_loss=0.0017  elapsed=77s
+      [R10 Lakeside_Regional_Mixed_Hospital] epoch 1/2  batch 31/33  avg_loss=0.0015  elapsed=91s
+      [R10 Lakeside_Regional_Mixed_Hospital] epoch 2/2  batch 1/33  avg_loss=0.0014  elapsed=98s
+      [R10 Lakeside_Regional_Mixed_Hospital] epoch 2/2  batch 6/33  avg_loss=0.0012  elapsed=112s
+      [R10 Lakeside_Regional_Mixed_Hospital] epoch 2/2  batch 11/33  avg_loss=0.0011  elapsed=126s
+      [R10 Lakeside_Regional_Mixed_Hospital] epoch 2/2  batch 16/33  avg_loss=0.0010  elapsed=140s
+      [R10 Lakeside_Regional_Mixed_Hospital] epoch 2/2  batch 21/33  avg_loss=0.0010  elapsed=154s
+      [R10 Lakeside_Regional_Mixed_Hospital] epoch 2/2  batch 26/33  avg_loss=0.0009  elapsed=169s
+      [R10 Lakeside_Regional_Mixed_Hospital] epoch 2/2  batch 31/33  avg_loss=0.0009  elapsed=184s
+    Lakeside_Regional_Mixed_Hospital              avg_loss=0.0008  tau=  66  n=516
+      [R10 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 1/97  avg_loss=0.0023  elapsed=3s
+      [R10 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 6/97  avg_loss=0.0015  elapsed=18s
+      [R10 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 11/97  avg_loss=0.0023  elapsed=34s
+      [R10 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 16/97  avg_loss=0.0018  elapsed=49s
+      [R10 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 21/97  avg_loss=0.0031  elapsed=64s
+      [R10 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 26/97  avg_loss=0.0029  elapsed=80s
+      [R10 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 31/97  avg_loss=0.0028  elapsed=94s
+      [R10 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 36/97  avg_loss=0.0029  elapsed=109s
+      [R10 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 41/97  avg_loss=0.0030  elapsed=123s
+      [R10 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 46/97  avg_loss=0.0032  elapsed=136s
+      [R10 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 51/97  avg_loss=0.0030  elapsed=151s
+      [R10 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 56/97  avg_loss=0.0033  elapsed=165s
+      [R10 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 61/97  avg_loss=0.0035  elapsed=179s
+      [R10 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 66/97  avg_loss=0.0036  elapsed=193s
+      [R10 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 71/97  avg_loss=0.0035  elapsed=208s
+      [R10 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 76/97  avg_loss=0.0036  elapsed=222s
+      [R10 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 81/97  avg_loss=0.0035  elapsed=237s
+      [R10 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 86/97  avg_loss=0.0035  elapsed=253s
+      [R10 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 91/97  avg_loss=0.0034  elapsed=267s
+      [R10 MetroSkin_Dermatology_Research_Clinic] epoch 1/2  batch 96/97  avg_loss=0.0033  elapsed=283s
+      [R10 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 1/97  avg_loss=0.0033  elapsed=288s
+      [R10 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 6/97  avg_loss=0.0033  elapsed=301s
+      [R10 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 11/97  avg_loss=0.0032  elapsed=316s
+      [R10 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 16/97  avg_loss=0.0032  elapsed=329s
+      [R10 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 21/97  avg_loss=0.0031  elapsed=344s
+      [R10 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 26/97  avg_loss=0.0031  elapsed=357s
+      [R10 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 31/97  avg_loss=0.0030  elapsed=372s
+      [R10 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 36/97  avg_loss=0.0030  elapsed=384s
+      [R10 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 41/97  avg_loss=0.0029  elapsed=399s
+      [R10 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 46/97  avg_loss=0.0028  elapsed=412s
+      [R10 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 51/97  avg_loss=0.0028  elapsed=425s
+      [R10 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 56/97  avg_loss=0.0027  elapsed=439s
+      [R10 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 61/97  avg_loss=0.0027  elapsed=452s
+      [R10 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 66/97  avg_loss=0.0026  elapsed=467s
+      [R10 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 71/97  avg_loss=0.0028  elapsed=481s
+      [R10 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 76/97  avg_loss=0.0028  elapsed=495s
+      [R10 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 81/97  avg_loss=0.0028  elapsed=509s
+      [R10 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 86/97  avg_loss=0.0028  elapsed=524s
+      [R10 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 91/97  avg_loss=0.0028  elapsed=537s
+      [R10 MetroSkin_Dermatology_Research_Clinic] epoch 2/2  batch 96/97  avg_loss=0.0028  elapsed=551s
+    MetroSkin_Dermatology_Research_Clinic         avg_loss=0.0028  tau= 194  n=1549
+      [R10 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 1/101  avg_loss=0.0003  elapsed=3s
+      [R10 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 6/101  avg_loss=0.0038  elapsed=16s
+      [R10 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 11/101  avg_loss=0.0032  elapsed=31s
+      [R10 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 16/101  avg_loss=0.0035  elapsed=46s
+      [R10 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 21/101  avg_loss=0.0030  elapsed=59s
+      [R10 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 26/101  avg_loss=0.0027  elapsed=73s
+      [R10 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 31/101  avg_loss=0.0026  elapsed=87s
+      [R10 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 36/101  avg_loss=0.0032  elapsed=101s
+      [R10 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 41/101  avg_loss=0.0032  elapsed=116s
+      [R10 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 46/101  avg_loss=0.0029  elapsed=131s
+      [R10 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 51/101  avg_loss=0.0028  elapsed=147s
+      [R10 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 56/101  avg_loss=0.0028  elapsed=161s
+      [R10 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 61/101  avg_loss=0.0035  elapsed=177s
+      [R10 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 66/101  avg_loss=0.0033  elapsed=192s
+      [R10 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 71/101  avg_loss=0.0032  elapsed=207s
+      [R10 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 76/101  avg_loss=0.0031  elapsed=221s
+      [R10 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 81/101  avg_loss=0.0038  elapsed=235s
+      [R10 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 86/101  avg_loss=0.0039  elapsed=249s
+      [R10 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 91/101  avg_loss=0.0040  elapsed=262s
+      [R10 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 96/101  avg_loss=0.0040  elapsed=275s
+      [R10 NorthCare_Tertiary_Melanoma_Institute] epoch 1/2  batch 101/101  avg_loss=0.0039  elapsed=287s
+      [R10 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 1/101  avg_loss=0.0039  elapsed=290s
+      [R10 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 6/101  avg_loss=0.0037  elapsed=303s
+      [R10 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 11/101  avg_loss=0.0037  elapsed=317s
+      [R10 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 16/101  avg_loss=0.0036  elapsed=332s
+      [R10 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 21/101  avg_loss=0.0036  elapsed=345s
+      [R10 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 26/101  avg_loss=0.0035  elapsed=360s
+      [R10 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 31/101  avg_loss=0.0034  elapsed=375s
+      [R10 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 36/101  avg_loss=0.0033  elapsed=390s
+      [R10 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 41/101  avg_loss=0.0032  elapsed=405s
+      [R10 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 46/101  avg_loss=0.0031  elapsed=419s
+      [R10 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 51/101  avg_loss=0.0030  elapsed=433s
+      [R10 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 56/101  avg_loss=0.0030  elapsed=447s
+      [R10 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 61/101  avg_loss=0.0030  elapsed=460s
+      [R10 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 66/101  avg_loss=0.0029  elapsed=473s
+      [R10 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 71/101  avg_loss=0.0029  elapsed=488s
+      [R10 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 76/101  avg_loss=0.0028  elapsed=501s
+      [R10 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 81/101  avg_loss=0.0027  elapsed=515s
+      [R10 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 86/101  avg_loss=0.0027  elapsed=528s
+      [R10 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 91/101  avg_loss=0.0026  elapsed=542s
+      [R10 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 96/101  avg_loss=0.0026  elapsed=554s
+      [R10 NorthCare_Tertiary_Melanoma_Institute] epoch 2/2  batch 101/101  avg_loss=0.0025  elapsed=566s
+    NorthCare_Tertiary_Melanoma_Institute         avg_loss=0.0025  tau= 202  n=1602
+      [R10 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 1/108  avg_loss=0.0003  elapsed=2s
+      [R10 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 6/108  avg_loss=0.0103  elapsed=17s
+      [R10 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 11/108  avg_loss=0.0100  elapsed=31s
+      [R10 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 16/108  avg_loss=0.0082  elapsed=45s
+      [R10 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 21/108  avg_loss=0.0070  elapsed=61s
+      [R10 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 26/108  avg_loss=0.0063  elapsed=77s
+      [R10 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 31/108  avg_loss=0.0059  elapsed=91s
+      [R10 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 36/108  avg_loss=0.0057  elapsed=106s
+      [R10 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 41/108  avg_loss=0.0055  elapsed=119s
+      [R10 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 46/108  avg_loss=0.0055  elapsed=134s
+      [R10 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 51/108  avg_loss=0.0051  elapsed=147s
+      [R10 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 56/108  avg_loss=0.0049  elapsed=161s
+      [R10 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 61/108  avg_loss=0.0048  elapsed=175s
+      [R10 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 66/108  avg_loss=0.0048  elapsed=189s
+      [R10 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 71/108  avg_loss=0.0046  elapsed=203s
+      [R10 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 76/108  avg_loss=0.0046  elapsed=216s
+      [R10 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 81/108  avg_loss=0.0043  elapsed=232s
+      [R10 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 86/108  avg_loss=0.0041  elapsed=247s
+      [R10 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 91/108  avg_loss=0.0040  elapsed=263s
+      [R10 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 96/108  avg_loss=0.0039  elapsed=277s
+      [R10 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 101/108  avg_loss=0.0038  elapsed=292s
+      [R10 Pinewood_Oncology_Biopsy_Center] epoch 1/2  batch 106/108  avg_loss=0.0037  elapsed=308s
+      [R10 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 1/108  avg_loss=0.0038  elapsed=314s
+      [R10 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 6/108  avg_loss=0.0038  elapsed=327s
+      [R10 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 11/108  avg_loss=0.0037  elapsed=340s
+      [R10 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 16/108  avg_loss=0.0036  elapsed=354s
+      [R10 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 21/108  avg_loss=0.0036  elapsed=368s
+      [R10 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 26/108  avg_loss=0.0036  elapsed=382s
+      [R10 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 31/108  avg_loss=0.0035  elapsed=394s
+      [R10 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 36/108  avg_loss=0.0034  elapsed=407s
+      [R10 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 41/108  avg_loss=0.0033  elapsed=420s
+      [R10 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 46/108  avg_loss=0.0033  elapsed=433s
+      [R10 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 51/108  avg_loss=0.0032  elapsed=448s
+      [R10 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 56/108  avg_loss=0.0032  elapsed=461s
+      [R10 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 61/108  avg_loss=0.0031  elapsed=476s
+      [R10 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 66/108  avg_loss=0.0031  elapsed=490s
+      [R10 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 71/108  avg_loss=0.0030  elapsed=504s
+      [R10 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 76/108  avg_loss=0.0030  elapsed=519s
+      [R10 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 81/108  avg_loss=0.0030  elapsed=532s
+      [R10 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 86/108  avg_loss=0.0029  elapsed=545s
+      [R10 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 91/108  avg_loss=0.0029  elapsed=559s
+      [R10 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 96/108  avg_loss=0.0029  elapsed=573s
+      [R10 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 101/108  avg_loss=0.0029  elapsed=587s
+      [R10 Pinewood_Oncology_Biopsy_Center] epoch 2/2  batch 106/108  avg_loss=0.0029  elapsed=600s
+    Pinewood_Oncology_Biopsy_Center               avg_loss=0.0028  tau= 216  n=1716
+      [R10 SunRay_Community_Outreach_Clinic] epoch 1/2  batch 1/14  avg_loss=0.0001  elapsed=3s
+      [R10 SunRay_Community_Outreach_Clinic] epoch 1/2  batch 6/14  avg_loss=0.0001  elapsed=18s
+      [R10 SunRay_Community_Outreach_Clinic] epoch 1/2  batch 11/14  avg_loss=0.0001  elapsed=33s
+      [R10 SunRay_Community_Outreach_Clinic] epoch 2/2  batch 1/14  avg_loss=0.0001  elapsed=45s
+      [R10 SunRay_Community_Outreach_Clinic] epoch 2/2  batch 6/14  avg_loss=0.0001  elapsed=60s
+      [R10 SunRay_Community_Outreach_Clinic] epoch 2/2  batch 11/14  avg_loss=0.0001  elapsed=75s
+    SunRay_Community_Outreach_Clinic              avg_loss=0.0001  tau=  28  n=223
+      [R10 TeleDerm_National_Screening_Network] epoch 1/2  batch 1/10  avg_loss=0.0000  elapsed=3s
+      [R10 TeleDerm_National_Screening_Network] epoch 1/2  batch 6/10  avg_loss=0.0001  elapsed=19s
+      [R10 TeleDerm_National_Screening_Network] epoch 2/2  batch 1/10  avg_loss=0.0001  elapsed=34s
+      [R10 TeleDerm_National_Screening_Network] epoch 2/2  batch 6/10  avg_loss=0.0001  elapsed=50s
+    TeleDerm_National_Screening_Network           avg_loss=0.0001  tau=  20  n=155
+      [R10 Westbridge_Academic_Dermoscopy_Unit] epoch 1/2  batch 1/67  avg_loss=0.0002  elapsed=2s
+      [R10 Westbridge_Academic_Dermoscopy_Unit] epoch 1/2  batch 6/67  avg_loss=0.0023  elapsed=17s
+      [R10 Westbridge_Academic_Dermoscopy_Unit] epoch 1/2  batch 11/67  avg_loss=0.0018  elapsed=32s
+      [R10 Westbridge_Academic_Dermoscopy_Unit] epoch 1/2  batch 16/67  avg_loss=0.0032  elapsed=48s
+      [R10 Westbridge_Academic_Dermoscopy_Unit] epoch 1/2  batch 21/67  avg_loss=0.0026  elapsed=62s
+      [R10 Westbridge_Academic_Dermoscopy_Unit] epoch 1/2  batch 26/67  avg_loss=0.0023  elapsed=78s
+      [R10 Westbridge_Academic_Dermoscopy_Unit] epoch 1/2  batch 31/67  avg_loss=0.0021  elapsed=92s
+      [R10 Westbridge_Academic_Dermoscopy_Unit] epoch 1/2  batch 36/67  avg_loss=0.0019  elapsed=107s
+      [R10 Westbridge_Academic_Dermoscopy_Unit] epoch 1/2  batch 41/67  avg_loss=0.0018  elapsed=122s
+      [R10 Westbridge_Academic_Dermoscopy_Unit] epoch 1/2  batch 46/67  avg_loss=0.0019  elapsed=139s
+      [R10 Westbridge_Academic_Dermoscopy_Unit] epoch 1/2  batch 51/67  avg_loss=0.0017  elapsed=155s
+      [R10 Westbridge_Academic_Dermoscopy_Unit] epoch 1/2  batch 56/67  avg_loss=0.0016  elapsed=171s
+      [R10 Westbridge_Academic_Dermoscopy_Unit] epoch 1/2  batch 61/67  avg_loss=0.0016  elapsed=186s
+      [R10 Westbridge_Academic_Dermoscopy_Unit] epoch 1/2  batch 66/67  avg_loss=0.0015  elapsed=201s
+      [R10 Westbridge_Academic_Dermoscopy_Unit] epoch 2/2  batch 1/67  avg_loss=0.0015  elapsed=205s
+      [R10 Westbridge_Academic_Dermoscopy_Unit] epoch 2/2  batch 6/67  avg_loss=0.0014  elapsed=220s
+      [R10 Westbridge_Academic_Dermoscopy_Unit] epoch 2/2  batch 11/67  avg_loss=0.0013  elapsed=233s
+      [R10 Westbridge_Academic_Dermoscopy_Unit] epoch 2/2  batch 16/67  avg_loss=0.0013  elapsed=246s
+      [R10 Westbridge_Academic_Dermoscopy_Unit] epoch 2/2  batch 21/67  avg_loss=0.0013  elapsed=261s
+      [R10 Westbridge_Academic_Dermoscopy_Unit] epoch 2/2  batch 26/67  avg_loss=0.0012  elapsed=275s
+      [R10 Westbridge_Academic_Dermoscopy_Unit] epoch 2/2  batch 31/67  avg_loss=0.0012  elapsed=290s
+      [R10 Westbridge_Academic_Dermoscopy_Unit] epoch 2/2  batch 36/67  avg_loss=0.0012  elapsed=304s
+      [R10 Westbridge_Academic_Dermoscopy_Unit] epoch 2/2  batch 41/67  avg_loss=0.0011  elapsed=318s
+      [R10 Westbridge_Academic_Dermoscopy_Unit] epoch 2/2  batch 46/67  avg_loss=0.0011  elapsed=333s
+      [R10 Westbridge_Academic_Dermoscopy_Unit] epoch 2/2  batch 51/67  avg_loss=0.0011  elapsed=348s
+      [R10 Westbridge_Academic_Dermoscopy_Unit] epoch 2/2  batch 56/67  avg_loss=0.0011  elapsed=362s
+      [R10 Westbridge_Academic_Dermoscopy_Unit] epoch 2/2  batch 61/67  avg_loss=0.0010  elapsed=376s
+      [R10 Westbridge_Academic_Dermoscopy_Unit] epoch 2/2  batch 66/67  avg_loss=0.0010  elapsed=390s
+    Westbridge_Academic_Dermoscopy_Unit           avg_loss=0.0010  tau= 134  n=1065
+  [Aggregation] FedNova tau_eff=158.17 (effective normalized step count for this round)
+  [Eval] Accuracy=94.72%  Precision=0.5197  Recall=0.7248  F1=0.6054  ROC-AUC=0.9604  (round took 3067.5s)
+
+======================================================================
+  TRAINING COMPLETE
+======================================================================
+  Total time        : 280.9 min
+  Best Accuracy      : 94.77%
+  Best Precision     : 0.5215
+  Best Recall        : 0.7798
+  Best F1            : 0.6250
+  Best ROC-AUC       : 0.9668
+  Checkpoint         : ./full_run_checkpoint.pth
+  Log                : ./full_run_log.json
+======================================================================
