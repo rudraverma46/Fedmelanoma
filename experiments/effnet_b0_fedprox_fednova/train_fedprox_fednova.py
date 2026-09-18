@@ -76,6 +76,7 @@ from sklearn.metrics import (
     precision_score,
     recall_score,
     roc_auc_score,
+    balanced_accuracy_score,
 )
 
 # ---------------------------------------------------------------------------
@@ -161,6 +162,14 @@ def evaluate(model, loader, device) -> Dict[str, float]:
     y_prob = np.array(all_probs)
 
     accuracy = accuracy_score(y_true, y_pred)
+    # Balanced accuracy = (sensitivity + specificity) / 2 = mean of per-class
+    # recall. Reported alongside plain accuracy because this dataset is
+    # ~17:1 imbalanced (5.55% malignant): an all-benign classifier already
+    # scores ~94.4% plain accuracy on this test set, so plain accuracy alone
+    # can look strong while barely beating a trivial baseline. Balanced
+    # accuracy does not reward that shortcut, since it weights the rare
+    # malignant class equally with the common benign class.
+    balanced_accuracy = balanced_accuracy_score(y_true, y_pred)
     precision = precision_score(y_true, y_pred, pos_label=POSITIVE_CLASS_IDX, zero_division=0)
     recall = recall_score(y_true, y_pred, pos_label=POSITIVE_CLASS_IDX, zero_division=0)
     f1 = f1_score(y_true, y_pred, pos_label=POSITIVE_CLASS_IDX, zero_division=0)
@@ -171,6 +180,7 @@ def evaluate(model, loader, device) -> Dict[str, float]:
 
     return {
         "accuracy": accuracy,
+        "balanced_accuracy": balanced_accuracy,
         "precision": precision,
         "recall": recall,
         "f1": f1,
@@ -271,6 +281,15 @@ def main() -> None:
     parser.add_argument("--log-path", type=str, default=str(THIS_DIR / "training_log.json"))
     parser.add_argument("--limit-per-hospital", type=int, default=None,
                         help="Cap samples per hospital (smoke testing only; omit for a real run).")
+    parser.add_argument("--resume-from", type=str, default=None,
+                        help="Path to a checkpoint .pth saved by this script. Loads its model_state_dict "
+                             "as the starting global model instead of a fresh pretrained init, and resumes "
+                             "round numbering after its saved round. Use with --resume-log to also carry "
+                             "forward that checkpoint's round-by-round history into the new log file.")
+    parser.add_argument("--resume-log", type=str, default=None,
+                        help="Path to a training_log.json from an earlier interrupted run. Its 'history' "
+                             "entries are prepended to this run's history so the final log/report covers "
+                             "all rounds, not just the ones completed after resuming.")
     args = parser.parse_args()
 
     device = torch.device(args.device)
@@ -317,10 +336,35 @@ def main() -> None:
     best_roc_auc = 0.0
     best_metrics: Dict = {}
     history: List[Dict] = []
+    start_round = 1
+
+    # --- Resume from an interrupted run's checkpoint, if requested ---------
+    if args.resume_from:
+        print(f"\n[Resume] Loading checkpoint: {args.resume_from}")
+        ckpt = torch.load(args.resume_from, map_location="cpu", weights_only=False)
+        global_state = clone_state_dict_cpu(ckpt["model_state_dict"])
+        start_round = int(ckpt["round"]) + 1
+        best_metrics = ckpt.get("metrics", {})
+        best_roc_auc = float(best_metrics.get("roc_auc", 0.0))
+        print(f"[Resume] Checkpoint was round {ckpt['round']} "
+              f"(accuracy={best_metrics.get('accuracy', 0)*100:.2f}%, roc_auc={best_roc_auc:.4f}). "
+              f"Resuming at round {start_round}.")
+
+    if args.resume_log:
+        print(f"[Resume] Loading prior history: {args.resume_log}")
+        with open(args.resume_log, "r") as f:
+            prior = json.load(f)
+        history = list(prior.get("history", []))
+        print(f"[Resume] Carried forward {len(history)} completed round(s) of history.")
+
+    if start_round > args.rounds:
+        print(f"\n[Resume] Checkpoint round {start_round - 1} already reaches or exceeds "
+              f"--rounds {args.rounds}. Nothing to do.")
+        return
 
     total_start = time.time()
 
-    for round_idx in range(1, args.rounds + 1):
+    for round_idx in range(start_round, args.rounds + 1):
         round_start = time.time()
         print(f"\n{'-'*60}")
         print(f"  ROUND {round_idx}/{args.rounds}")
@@ -363,6 +407,7 @@ def main() -> None:
 
         print(
             f"  [Eval] Accuracy={metrics['accuracy']*100:.2f}%  "
+            f"BalancedAcc={metrics['balanced_accuracy']*100:.2f}%  "
             f"Precision={metrics['precision']:.4f}  Recall={metrics['recall']:.4f}  "
             f"F1={metrics['f1']:.4f}  ROC-AUC={metrics['roc_auc']:.4f}  "
             f"(round took {round_time:.1f}s)"

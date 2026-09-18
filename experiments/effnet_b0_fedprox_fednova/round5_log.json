@@ -1,0 +1,137 @@
+{
+  "history": [
+    {
+      "round": 1,
+      "tau_eff": 158.17051874678992,
+      "round_time_sec": 3493.4369628429413,
+      "accuracy": 0.9139344262295082,
+      "precision": 0.3439153439153439,
+      "recall": 0.5963302752293578,
+      "f1": 0.436241610738255,
+      "roc_auc": 0.868552967588744,
+      "n_eval": 1952,
+      "client_avg_losses": {
+        "CityGeneral_Multispecialty_Hospital": 0.011239377406632734,
+        "GoldenSun_Public_Health_Screening_Camp": 0.010268001226135172,
+        "Greenfield_Rural_Community_Health_Center": 0.016855938986946758,
+        "Lakeside_Regional_Mixed_Hospital": 0.008500284134325657,
+        "MetroSkin_Dermatology_Research_Clinic": 0.014748396834396977,
+        "NorthCare_Tertiary_Melanoma_Institute": 0.01489195370318202,
+        "Pinewood_Oncology_Biopsy_Center": 0.01519499209718089,
+        "SunRay_Community_Outreach_Clinic": 0.008287029091401823,
+        "TeleDerm_National_Screening_Network": 0.00654456353513524,
+        "Westbridge_Academic_Dermoscopy_Unit": 0.008524370828031827
+      }
+    },
+    {
+      "round": 2,
+      "tau_eff": 158.17051874678992,
+      "round_time_sec": 3778.9866347312927,
+      "accuracy": 0.9236680327868853,
+      "precision": 0.39361702127659576,
+      "recall": 0.6788990825688074,
+      "f1": 0.4983164983164983,
+      "roc_auc": 0.9334551265139109,
+      "n_eval": 1952,
+      "client_avg_losses": {
+        "CityGeneral_Multispecialty_Hospital": 0.006897900433007938,
+        "GoldenSun_Public_Health_Screening_Camp": 0.006597715259816211,
+        "Greenfield_Rural_Community_Health_Center": 0.009672681684605777,
+        "Lakeside_Regional_Mixed_Hospital": 0.005504752112425525,
+        "MetroSkin_Dermatology_Research_Clinic": 0.010995410035902,
+        "NorthCare_Tertiary_Melanoma_Institute": 0.011487535383128146,
+        "Pinewood_Oncology_Biopsy_Center": 0.010839746017828238,
+        "SunRay_Community_Outreach_Clinic": 0.004664367048202881,
+        "TeleDerm_National_Screening_Network": 0.00322779132402502,
+        "Westbridge_Academic_Dermoscopy_Unit": 0.00583812982406912
+      }
+    },
+    {
+      "round": 3,
+      "tau_eff": 158.17051874678992,
+      "round_time_sec": 3733.139837741852,
+      "accuracy": 0.9431352459016393,
+      "precision": 0.4930555555555556,
+      "recall": 0.6513761467889908,
+      "f1": 0.5612648221343873,
+      "roc_auc": 0.9489514005386113,
+      "n_eval": 1952,
+      "client_avg_losses": {
+        "CityGeneral_Multispecialty_Hospital": 0.005282576341414824,
+        "GoldenSun_Public_Health_Screening_Camp": 0.004468310478841886,
+        "Greenfield_Rural_Community_Health_Center": 0.006522379797668411,
+        "Lakeside_Regional_Mixed_Hospital": 0.004193709675526021,
+        "MetroSkin_Dermatology_Research_Clinic": 0.009055220478780797,
+        "NorthCare_Tertiary_Melanoma_Institute": 0.008865321040646829,
+        "Pinewood_Oncology_Biopsy_Center": 0.008024423118008094,
+        "SunRay_Community_Outreach_Clinic": 0.0025736597453942522,
+        "TeleDerm_National_Screening_Network": 0.001975086340098642,
+        "Westbridge_Academic_Dermoscopy_Unit": 0.004265335298563812
+      }
+    },
+    {
+      "round": 4,
+      "tau_eff": 158.17051874678992,
+      "round_time_sec": 3671.616892337799,
+      "accuracy": 0.9456967213114754,
+      "precision": 0.5095541401273885,
+      "recall": 0.7339449541284404,
+      "f1": 0.6015037593984962,
+      "roc_auc": 0.9534116194676608,
+      "n_eval": 1952,
+      "client_avg_losses": {
+        "CityGeneral_Multispecialty_Hospital": 0.0036937059655125872,
+        "GoldenSun_Public_Health_Screening_Camp": 0.0023390376165759964,
+        "Greenfield_Rural_Community_Health_Center": 0.004405564335264409,
+        "Lakeside_Regional_Mixed_Hospital": 0.003253515840642098,
+        "MetroSkin_Dermatology_Research_Clinic": 0.006955197242991135,
+        "NorthCare_Tertiary_Melanoma_Institute": 0.0072509654080679655,
+        "Pinewood_Oncology_Biopsy_Center": 0.007434256776899996,
+        "SunRay_Community_Outreach_Clinic": 0.001641381464391348,
+        "TeleDerm_National_Screening_Network": 0.0008892978235962801,
+        "Westbridge_Academic_Dermoscopy_Unit": 0.0035647895828292554
+      }
+    },
+    {
+      "round": 5,
+      "tau_eff": 158.17051874678992,
+      "round_time_sec": 3601.804856300354,
+      "accuracy": 0.9472336065573771,
+      "precision": 0.5197368421052632,
+      "recall": 0.7247706422018348,
+      "f1": 0.6053639846743295,
+      "roc_auc": 0.9628198937711251,
+      "n_eval": 1952,
+      "client_avg_losses": {
+        "CityGeneral_Multispecialty_Hospital": 0.002443255152886397,
+        "GoldenSun_Public_Health_Screening_Camp": 0.0012920228456585812,
+        "Greenfield_Rural_Community_Health_Center": 0.0020824129594704853,
+        "Lakeside_Regional_Mixed_Hospital": 0.0016895932715146266,
+        "MetroSkin_Dermatology_Research_Clinic": 0.006535466517064932,
+        "NorthCare_Tertiary_Melanoma_Institute": 0.00658672862043051,
+        "Pinewood_Oncology_Biopsy_Center": 0.007350375019962451,
+        "SunRay_Community_Outreach_Clinic": 0.0013009280467356024,
+        "TeleDerm_National_Screening_Network": 0.0008510589112120214,
+        "Westbridge_Academic_Dermoscopy_Unit": 0.0023522937656015354
+      }
+    }
+  ],
+  "best_metrics": {
+    "accuracy": 0.9472336065573771,
+    "precision": 0.5197368421052632,
+    "recall": 0.7247706422018348,
+    "f1": 0.6053639846743295,
+    "roc_auc": 0.9628198937711251,
+    "confusion_matrix": [
+      [
+        1770,
+        73
+      ],
+      [
+        30,
+        79
+      ]
+    ],
+    "n_eval": 1952
+  }
+}
