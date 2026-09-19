@@ -24,3 +24,4 @@ without_federated/client/best_fedmelanoma_model.pth
 experiments/effnet_b0_fedprox_fednova/round3_checkpoint.pth
 experiments/effnet_b0_fedprox_fednova/round5_checkpoint.pth
 experiments/effnet_b0_fedprox_fednova/*_latest.pth
+experiments/effnet_b0_fedprox_fednova/eval_infer.log

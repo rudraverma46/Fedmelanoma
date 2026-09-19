@@ -145,13 +145,16 @@ def fig_threshold(y, p, out):
                                ("F1", f1, C_ORANGE)]:
         ax.plot(ts, vals, color=color, linewidth=2.0, label=label, zorder=3)
 
+    # Threshold markers, labelled inside the axes so nothing is clipped away
+    # by the tight bounding box on save.
     ax.axvline(0.5, color=INK_SOFT, linestyle=":", linewidth=1.2, zorder=2)
-    ax.annotate("default threshold 0.50", (0.5, 1.03), color=INK_SOFT,
-                fontsize=8.5, ha="center", va="bottom")
+    ax.annotate("default\nt = 0.50", (0.492, 0.055), color=INK_SOFT,
+                fontsize=8.5, ha="right", va="bottom", linespacing=1.35)
     best = int(np.argmax(f1))
-    ax.axvline(ts[best], color=C_ORANGE, linestyle=":", linewidth=1.2, zorder=2)
-    ax.annotate(f"best F1 at t = {ts[best]:.2f}", (ts[best], -0.085),
-                color=C_ORANGE, fontsize=8.5, ha="center", va="top")
+    ax.axvline(ts[best], color=C_ORANGE, linestyle=":", linewidth=1.4, zorder=2)
+    ax.annotate(f"best F1 {f1[best]:.3f}\nat t = {ts[best]:.2f}",
+                (ts[best] + 0.012, 0.055), color=C_ORANGE, fontsize=8.5,
+                ha="left", va="bottom", linespacing=1.35)
 
     _style(ax)
     ax.set_xlabel("Decision threshold on P(malignant)")
