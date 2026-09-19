@@ -17,3 +17,10 @@ without_federated/client/best_fedmelanoma_model.pth
 
 
 
+
+# Intermediate FedProx/FedNova training checkpoints (16MB each).
+# The best model (experiments/effnet_b0_fedprox_fednova/full_run_checkpoint.pth,
+# round 7) is tracked; per-stage archives and per-round "latest" snapshots are not.
+experiments/effnet_b0_fedprox_fednova/round3_checkpoint.pth
+experiments/effnet_b0_fedprox_fednova/round5_checkpoint.pth
+experiments/effnet_b0_fedprox_fednova/*_latest.pth
