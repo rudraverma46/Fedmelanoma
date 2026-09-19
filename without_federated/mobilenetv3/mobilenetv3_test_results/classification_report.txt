@@ -1,0 +1,11 @@
+Classification Report – FedMelanomaModel Test Set
+=======================================================
+
+              precision    recall  f1-score   support
+
+      Benign       0.99      0.96      0.98      1843
+   Malignant       0.56      0.87      0.68       109
+
+    accuracy                           0.95      1952
+   macro avg       0.78      0.92      0.83      1952
+weighted avg       0.97      0.95      0.96      1952

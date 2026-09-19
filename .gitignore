@@ -15,5 +15,13 @@ without_federated/client/__pycache__
 without_federated/client/.pytest_cache
 without_federated/client/best_fedmelanoma_model.pth
 
+without_federated/mobilenetv3/hospital_partitions
+without_federated/mobilenetv3/__pycache__
+without_federated/mobilenetv3/.pytest_cache
+without_federated/mobilenetv3/best_fedmelanoma_mobilenetv3.pth
+without_federated/mobilenetv3/smoke_test_checkpoint.pth
+
+/hospital_partitions
+
 
 

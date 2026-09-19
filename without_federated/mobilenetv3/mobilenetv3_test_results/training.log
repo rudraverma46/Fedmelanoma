@@ -1,0 +1,382 @@
+============================================================
+DATASET STATISTICS
+============================================================
+  Train samples  :    7,788
+    Benign  (0)  :    7,356  (94.5%)
+    Malignant (1):      432  (5.5%)
+  Test  samples  :    1,952
+    Benign  (0)  :    1,843  (94.4%)
+    Malignant (1):      109  (5.6%)
+  Class weights  : Benign=0.0555  Malignant=0.9445
+============================================================
+
+Device : cpu
+Epochs : 50   |   Batch size: 20
+LR     : 0.0001   |   Weight decay: 0.0001
+
+ENTERED TRAINING LOOP
+STARTING EPOCH 1
+C:\Users\jaism\AppData\Local\Programs\Python\Python313\Lib\site-packages\torch\utils\data\dataloader.py:1102: UserWarning: 'pin_memory' argument is set as true but no accelerator is found, then device pinned memory won't be used.
+  super().__init__(loader)
+Epoch Progress: 0.3% | ETA Epoch: 212.39 min
+Epoch Progress: 25.9% | ETA Epoch: 11.92 min
+Epoch Progress: 51.5% | ETA Epoch: 7.26 min
+Epoch Progress: 77.2% | ETA Epoch: 3.35 min
+Epoch Time: 873.79s | Average Epoch Time: 873.79s
+Estimated Remaining: 713.59 min (11.89 hrs)
+------------------------------------------------------------
+Epoch 1/50
+  Train Loss           : 0.0114
+  Validation Accuracy  : 89.19%
+  Malignant Precision  : 0.3386
+  Malignant Recall     : 0.9817
+  Malignant F1         : 0.5035
+  Validation ROC-AUC   : 0.9764
+------------------------------------------------------------
+
+  Confusion Matrix (Epoch 1):
+             Pred Benign  Pred Malignant
+  True Benign      1634             209
+  True Malignant      2             107
+
+  Classification Report:
+              precision    recall  f1-score   support
+
+      Benign       1.00      0.89      0.94      1843
+   Malignant       0.34      0.98      0.50       109
+
+    accuracy                           0.89      1952
+   macro avg       0.67      0.93      0.72      1952
+weighted avg       0.96      0.89      0.92      1952
+
+  [✓] Checkpoint saved → best_fedmelanoma_mobilenetv3.pth  (ROC-AUC: 0.9764)
+STARTING EPOCH 2
+C:\Users\jaism\AppData\Local\Programs\Python\Python313\Lib\site-packages\torch\utils\data\dataloader.py:1102: UserWarning: 'pin_memory' argument is set as true but no accelerator is found, then device pinned memory won't be used.
+  super().__init__(loader)
+Epoch Progress: 0.3% | ETA Epoch: 243.61 min
+Epoch Progress: 25.9% | ETA Epoch: 12.06 min
+Epoch Progress: 51.5% | ETA Epoch: 7.32 min
+Epoch Progress: 77.2% | ETA Epoch: 3.36 min
+Epoch Time: 872.33s | Average Epoch Time: 873.06s
+Estimated Remaining: 698.45 min (11.64 hrs)
+------------------------------------------------------------
+Epoch 2/50
+  Train Loss           : 0.0049
+  Validation Accuracy  : 91.96%
+  Malignant Precision  : 0.4084
+  Malignant Recall     : 0.9817
+  Malignant F1         : 0.5768
+  Validation ROC-AUC   : 0.9814
+------------------------------------------------------------
+
+  Confusion Matrix (Epoch 2):
+             Pred Benign  Pred Malignant
+  True Benign      1688             155
+  True Malignant      2             107
+
+  Classification Report:
+              precision    recall  f1-score   support
+
+      Benign       1.00      0.92      0.96      1843
+   Malignant       0.41      0.98      0.58       109
+
+    accuracy                           0.92      1952
+   macro avg       0.70      0.95      0.77      1952
+weighted avg       0.97      0.92      0.93      1952
+
+  [✓] Checkpoint saved → best_fedmelanoma_mobilenetv3.pth  (ROC-AUC: 0.9814)
+STARTING EPOCH 3
+C:\Users\jaism\AppData\Local\Programs\Python\Python313\Lib\site-packages\torch\utils\data\dataloader.py:1102: UserWarning: 'pin_memory' argument is set as true but no accelerator is found, then device pinned memory won't be used.
+  super().__init__(loader)
+Epoch Progress: 0.3% | ETA Epoch: 247.53 min
+Epoch Progress: 25.9% | ETA Epoch: 12.06 min
+Epoch Progress: 51.5% | ETA Epoch: 7.31 min
+Epoch Progress: 77.2% | ETA Epoch: 3.35 min
+Epoch Time: 869.92s | Average Epoch Time: 872.01s
+Estimated Remaining: 683.08 min (11.38 hrs)
+------------------------------------------------------------
+Epoch 3/50
+  Train Loss           : 0.0032
+  Validation Accuracy  : 94.06%
+  Malignant Precision  : 0.4839
+  Malignant Recall     : 0.9633
+  Malignant F1         : 0.6442
+  Validation ROC-AUC   : 0.9842
+------------------------------------------------------------
+
+  Confusion Matrix (Epoch 3):
+             Pred Benign  Pred Malignant
+  True Benign      1731             112
+  True Malignant      4             105
+
+  Classification Report:
+              precision    recall  f1-score   support
+
+      Benign       1.00      0.94      0.97      1843
+   Malignant       0.48      0.96      0.64       109
+
+    accuracy                           0.94      1952
+   macro avg       0.74      0.95      0.81      1952
+weighted avg       0.97      0.94      0.95      1952
+
+  [✓] Checkpoint saved → best_fedmelanoma_mobilenetv3.pth  (ROC-AUC: 0.9842)
+STARTING EPOCH 4
+C:\Users\jaism\AppData\Local\Programs\Python\Python313\Lib\site-packages\torch\utils\data\dataloader.py:1102: UserWarning: 'pin_memory' argument is set as true but no accelerator is found, then device pinned memory won't be used.
+  super().__init__(loader)
+Epoch Progress: 0.3% | ETA Epoch: 242.07 min
+Epoch Progress: 25.9% | ETA Epoch: 12.08 min
+Epoch Progress: 51.5% | ETA Epoch: 7.30 min
+Epoch Progress: 77.2% | ETA Epoch: 3.35 min
+Epoch Time: 871.26s | Average Epoch Time: 871.83s
+Estimated Remaining: 668.40 min (11.14 hrs)
+------------------------------------------------------------
+Epoch 4/50
+  Train Loss           : 0.0023
+  Validation Accuracy  : 94.06%
+  Malignant Precision  : 0.4836
+  Malignant Recall     : 0.9450
+  Malignant F1         : 0.6398
+  Validation ROC-AUC   : 0.9808
+------------------------------------------------------------
+
+  Confusion Matrix (Epoch 4):
+             Pred Benign  Pred Malignant
+  True Benign      1733             110
+  True Malignant      6             103
+
+  Classification Report:
+              precision    recall  f1-score   support
+
+      Benign       1.00      0.94      0.97      1843
+   Malignant       0.48      0.94      0.64       109
+
+    accuracy                           0.94      1952
+   macro avg       0.74      0.94      0.80      1952
+weighted avg       0.97      0.94      0.95      1952
+
+  [EarlyStopping] No ROC-AUC improvement (1/5)
+STARTING EPOCH 5
+C:\Users\jaism\AppData\Local\Programs\Python\Python313\Lib\site-packages\torch\utils\data\dataloader.py:1102: UserWarning: 'pin_memory' argument is set as true but no accelerator is found, then device pinned memory won't be used.
+  super().__init__(loader)
+Epoch Progress: 0.3% | ETA Epoch: 237.87 min
+Epoch Progress: 25.9% | ETA Epoch: 12.00 min
+Epoch Progress: 51.5% | ETA Epoch: 7.30 min
+Epoch Progress: 77.2% | ETA Epoch: 3.35 min
+Epoch Time: 871.36s | Average Epoch Time: 871.73s
+Estimated Remaining: 653.80 min (10.90 hrs)
+------------------------------------------------------------
+Epoch 5/50
+  Train Loss           : 0.0021
+  Validation Accuracy  : 95.44%
+  Malignant Precision  : 0.5588
+  Malignant Recall     : 0.8716
+  Malignant F1         : 0.6810
+  Validation ROC-AUC   : 0.9845
+------------------------------------------------------------
+
+  Confusion Matrix (Epoch 5):
+             Pred Benign  Pred Malignant
+  True Benign      1768              75
+  True Malignant     14              95
+
+  Classification Report:
+              precision    recall  f1-score   support
+
+      Benign       0.99      0.96      0.98      1843
+   Malignant       0.56      0.87      0.68       109
+
+    accuracy                           0.95      1952
+   macro avg       0.78      0.92      0.83      1952
+weighted avg       0.97      0.95      0.96      1952
+
+  [✓] Checkpoint saved → best_fedmelanoma_mobilenetv3.pth  (ROC-AUC: 0.9845)
+STARTING EPOCH 6
+C:\Users\jaism\AppData\Local\Programs\Python\Python313\Lib\site-packages\torch\utils\data\dataloader.py:1102: UserWarning: 'pin_memory' argument is set as true but no accelerator is found, then device pinned memory won't be used.
+  super().__init__(loader)
+Epoch Progress: 0.3% | ETA Epoch: 259.73 min
+Epoch Progress: 25.9% | ETA Epoch: 12.13 min
+Epoch Progress: 51.5% | ETA Epoch: 7.34 min
+Epoch Progress: 77.2% | ETA Epoch: 3.36 min
+Epoch Time: 872.73s | Average Epoch Time: 871.90s
+Estimated Remaining: 639.39 min (10.66 hrs)
+------------------------------------------------------------
+Epoch 6/50
+  Train Loss           : 0.0018
+  Validation Accuracy  : 94.93%
+  Malignant Precision  : 0.5275
+  Malignant Recall     : 0.8807
+  Malignant F1         : 0.6598
+  Validation ROC-AUC   : 0.9817
+------------------------------------------------------------
+
+  Confusion Matrix (Epoch 6):
+             Pred Benign  Pred Malignant
+  True Benign      1757              86
+  True Malignant     13              96
+
+  Classification Report:
+              precision    recall  f1-score   support
+
+      Benign       0.99      0.95      0.97      1843
+   Malignant       0.53      0.88      0.66       109
+
+    accuracy                           0.95      1952
+   macro avg       0.76      0.92      0.82      1952
+weighted avg       0.97      0.95      0.96      1952
+
+  [EarlyStopping] No ROC-AUC improvement (1/5)
+STARTING EPOCH 7
+C:\Users\jaism\AppData\Local\Programs\Python\Python313\Lib\site-packages\torch\utils\data\dataloader.py:1102: UserWarning: 'pin_memory' argument is set as true but no accelerator is found, then device pinned memory won't be used.
+  super().__init__(loader)
+Epoch Progress: 0.3% | ETA Epoch: 231.83 min
+Epoch Progress: 25.9% | ETA Epoch: 11.92 min
+Epoch Progress: 51.5% | ETA Epoch: 7.27 min
+Epoch Progress: 77.2% | ETA Epoch: 3.32 min
+Epoch Time: 859.90s | Average Epoch Time: 870.19s
+Estimated Remaining: 623.63 min (10.39 hrs)
+------------------------------------------------------------
+Epoch 7/50
+  Train Loss           : 0.0011
+  Validation Accuracy  : 95.90%
+  Malignant Precision  : 0.5973
+  Malignant Recall     : 0.8165
+  Malignant F1         : 0.6899
+  Validation ROC-AUC   : 0.9812
+------------------------------------------------------------
+
+  Confusion Matrix (Epoch 7):
+             Pred Benign  Pred Malignant
+  True Benign      1783              60
+  True Malignant     20              89
+
+  Classification Report:
+              precision    recall  f1-score   support
+
+      Benign       0.99      0.97      0.98      1843
+   Malignant       0.60      0.82      0.69       109
+
+    accuracy                           0.96      1952
+   macro avg       0.79      0.89      0.83      1952
+weighted avg       0.97      0.96      0.96      1952
+
+  [EarlyStopping] No ROC-AUC improvement (2/5)
+STARTING EPOCH 8
+C:\Users\jaism\AppData\Local\Programs\Python\Python313\Lib\site-packages\torch\utils\data\dataloader.py:1102: UserWarning: 'pin_memory' argument is set as true but no accelerator is found, then device pinned memory won't be used.
+  super().__init__(loader)
+Epoch Progress: 0.3% | ETA Epoch: 240.98 min
+Epoch Progress: 25.9% | ETA Epoch: 12.03 min
+Epoch Progress: 51.5% | ETA Epoch: 7.98 min
+Epoch Progress: 77.2% | ETA Epoch: 7.15 min
+Epoch Time: 2245.69s | Average Epoch Time: 1042.12s
+Estimated Remaining: 729.49 min (12.16 hrs)
+------------------------------------------------------------
+Epoch 8/50
+  Train Loss           : 0.0013
+  Validation Accuracy  : 95.24%
+  Malignant Precision  : 0.5471
+  Malignant Recall     : 0.8532
+  Malignant F1         : 0.6667
+  Validation ROC-AUC   : 0.9811
+------------------------------------------------------------
+
+  Confusion Matrix (Epoch 8):
+             Pred Benign  Pred Malignant
+  True Benign      1766              77
+  True Malignant     16              93
+
+  Classification Report:
+              precision    recall  f1-score   support
+
+      Benign       0.99      0.96      0.97      1843
+   Malignant       0.55      0.85      0.67       109
+
+    accuracy                           0.95      1952
+   macro avg       0.77      0.91      0.82      1952
+weighted avg       0.97      0.95      0.96      1952
+
+  [EarlyStopping] No ROC-AUC improvement (3/5)
+STARTING EPOCH 9
+C:\Users\jaism\AppData\Local\Programs\Python\Python313\Lib\site-packages\torch\utils\data\dataloader.py:1102: UserWarning: 'pin_memory' argument is set as true but no accelerator is found, then device pinned memory won't be used.
+  super().__init__(loader)
+Epoch Progress: 0.3% | ETA Epoch: 394.65 min
+Epoch Progress: 25.9% | ETA Epoch: 20.42 min
+Epoch Progress: 51.5% | ETA Epoch: 9.90 min
+Epoch Progress: 77.2% | ETA Epoch: 4.30 min
+Epoch Time: 1086.28s | Average Epoch Time: 1047.03s
+Estimated Remaining: 715.47 min (11.92 hrs)
+------------------------------------------------------------
+Epoch 9/50
+  Train Loss           : 0.0007
+  Validation Accuracy  : 96.00%
+  Malignant Precision  : 0.6000
+  Malignant Recall     : 0.8532
+  Malignant F1         : 0.7045
+  Validation ROC-AUC   : 0.9776
+------------------------------------------------------------
+
+  Confusion Matrix (Epoch 9):
+             Pred Benign  Pred Malignant
+  True Benign      1781              62
+  True Malignant     16              93
+
+  Classification Report:
+              precision    recall  f1-score   support
+
+      Benign       0.99      0.97      0.98      1843
+   Malignant       0.60      0.85      0.70       109
+
+    accuracy                           0.96      1952
+   macro avg       0.80      0.91      0.84      1952
+weighted avg       0.97      0.96      0.96      1952
+
+  [EarlyStopping] No ROC-AUC improvement (4/5)
+STARTING EPOCH 10
+C:\Users\jaism\AppData\Local\Programs\Python\Python313\Lib\site-packages\torch\utils\data\dataloader.py:1102: UserWarning: 'pin_memory' argument is set as true but no accelerator is found, then device pinned memory won't be used.
+  super().__init__(loader)
+Epoch Progress: 0.3% | ETA Epoch: 430.68 min
+Epoch Progress: 25.9% | ETA Epoch: 14.70 min
+Epoch Progress: 51.5% | ETA Epoch: 8.56 min
+Epoch Progress: 77.2% | ETA Epoch: 3.88 min
+Epoch Time: 997.94s | Average Epoch Time: 1042.12s
+Estimated Remaining: 694.75 min (11.58 hrs)
+------------------------------------------------------------
+Epoch 10/50
+  Train Loss           : 0.0006
+  Validation Accuracy  : 96.00%
+  Malignant Precision  : 0.6054
+  Malignant Recall     : 0.8165
+  Malignant F1         : 0.6953
+  Validation ROC-AUC   : 0.9825
+------------------------------------------------------------
+
+  Confusion Matrix (Epoch 10):
+             Pred Benign  Pred Malignant
+  True Benign      1785              58
+  True Malignant     20              89
+
+  Classification Report:
+              precision    recall  f1-score   support
+
+      Benign       0.99      0.97      0.98      1843
+   Malignant       0.61      0.82      0.70       109
+
+    accuracy                           0.96      1952
+   macro avg       0.80      0.89      0.84      1952
+weighted avg       0.97      0.96      0.96      1952
+
+  [EarlyStopping] No ROC-AUC improvement (5/5)
+
+[!] Early stopping triggered after epoch 10. No ROC-AUC improvement for 5 consecutive epochs.
+
+============================================================
+TRAINING COMPLETE – BEST VALIDATION METRICS
+============================================================
+  Best Accuracy  : 95.44%
+  Best Precision : 0.5588
+  Best Recall    : 0.8716
+  Best F1        : 0.6810
+  Best ROC-AUC   : 0.9845
+  Checkpoint     : best_fedmelanoma_mobilenetv3.pth
+============================================================
+
+[INFO] Training curves saved → training_curves.png
