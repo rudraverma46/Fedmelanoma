@@ -30,8 +30,12 @@ class FedMelanomaModel(nn.Module):
 
         super().__init__()
 
+        # --- CHANGED: EfficientNet-B3 -> ResNet50 ---------------------------
+        # ResNet50 (ImageNet pretrained), classifier head stripped via
+        # num_classes=0 so timm applies global average pooling and returns
+        # the 2048-dim penultimate feature vector directly.
         self.backbone = timm.create_model(
-            "efficientnet_b3",
+            "resnet50",
             pretrained=True,
             num_classes=0
         )
@@ -40,8 +44,9 @@ class FedMelanomaModel(nn.Module):
 
         self.dropout = nn.Dropout(0.3)
 
+        # --- CHANGED: fusion input dim 1536 (EffNet-B3) -> 2048 (ResNet50) --
         self.classifier = nn.Linear(
-            1536 + 32,
+            2048 + 32,
             2
         )
 

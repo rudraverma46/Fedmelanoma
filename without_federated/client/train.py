@@ -53,14 +53,29 @@ DEVICE: torch.device = torch.device(
 )
 
 # ---------------------------------------------------------------------------
+# Dataset location
+# ---------------------------------------------------------------------------
+# CHANGED: this used to be the hardcoded relative string "hospital_partitions",
+# which only worked if you launched `python train.py` from the exact parent
+# directory of that folder. It's now an absolute path constant, so the script
+# works no matter which directory you run it from.
+#
+# Forward slashes are used deliberately (instead of backslashes) because
+# Python/Windows both accept "/" in paths, and it avoids any accidental
+# backslash-escape issues (e.g. "\t", "\U...") that can occur in a plain
+# (non-raw) Windows path string.
+DATASET_ROOT: str = "D:/MAIN BACKUP/backup 3/Fedmelanoma/without_federated/client/hospital_partitions"
+
+# ---------------------------------------------------------------------------
 # Training hyper-parameters (edit here rather than deep inside main)
 # ---------------------------------------------------------------------------
 NUM_EPOCHS: int = 100
-BATCH_SIZE: int = 20
+BATCH_SIZE: int = 8
 LEARNING_RATE: float = 1e-4
 WEIGHT_DECAY: float = 1e-4
 FOCAL_GAMMA: float = 2.0
 EARLY_STOPPING_PATIENCE: int = 5
+MIN_EPOCHS_BEFORE_STOPPING: int = 50
 CHECKPOINT_PATH: str = "best_fedmelanoma_model.pth"
 POSITIVE_CLASS_IDX: int = 1  # Malignant = 1
 
@@ -319,7 +334,7 @@ def save_checkpoint(
         "roc_auc":              metrics["roc_auc"],
     }
     torch.save(checkpoint, path)
-    print(f"  [✓] Checkpoint saved → {path}  (ROC-AUC: {metrics['roc_auc']:.4f})")
+    print(f"  [OK] Checkpoint saved -> {path}  (ROC-AUC: {metrics['roc_auc']:.4f})")
 
 
 # ===========================================================================
@@ -340,7 +355,7 @@ def plot_training_curves(
     try:
         import matplotlib.pyplot as plt
     except ImportError:
-        print("[INFO] matplotlib not installed – skipping plots.")
+        print("[INFO] matplotlib not installed - skipping plots.")
         return
 
     epochs = list(range(1, len(train_losses) + 1))
@@ -378,7 +393,7 @@ def plot_training_curves(
 
     if save_path:
         plt.savefig(save_path, dpi=150, bbox_inches="tight")
-        print(f"\n[INFO] Training curves saved → {save_path}")
+        print(f"\n[INFO] Training curves saved -> {save_path}")
 
     plt.show()
 
@@ -392,6 +407,18 @@ def main() -> None:
     import cv2
     cv2.setNumThreads(0)
     os.environ["OMP_NUM_THREADS"] = "1"
+
+    # -----------------------------------------------------------------------
+    # 0. Sanity-check dataset root before doing anything else
+    # -----------------------------------------------------------------------
+    if not os.path.isdir(DATASET_ROOT):
+        raise FileNotFoundError(
+            f"DATASET_ROOT does not exist: {DATASET_ROOT}\n"
+            f"Update the DATASET_ROOT constant near the top of train.py "
+            f"to point at the folder that directly contains your 10 "
+            f"hospital subfolders (e.g. CityGeneral_Multispecialty_Hospital)."
+        )
+
     # -----------------------------------------------------------------------
     # 1. Hospital names – unchanged from original
     # -----------------------------------------------------------------------
@@ -415,20 +442,27 @@ def main() -> None:
     test_datasets:  List[MelanomaDataset] = []
 
     for hospital in hospital_names:
-        base = f"hospital_partitions/{hospital}"
+        # CHANGED: base path now built from the DATASET_ROOT constant
+        # (absolute path) instead of the hardcoded relative string
+        # "hospital_partitions". This is the only structural change vs.
+        # the original script — MelanomaDataset itself is untouched.
+        base = f"{DATASET_ROOT}/{hospital}"
 
-        train_datasets.append(
-            MelanomaDataset(
-                f"{base}/metadata_train.csv",
-                f"{base}/images/Train",
-            )
-        )
-        test_datasets.append(
-            MelanomaDataset(
-                f"{base}/metadata_test.csv",
-                f"{base}/images/Test",
-            )
-        )
+        train_csv = f"{base}/metadata_train.csv"
+        test_csv  = f"{base}/metadata_test.csv"
+        train_img = f"{base}/images/Train"
+        test_img  = f"{base}/images/Test"
+
+        for path in (train_csv, test_csv):
+            if not os.path.isfile(path):
+                raise FileNotFoundError(
+                    f"Expected metadata CSV not found: {path}\n"
+                    f"Check that '{hospital}' exists under DATASET_ROOT "
+                    f"and contains metadata_train.csv / metadata_test.csv."
+                )
+
+        train_datasets.append(MelanomaDataset(train_csv, train_img))
+        test_datasets.append(MelanomaDataset(test_csv, test_img))
 
     train_dataset = ConcatDataset(train_datasets)
     test_dataset  = ConcatDataset(test_datasets)
@@ -587,7 +621,7 @@ def main() -> None:
             )
 
         # -- 8f. Early stopping check ----------------------------------------
-        if patience_count >= EARLY_STOPPING_PATIENCE:
+        if epoch >= MIN_EPOCHS_BEFORE_STOPPING and patience_count >= EARLY_STOPPING_PATIENCE:
             print(
                 f"\n[!] Early stopping triggered after epoch {epoch}. "
                 f"No ROC-AUC improvement for {EARLY_STOPPING_PATIENCE} "
@@ -599,7 +633,7 @@ def main() -> None:
     # 9. Final summary
     # -----------------------------------------------------------------------
     print("\n" + "=" * 60)
-    print("TRAINING COMPLETE – BEST VALIDATION METRICS")
+    print("TRAINING COMPLETE - BEST VALIDATION METRICS")
     print("=" * 60)
     print(f"  Best Accuracy  : {best_metrics.get('accuracy',  0)*100:.2f}%")
     print(f"  Best Precision : {best_metrics.get('precision', 0):.4f}")
@@ -624,4 +658,4 @@ def main() -> None:
 # Entry point
 # ---------------------------------------------------------------------------
 if __name__ == "__main__":
-    main()          
+    main()         
