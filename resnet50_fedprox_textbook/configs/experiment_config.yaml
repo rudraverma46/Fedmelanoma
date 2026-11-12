@@ -1,0 +1,52 @@
+# Textbook FedProx. Copied from resnet50_fedavg_textbook. Differences: run_id and the fedprox section.
+# ResNet-50 Novelty + standard FedAvg. Copied from the Novelty reference. Differences: run_id, the
+# relative partitions_root (same folder on disk), and no aggregation constants, because FedAvg has none.
+# ResNet-50 experiment configuration.
+# Every value below is the value the EfficientNet-B3 reference EXECUTES (commit 1351f63), not
+# what its blueprint says; tests/test_00_reference_integrity.py asserts they match the code.
+# Keys under `reference_constants` are documentation: the vendored modules use their own
+# defaults and nothing here overrides them.
+
+experiment:
+  run_id: resnet50-fedprox-textbook-mu0.01-seed42
+  seed: 42                      # server/server.py default (Blueprint s10 system.seed)
+
+data:
+  # Read-only. The same hospital_partitions the reference expects at ./hospital_partitions.
+  partitions_root: ../without_federated/client/hospital_partitions
+  cache_dir: ../resnet 50_novelty_fedavg/cache   # opened read-only (numpy mmap_mode="r")
+
+federation:                     # reference pyproject.toml [tool.flwr.app.config]
+  num_server_rounds: 50
+  clients_per_round: 6          # the clients that train: 10 addressed, 4 drop out uniformly at random
+  local_epochs: 5
+  num_clients: 10
+
+local_training:                 # reference client/client.py defaults
+  batch_size: 20
+  learning_rate: 1.0e-4
+  weight_decay: 1.0e-4
+  focal_gamma: 2.0
+
+fedprox:
+  # Proximal coefficient in F_k(w) = L_k(w) + (mu/2)||w - w_t||^2. Same value as resnet50_novelty_fedprox.
+  mu: 0.01
+
+model:
+  backbone: resnet50            # the only intended change
+  feature_dim: 2048             # EfficientNet-B3: 1536
+  metadata_dim: 32
+  fusion_dim: 2080              # EfficientNet-B3: 1568
+  dropout: 0.3
+  num_classes: 2
+
+runtime:                        # execution only; no effect on the algorithm
+  dataloader_workers: 0         # reference 4; see documentation/IMPLEMENTATION_MAPPING.md
+  pin_memory: true
+  # Safe stop if free commit stays below this for 30 s. 0.2, not 0.4: the verification run dipped to
+  # 0.35 GB while Windows grew the page file (limit 18.73 -> 19.74 GB) and then recovered.
+  commit_floor_gb: 0.2
+  monitor_interval_seconds: 10
+
+reference_constants:
+  evaluation_thresholds: [0.30, 0.40, 0.50, 0.60, 0.70]
