@@ -1,0 +1,57 @@
+{
+ "run_id": "verify-seed42",
+ "stats": {
+  "completed_rounds": 2,
+  "empty_rounds": 0,
+  "quorum_label_rounds": 2,
+  "mean_selected": 10.0,
+  "mean_aggregated": 6.0,
+  "mean_failed": 0.0,
+  "mean_new_stragglers": 4.0,
+  "window_mean": 0.0,
+  "window_min": 0.0,
+  "window_max": 0.0
+ },
+ "best": {
+  "round": 2,
+  "roc_auc": 0.9251454718993932
+ },
+ "finals": {},
+ "plots_written": [
+  "training_loss",
+  "global_auroc",
+  "global_auprc",
+  "global_sensitivity",
+  "global_specificity",
+  "global_f1",
+  "global_balanced_accuracy",
+  "fairness_gap",
+  "adaptive_window",
+  "staleness",
+  "broadcast_verification_timeline",
+  "client_reliability",
+  "client_effective_interactions",
+  "diversity_scores",
+  "client_selection_frequency",
+  "aggregation_weights",
+  "client_latency"
+ ],
+ "schedule_mismatches": 0,
+ "rounds_compared": 2,
+ "hash_failures": 0,
+ "broken_hash_chain": 0,
+ "resumes": 1,
+ "safe_stops": 0,
+ "exceptions": [],
+ "run_end_logged": true,
+ "train_seconds": 596.5987415313721,
+ "resources": {
+  "commit_free_min_gb": 0.2891349792480469,
+  "ram_free_min_gb": 0.5693702697753906,
+  "process_rss_max_gb": 1.843402862548828,
+  "gpu_mem_max_mb": 2647.0,
+  "gpu_util_mean_pct": 85.06666666666666,
+  "gpu_temp_max_c": 80.0,
+  "commit_limit_max_gb": 20.301475524902344
+ }
+}
