@@ -1,0 +1,237 @@
+{
+ "leakage": {
+  "all_rows": {
+   "rows": 1952,
+   "malignant": 109,
+   "roc_auc": 0.9648309746275269,
+   "pr_auc": 0.7173669335169877,
+   "recall_at_0.5": 0.7155963302752294,
+   "patient_clustered_bootstrap": {
+    "resamples": 2000,
+    "patients": 637,
+    "roc_auc_95": [
+     0.9405486854740933,
+     0.9824025683484303
+    ],
+    "pr_auc_95": [
+     0.6192632660204096,
+     0.8075295943347641
+    ]
+   }
+  },
+  "neither_patient_nor_lesion_seen": {
+   "rows": 130,
+   "malignant": 42,
+   "roc_auc": 0.8284632034632035,
+   "pr_auc": 0.6818859346389179,
+   "recall_at_0.5": 0.7380952380952381
+  },
+  "histopathology_confirmed_only": {
+   "rows": 295,
+   "malignant": 109,
+   "roc_auc": 0.8207063233698333,
+   "pr_auc": 0.7338382829658145,
+   "recall_at_0.5": 0.7155963302752294,
+   "patient_clustered_bootstrap": {
+    "resamples": 2000,
+    "patients": 259,
+    "roc_auc_95": [
+     0.7670882402545548,
+     0.8700651990068576
+    ],
+    "pr_auc_95": [
+     0.6446452248066931,
+     0.8173727087442779
+    ]
+   }
+  }
+ },
+ "round_selection": {
+  "selected": [
+   "CityGeneral_Multispecialty_Hospital",
+   "GoldenSun_Public_Health_Screening_Camp",
+   "Greenfield_Rural_Community_Health_Center",
+   "MetroSkin_Dermatology_Research_Clinic",
+   "SunRay_Community_Outreach_Clinic",
+   "Westbridge_Academic_Dermoscopy_Unit"
+  ],
+  "not_selected": [
+   "Lakeside_Regional_Mixed_Hospital",
+   "NorthCare_Tertiary_Melanoma_Institute",
+   "Pinewood_Oncology_Biopsy_Center",
+   "TeleDerm_National_Screening_Network"
+  ],
+  "per_hospital": {
+   "CityGeneral_Multispecialty_Hospital": {
+    "rows": 141,
+    "malignant": 7,
+    "roc_auc": 0.9936034115138593
+   },
+   "GoldenSun_Public_Health_Screening_Camp": {
+    "rows": 50,
+    "malignant": 2,
+    "roc_auc": 0.9791666666666666
+   },
+   "Greenfield_Rural_Community_Health_Center": {
+    "rows": 51,
+    "malignant": 3,
+    "roc_auc": 0.9930555555555555
+   },
+   "Lakeside_Regional_Mixed_Hospital": {
+    "rows": 130,
+    "malignant": 4,
+    "roc_auc": 0.9841269841269842
+   },
+   "MetroSkin_Dermatology_Research_Clinic": {
+    "rows": 388,
+    "malignant": 24,
+    "roc_auc": 0.9757326007326008
+   },
+   "NorthCare_Tertiary_Melanoma_Institute": {
+    "rows": 401,
+    "malignant": 28,
+    "roc_auc": 0.9502106472615857
+   },
+   "Pinewood_Oncology_Biopsy_Center": {
+    "rows": 429,
+    "malignant": 28,
+    "roc_auc": 0.9476309226932669
+   },
+   "SunRay_Community_Outreach_Clinic": {
+    "rows": 56,
+    "malignant": 2,
+    "roc_auc": 0.9907407407407408
+   },
+   "TeleDerm_National_Screening_Network": {
+    "rows": 39,
+    "malignant": 1,
+    "roc_auc": 1.0
+   },
+   "Westbridge_Academic_Dermoscopy_Unit": {
+    "rows": 267,
+    "malignant": 10,
+    "roc_auc": 0.9731517509727626
+   }
+  },
+  "selected_rows": 953,
+  "selected_malignant": 48,
+  "rebuilt_weighted_roc_auc": 0.9796427027970399,
+  "logged_round_roc_auc": 0.9797517175405696
+ },
+ "paired_with_resnet50_round20": {
+  "rows": 1952,
+  "malignant": 109,
+  "patients": 637,
+  "resamples": 2000,
+  "metrics": {
+   "roc_auc": {
+    "resnet50": 0.9767531000014934,
+    "efficientnet_b3": 0.9648309746275269,
+    "difference": -0.01192212537396653,
+    "difference_95": [
+     -0.037919067269090334,
+     0.015717934592595146
+    ],
+    "clear": false,
+    "resnet50_95": [
+     0.955767549704528,
+     0.9895619279759296
+    ],
+    "efficientnet_b3_95": [
+     0.9405486854740933,
+     0.9824025683484303
+    ]
+   },
+   "pr_auc": {
+    "resnet50": 0.7711106601998388,
+    "efficientnet_b3": 0.7140829041781498,
+    "difference": -0.05702775602168897,
+    "difference_95": [
+     -0.14904153117991045,
+     0.03888978206136405
+    ],
+    "clear": false,
+    "resnet50_95": [
+     0.6823532068649616,
+     0.8471681339230233
+    ],
+    "efficientnet_b3_95": [
+     0.6110287598807922,
+     0.8051871675908809
+    ]
+   },
+   "recall": {
+    "resnet50": 0.8256880733944955,
+    "efficientnet_b3": 0.7155963302752294,
+    "difference": -0.11009174311926606,
+    "difference_95": [
+     -0.2058823529411764,
+     -0.009803921568627527
+    ],
+    "clear": true,
+    "resnet50_95": [
+     0.7523787680209698,
+     0.8938159462219195
+    ],
+    "efficientnet_b3_95": [
+     0.6260851891127608,
+     0.8037383177570093
+    ]
+   },
+   "precision": {
+    "resnet50": 0.6293706293706294,
+    "efficientnet_b3": 0.65,
+    "difference": 0.020629370629370647,
+    "difference_95": [
+     -0.05924935076925784,
+     0.09559130953529194
+    ],
+    "clear": false,
+    "resnet50_95": [
+     0.5430416272469253,
+     0.7133116883116882
+    ],
+    "efficientnet_b3_95": [
+     0.5630236539060068,
+     0.7355578512396693
+    ]
+   },
+   "f1": {
+    "resnet50": 0.7142857142857142,
+    "efficientnet_b3": 0.6812227074235808,
+    "difference": -0.03306300686213337,
+    "difference_95": [
+     -0.10873376643678552,
+     0.04168935576267988
+    ],
+    "clear": false,
+    "resnet50_95": [
+     0.6434108527131784,
+     0.7761220123160423
+    ],
+    "efficientnet_b3_95": [
+     0.6050420168067226,
+     0.7464147906422949
+    ]
+   },
+   "accuracy": {
+    "resnet50": 0.9631147540983607,
+    "efficientnet_b3": 0.9626024590163934,
+    "difference": -0.0005122950819672623,
+    "difference_95": [
+     -0.010105817716370794,
+     0.008922692648399696
+    ],
+    "clear": false,
+    "resnet50_95": [
+     0.9521546179127661,
+     0.972276313621815
+    ],
+    "efficientnet_b3_95": [
+     0.9513140465210658,
+     0.9716869462274622
+    ]
+   }
+  }
+ }
+}

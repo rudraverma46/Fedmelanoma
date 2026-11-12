@@ -1,0 +1,19 @@
+{
+  "checkpoint": "D:\\MAIN BACKUP\\backup 3\\Fedmelanoma\\EFFICIENTNET_B3_FIXED_MAPPING\\checkpoints\\efficientnetb3-fixedmap-seed42\\global_round_0020.pth",
+  "accuracy": 0.9626024590163934,
+  "precision": 0.65,
+  "recall": 0.7155963302752294,
+  "f1": 0.6812227074235808,
+  "roc_auc": 0.9648309746275269,
+  "sensitivity": 0.7155963302752294,
+  "specificity": 0.9772110689093869,
+  "ppv": 0.65,
+  "npv": 0.9830786026200873,
+  "balanced_accuracy": 0.8464036995923081,
+  "mcc": 0.66226999038206,
+  "pr_auc": 0.7140829041781498,
+  "tn": 1801.0,
+  "fp": 42.0,
+  "fn": 31.0,
+  "tp": 78.0
+}

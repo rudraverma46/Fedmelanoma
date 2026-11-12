@@ -1,0 +1,14 @@
+============================================================
+FAIRNESS / SUBGROUP SUMMARY
+============================================================
+Fitzpatrick fairness gap (max-min sensitivity): 0.5263
+  Best group : IV (sensitivity=1.0000)
+  Worst group: I (sensitivity=0.4737)
+  Excluded groups (sensitivity undefined): ['V', 'VI']
+
+Worst-group AUROC by hospital (client type, Blueprint WGA): Pinewood_Oncology_Biopsy_Center = 0.9476
+
+Worst-group AUROC by metadata axis:
+  skin_type: II = 0.9456
+  image_type: clinical: overview = 0.8939
+  confirm_type: histopathology = 0.8207

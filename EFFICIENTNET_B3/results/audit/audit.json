@@ -1,0 +1,430 @@
+{
+ "items": [
+  {
+   "item": "Model architecture",
+   "file": "models/model.py",
+   "symbol": "class FedMelanomaModel",
+   "behaviour": "Backbone, metadata branch, fusion, head",
+   "this_vs_reference": "identical",
+   "this_vs_resnet50": "differs"
+  },
+  {
+   "item": "Image preprocessing",
+   "file": "client/dataset.py",
+   "symbol": "cv2.resize(image, (224, 224))",
+   "behaviour": "RGB, 224x224, ImageNet normalisation, no augmentation",
+   "this_vs_reference": "identical",
+   "this_vs_resnet50": "identical"
+  },
+  {
+   "item": "Metadata preprocessing",
+   "file": "client/dataset.py",
+   "symbol": "encode_metadata",
+   "behaviour": "13-dimensional one-hot vector",
+   "this_vs_reference": "identical",
+   "this_vs_resnet50": "identical"
+  },
+  {
+   "item": "Metadata MLP",
+   "file": "models/model.py",
+   "symbol": "class MetadataMLP",
+   "behaviour": "13 -> 64 (BatchNorm, ReLU) -> 32 (ReLU)",
+   "this_vs_reference": "identical",
+   "this_vs_resnet50": "differs"
+  },
+  {
+   "item": "Feature fusion",
+   "file": "models/model.py",
+   "symbol": "torch.cat",
+   "behaviour": "[image ; metadata]",
+   "this_vs_reference": "identical",
+   "this_vs_resnet50": "differs"
+  },
+  {
+   "item": "Classification head",
+   "file": "models/model.py",
+   "symbol": "self.classifier",
+   "behaviour": "Dropout 0.3, then Linear(F + 32, 2)",
+   "this_vs_reference": "identical",
+   "this_vs_resnet50": "differs"
+  },
+  {
+   "item": "Focal loss",
+   "file": "client/focal_loss.py",
+   "symbol": "class ClassWeightedFocalLoss",
+   "behaviour": "Class-weighted focal, gamma 2, per-hospital weights",
+   "this_vs_reference": "identical",
+   "this_vs_resnet50": "identical"
+  },
+  {
+   "item": "Client selection algorithm",
+   "file": "server/selector.py",
+   "symbol": "boltzmann_selection",
+   "behaviour": "Boltzmann sampling without replacement, tau 0.20",
+   "this_vs_reference": "identical",
+   "this_vs_resnet50": "identical"
+  },
+  {
+   "item": "Diversity calculation",
+   "file": "emd.py",
+   "symbol": "compute_diversity_score",
+   "behaviour": "OT distance, weights 0.40 / 0.35 / 0.25",
+   "this_vs_reference": "identical",
+   "this_vs_resnet50": "identical"
+  },
+  {
+   "item": "Reliability calculation",
+   "file": "server/selector.py",
+   "symbol": "update_client_state",
+   "behaviour": "R_i moving average, rho 0.85",
+   "this_vs_reference": "identical",
+   "this_vs_resnet50": "identical"
+  },
+  {
+   "item": "Exposure-aware selection",
+   "file": "server/selector.py",
+   "symbol": "compute_score",
+   "behaviour": "R_i(1 + gamma D_i / (1 + lambda N_eff))",
+   "this_vs_reference": "identical",
+   "this_vs_resnet50": "identical"
+  },
+  {
+   "item": "Aggregation equations",
+   "file": "server/aggregation.py",
+   "symbol": "compute_aggregation_weights",
+   "behaviour": "(n_i/n_A) delta^s_i (1 + gamma D_i), normalised",
+   "this_vs_reference": "identical",
+   "this_vs_resnet50": "identical"
+  },
+  {
+   "item": "Staleness handling",
+   "file": "server/aggregation.py",
+   "symbol": "DELTA",
+   "behaviour": "delta 0.90 discount",
+   "this_vs_reference": "identical",
+   "this_vs_resnet50": "identical"
+  },
+  {
+   "item": "Straggler simulation",
+   "file": "server/straggler.py",
+   "symbol": "simulate_response",
+   "behaviour": "Failure and latency drawn after local fit",
+   "this_vs_reference": "identical",
+   "this_vs_resnet50": "identical"
+  },
+  {
+   "item": "Client latency distributions",
+   "file": "server/straggler.py",
+   "symbol": "BETA_PARAMS",
+   "behaviour": "Beta completion and LogNormal latency by tier",
+   "this_vs_reference": "identical",
+   "this_vs_resnet50": "identical"
+  },
+  {
+   "item": "Adaptive window calculation",
+   "file": "server/straggler.py",
+   "symbol": "_update_window",
+   "behaviour": "max(median + 2.5 MAD, 2.0 s), last 10 latencies",
+   "this_vs_reference": "identical",
+   "this_vs_resnet50": "identical"
+  },
+  {
+   "item": "Quorum calculation and behaviour",
+   "file": "server/straggler.py",
+   "symbol": "manage_window",
+   "behaviour": "ceil(0.7 C), logged only, never blocks",
+   "this_vs_reference": "identical",
+   "this_vs_resnet50": "identical"
+  },
+  {
+   "item": "Late-update buffering",
+   "file": "server/straggler.py",
+   "symbol": "_drain_buffer",
+   "behaviour": "s = 1, drained next round, S_max 3",
+   "this_vs_reference": "identical",
+   "this_vs_resnet50": "identical"
+  },
+  {
+   "item": "Local optimizer",
+   "file": "client/local_trainer.py",
+   "symbol": "build_optimizer",
+   "behaviour": "AdamW, new each fit; no scheduler, clipping or AMP",
+   "this_vs_reference": "identical",
+   "this_vs_resnet50": "identical"
+  },
+  {
+   "item": "Learning rate and weight decay",
+   "file": "client/client.py",
+   "symbol": "DEFAULT_LEARNING_RATE",
+   "behaviour": "1e-4 and 1e-4",
+   "this_vs_reference": "identical",
+   "this_vs_resnet50": "identical"
+  },
+  {
+   "item": "Batch size",
+   "file": "client/client.py",
+   "symbol": "DEFAULT_BATCH_SIZE",
+   "behaviour": "20",
+   "this_vs_reference": "identical",
+   "this_vs_resnet50": "identical"
+  },
+  {
+   "item": "Local epochs",
+   "file": "configs/experiment_config.yaml",
+   "symbol": "local_epochs: 5",
+   "behaviour": "5 (reference: pyproject.toml)",
+   "this_vs_reference": "not in both",
+   "this_vs_resnet50": "differs"
+  },
+  {
+   "item": "Federated rounds",
+   "file": "configs/experiment_config.yaml",
+   "symbol": "num_server_rounds: 50",
+   "behaviour": "50 (reference: pyproject.toml)",
+   "this_vs_reference": "not in both",
+   "this_vs_resnet50": "differs"
+  },
+  {
+   "item": "Client participation",
+   "file": "configs/experiment_config.yaml",
+   "symbol": "clients_per_round: 6",
+   "behaviour": "6 of 10, buffered clients excluded",
+   "this_vs_reference": "not in both",
+   "this_vs_resnet50": "differs"
+  },
+  {
+   "item": "Dataset partitions",
+   "file": "hospital_registry.py",
+   "symbol": "build_hospital_registry",
+   "behaviour": "Same read-only partition folder",
+   "this_vs_reference": "identical",
+   "this_vs_resnet50": "identical"
+  },
+  {
+   "item": "Random seeds",
+   "file": "server/server.py",
+   "symbol": "seed",
+   "behaviour": "Seed 42 in the reference; torch seeds added by runtime (D7)",
+   "this_vs_reference": "identical",
+   "this_vs_resnet50": "identical"
+  },
+  {
+   "item": "Checkpointing",
+   "file": "monitoring/checkpointing.py",
+   "symbol": "save_global_checkpoint",
+   "behaviour": "Every round; best by weighted ROC-AUC",
+   "this_vs_reference": "identical",
+   "this_vs_resnet50": "identical"
+  },
+  {
+   "item": "Evaluation methodology",
+   "file": "evaluate.py",
+   "symbol": "compute_metrics",
+   "behaviour": "Pooled test set, threshold 0.5, selected clients per round",
+   "this_vs_reference": "identical",
+   "this_vs_resnet50": "identical"
+  }
+ ],
+ "files": [
+  {
+   "file": "client/__init__.py",
+   "vs_reference": "identical",
+   "vs_resnet50": "identical"
+  },
+  {
+   "file": "client/client.py",
+   "vs_reference": "identical",
+   "vs_resnet50": "identical"
+  },
+  {
+   "file": "client/dataset.py",
+   "vs_reference": "identical",
+   "vs_resnet50": "identical"
+  },
+  {
+   "file": "client/focal_loss.py",
+   "vs_reference": "identical",
+   "vs_resnet50": "identical"
+  },
+  {
+   "file": "client/local_trainer.py",
+   "vs_reference": "identical",
+   "vs_resnet50": "identical"
+  },
+  {
+   "file": "emd.py",
+   "vs_reference": "identical",
+   "vs_resnet50": "identical"
+  },
+  {
+   "file": "evaluate.py",
+   "vs_reference": "identical",
+   "vs_resnet50": "identical"
+  },
+  {
+   "file": "evaluation/build_report.py",
+   "vs_reference": "not in both",
+   "vs_resnet50": "identical"
+  },
+  {
+   "file": "evaluation/evaluate_checkpoint.py",
+   "vs_reference": "not in both",
+   "vs_resnet50": "identical"
+  },
+  {
+   "file": "evaluation/leakage_analysis.py",
+   "vs_reference": "not in both",
+   "vs_resnet50": "identical"
+  },
+  {
+   "file": "hospital_registry.py",
+   "vs_reference": "identical",
+   "vs_resnet50": "identical"
+  },
+  {
+   "file": "models/__init__.py",
+   "vs_reference": "identical",
+   "vs_resnet50": "identical"
+  },
+  {
+   "file": "models/model.py",
+   "vs_reference": "identical",
+   "vs_resnet50": "differs"
+  },
+  {
+   "file": "monitoring/__init__.py",
+   "vs_reference": "identical",
+   "vs_resnet50": "identical"
+  },
+  {
+   "file": "monitoring/checkpointing.py",
+   "vs_reference": "identical",
+   "vs_resnet50": "identical"
+  },
+  {
+   "file": "monitoring/experiment_logging.py",
+   "vs_reference": "identical",
+   "vs_resnet50": "identical"
+  },
+  {
+   "file": "monitoring/param_hash.py",
+   "vs_reference": "identical",
+   "vs_resnet50": "identical"
+  },
+  {
+   "file": "monitoring/plotting.py",
+   "vs_reference": "identical",
+   "vs_resnet50": "identical"
+  },
+  {
+   "file": "monitoring/straggler_logging.py",
+   "vs_reference": "identical",
+   "vs_resnet50": "identical"
+  },
+  {
+   "file": "monitoring/subgroup_metrics.py",
+   "vs_reference": "identical",
+   "vs_resnet50": "identical"
+  },
+  {
+   "file": "runtime/__init__.py",
+   "vs_reference": "not in both",
+   "vs_resnet50": "identical"
+  },
+  {
+   "file": "runtime/config.py",
+   "vs_reference": "not in both",
+   "vs_resnet50": "identical"
+  },
+  {
+   "file": "runtime/image_cache.py",
+   "vs_reference": "not in both",
+   "vs_resnet50": "identical"
+  },
+  {
+   "file": "runtime/in_process.py",
+   "vs_reference": "not in both",
+   "vs_resnet50": "identical"
+  },
+  {
+   "file": "runtime/resources.py",
+   "vs_reference": "not in both",
+   "vs_resnet50": "identical"
+  },
+  {
+   "file": "runtime/run_experiment.py",
+   "vs_reference": "not in both",
+   "vs_resnet50": "identical"
+  },
+  {
+   "file": "runtime/state.py",
+   "vs_reference": "not in both",
+   "vs_resnet50": "identical"
+  },
+  {
+   "file": "server/__init__.py",
+   "vs_reference": "identical",
+   "vs_resnet50": "identical"
+  },
+  {
+   "file": "server/aggregation.py",
+   "vs_reference": "identical",
+   "vs_resnet50": "identical"
+  },
+  {
+   "file": "server/selector.py",
+   "vs_reference": "identical",
+   "vs_resnet50": "identical"
+  },
+  {
+   "file": "server/server.py",
+   "vs_reference": "identical",
+   "vs_resnet50": "identical"
+  },
+  {
+   "file": "server/straggler.py",
+   "vs_reference": "identical",
+   "vs_resnet50": "identical"
+  },
+  {
+   "file": "server/strategy.py",
+   "vs_reference": "identical",
+   "vs_resnet50": "identical"
+  },
+  {
+   "file": "tools/audit_implementations.py",
+   "vs_reference": "not in both",
+   "vs_resnet50": "not in both"
+  },
+  {
+   "file": "tools/build_image_cache.py",
+   "vs_reference": "not in both",
+   "vs_resnet50": "identical"
+  },
+  {
+   "file": "tools/dry_run_schedule.py",
+   "vs_reference": "not in both",
+   "vs_resnet50": "identical"
+  },
+  {
+   "file": "tools/mapping_sensitivity.py",
+   "vs_reference": "not in both",
+   "vs_resnet50": "identical"
+  },
+  {
+   "file": "tools/run_supervised.py",
+   "vs_reference": "not in both",
+   "vs_resnet50": "differs"
+  },
+  {
+   "file": "tools/run_verification.py",
+   "vs_reference": "not in both",
+   "vs_resnet50": "differs"
+  },
+  {
+   "file": "tools/vendor_reference_files.py",
+   "vs_reference": "not in both",
+   "vs_resnet50": "identical"
+  }
+ ]
+}

@@ -1,0 +1,14 @@
+============================================================
+FAIRNESS / SUBGROUP SUMMARY
+============================================================
+Fitzpatrick fairness gap (max-min sensitivity): 0.4737
+  Best group : IV (sensitivity=1.0000)
+  Worst group: I (sensitivity=0.5263)
+  Excluded groups (sensitivity undefined): ['V', 'VI']
+
+Worst-group AUROC by hospital (client type, Blueprint WGA): Westbridge_Academic_Dermoscopy_Unit = 0.9428
+
+Worst-group AUROC by metadata axis:
+  skin_type: II = 0.9463
+  image_type: clinical: overview = 0.7803
+  confirm_type: histopathology = 0.7845

@@ -1,0 +1,1446 @@
+{
+ "rules": "Chapter 8 of EFFICIENTNET_B3_FIXED_MAPPING_PLAN.pdf",
+ "bootstrap": {
+  "resamples": 2000,
+  "seed": 42,
+  "difference": "efficientnet_b3 minus resnet50"
+ },
+ "architecture": {
+  "resnet50": {
+   "state_tensors": 329,
+   "parameters": 23515298,
+   "backbone_parameters": 23508032,
+   "non_backbone_parameters": 7266,
+   "fusion_inputs": 2080,
+   "image_features": 2048,
+   "weights_mb": 94.274616,
+   "checkpoint_file_mb": 94.380783
+  },
+  "efficientnet_b3": {
+   "state_tensors": 583,
+   "parameters": 10702474,
+   "backbone_parameters": 10696232,
+   "non_backbone_parameters": 6242,
+   "fusion_inputs": 1568,
+   "image_features": 1536,
+   "weights_mb": 43.160224,
+   "checkpoint_file_mb": 43.347101
+  }
+ },
+ "classification": {
+  "final_best": {
+   "all_rows": {
+    "rows": 1952,
+    "malignant": 109,
+    "patients": 637,
+    "resamples": 2000,
+    "metrics": {
+     "roc_auc": {
+      "resnet50": 0.9767531000014934,
+      "efficientnet_b3": 0.9788687172390448,
+      "difference": 0.0021156172375513815,
+      "difference_95": [
+       -0.01240582590352341,
+       0.024732142857142928
+      ],
+      "clear": false,
+      "resnet50_95": [
+       0.955767549704528,
+       0.9895619279759296
+      ],
+      "efficientnet_b3_95": [
+       0.9698941341226909,
+       0.9862147125816229
+      ]
+     },
+     "pr_auc": {
+      "resnet50": 0.7711106601998388,
+      "efficientnet_b3": 0.7467974672715928,
+      "difference": -0.024313192928245964,
+      "difference_95": [
+       -0.11001460815662793,
+       0.06967923468488345
+      ],
+      "clear": false,
+      "resnet50_95": [
+       0.6823532068649616,
+       0.8471681339230233
+      ],
+      "efficientnet_b3_95": [
+       0.6583709378573416,
+       0.8323540439771263
+      ]
+     },
+     "recall": {
+      "resnet50": 0.8256880733944955,
+      "efficientnet_b3": 0.7798165137614679,
+      "difference": -0.04587155963302758,
+      "difference_95": [
+       -0.13043478260869568,
+       0.03450304259634873
+      ],
+      "clear": false,
+      "resnet50_95": [
+       0.7523787680209698,
+       0.8938159462219195
+      ],
+      "efficientnet_b3_95": [
+       0.7019188596491227,
+       0.8512396694214877
+      ]
+     },
+     "precision": {
+      "resnet50": 0.6293706293706294,
+      "efficientnet_b3": 0.6640625,
+      "difference": 0.034691870629370625,
+      "difference_95": [
+       -0.03170688608776841,
+       0.10328647273515043
+      ],
+      "clear": false,
+      "resnet50_95": [
+       0.5430416272469253,
+       0.7133116883116882
+      ],
+      "efficientnet_b3_95": [
+       0.5833333333333334,
+       0.7461567164179105
+      ]
+     },
+     "f1": {
+      "resnet50": 0.7142857142857142,
+      "efficientnet_b3": 0.7172995780590717,
+      "difference": 0.00301386377335755,
+      "difference_95": [
+       -0.06090445011051233,
+       0.06774246852131628
+      ],
+      "clear": false,
+      "resnet50_95": [
+       0.6434108527131784,
+       0.7761220123160423
+      ],
+      "efficientnet_b3_95": [
+       0.6499947257383967,
+       0.7802745269605164
+      ]
+     },
+     "accuracy": {
+      "resnet50": 0.9631147540983607,
+      "efficientnet_b3": 0.9656762295081968,
+      "difference": 0.0025614754098360892,
+      "difference_95": [
+       -0.005721206645343857,
+       0.011162451916065054
+      ],
+      "clear": false,
+      "resnet50_95": [
+       0.9521546179127661,
+       0.972276313621815
+      ],
+      "efficientnet_b3_95": [
+       0.9556873257660046,
+       0.974287350408305
+      ]
+     }
+    }
+   },
+   "histopathology_confirmed_only": {
+    "rows": 295,
+    "malignant": 109,
+    "patients": 259,
+    "resamples": 2000,
+    "metrics": {
+     "roc_auc": {
+      "resnet50": 0.8549373581927593,
+      "efficientnet_b3": 0.843642103186347,
+      "difference": -0.011295255006412264,
+      "difference_95": [
+       -0.0602490601237147,
+       0.037763055993099384
+      ],
+      "clear": false,
+      "resnet50_95": [
+       0.8082926280976751,
+       0.8990598936836923
+      ],
+      "efficientnet_b3_95": [
+       0.7974541660784866,
+       0.8908661027574934
+      ]
+     },
+     "pr_auc": {
+      "resnet50": 0.775195547354763,
+      "efficientnet_b3": 0.7605931450570037,
+      "difference": -0.014602402297759332,
+      "difference_95": [
+       -0.10085462117473615,
+       0.07215055458889566
+      ],
+      "clear": false,
+      "resnet50_95": [
+       0.688487959716292,
+       0.8484102932769392
+      ],
+      "efficientnet_b3_95": [
+       0.6674185666344826,
+       0.8418402239752594
+      ]
+     },
+     "recall": {
+      "resnet50": 0.8256880733944955,
+      "efficientnet_b3": 0.7798165137614679,
+      "difference": -0.04587155963302758,
+      "difference_95": [
+       -0.13159525880817743,
+       0.04275362318840566
+      ],
+      "clear": false,
+      "resnet50_95": [
+       0.7520833333333333,
+       0.8947493734335839
+      ],
+      "efficientnet_b3_95": [
+       0.6966154439303812,
+       0.8571428571428571
+      ]
+     },
+     "precision": {
+      "resnet50": 0.6293706293706294,
+      "efficientnet_b3": 0.6692913385826772,
+      "difference": 0.03992070921204782,
+      "difference_95": [
+       -0.028945179237764147,
+       0.10774562419405283
+      ],
+      "clear": false,
+      "resnet50_95": [
+       0.5454388714733542,
+       0.7101913043478258
+      ],
+      "efficientnet_b3_95": [
+       0.5847457627118644,
+       0.7520678816133362
+      ]
+     },
+     "f1": {
+      "resnet50": 0.7142857142857142,
+      "efficientnet_b3": 0.7203389830508474,
+      "difference": 0.006053268765133235,
+      "difference_95": [
+       -0.05768543239400484,
+       0.07168333054215711
+      ],
+      "clear": false,
+      "resnet50_95": [
+       0.6448912126834204,
+       0.776470588235294
+      ],
+      "efficientnet_b3_95": [
+       0.651370812886708,
+       0.783681632653061
+      ]
+     },
+     "accuracy": {
+      "resnet50": 0.7559322033898305,
+      "efficientnet_b3": 0.7762711864406779,
+      "difference": 0.02033898305084747,
+      "difference_95": [
+       -0.036915858811831966,
+       0.07793648331190987
+      ],
+      "clear": false,
+      "resnet50_95": [
+       0.7036944444444445,
+       0.8085844574390325
+      ],
+      "efficientnet_b3_95": [
+       0.7252294315672105,
+       0.8243243243243243
+      ]
+     }
+    }
+   },
+   "neither_patient_nor_lesion_seen": {
+    "rows": 130,
+    "malignant": 42,
+    "patients": 122,
+    "resamples": 2000,
+    "metrics": {
+     "roc_auc": {
+      "resnet50": 0.8847402597402596,
+      "efficientnet_b3": 0.8484848484848484,
+      "difference": -0.03625541125541121,
+      "difference_95": [
+       -0.11968672280640509,
+       0.047322189745463344
+      ],
+      "clear": false,
+      "resnet50_95": [
+       0.8106623349013273,
+       0.9448589307806898
+      ],
+      "efficientnet_b3_95": [
+       0.7729985779054378,
+       0.917697486426419
+      ]
+     },
+     "pr_auc": {
+      "resnet50": 0.8080713852743787,
+      "efficientnet_b3": 0.7085336042834967,
+      "difference": -0.09953778099088206,
+      "difference_95": [
+       -0.2430671937231823,
+       0.03615056544908976
+      ],
+      "clear": false,
+      "resnet50_95": [
+       0.6704300344075962,
+       0.9051895997180454
+      ],
+      "efficientnet_b3_95": [
+       0.5386199154961901,
+       0.8466410883693066
+      ]
+     },
+     "recall": {
+      "resnet50": 0.8809523809523809,
+      "efficientnet_b3": 0.7857142857142857,
+      "difference": -0.09523809523809523,
+      "difference_95": [
+       -0.241405433646813,
+       0.051315789473684065
+      ],
+      "clear": false,
+      "resnet50_95": [
+       0.7707932692307693,
+       0.9736842105263158
+      ],
+      "efficientnet_b3_95": [
+       0.6521486349848332,
+       0.9024390243902439
+      ]
+     },
+     "precision": {
+      "resnet50": 0.5967741935483871,
+      "efficientnet_b3": 0.5689655172413793,
+      "difference": -0.027808676307007785,
+      "difference_95": [
+       -0.11515901956432134,
+       0.057778386855652994
+      ],
+      "clear": false,
+      "resnet50_95": [
+       0.4696969696969697,
+       0.7230851063829786
+      ],
+      "efficientnet_b3_95": [
+       0.43859649122807015,
+       0.6981206948188079
+      ]
+     },
+     "f1": {
+      "resnet50": 0.7115384615384616,
+      "efficientnet_b3": 0.66,
+      "difference": -0.05153846153846153,
+      "difference_95": [
+       -0.14899473253906445,
+       0.04552054680336747
+      ],
+      "clear": false,
+      "resnet50_95": [
+       0.597938144329897,
+       0.8067300604452308
+      ],
+      "efficientnet_b3_95": [
+       0.5399408602150538,
+       0.7608695652173914
+      ]
+     },
+     "accuracy": {
+      "resnet50": 0.7692307692307693,
+      "efficientnet_b3": 0.7384615384615385,
+      "difference": -0.03076923076923077,
+      "difference_95": [
+       -0.10606060606060608,
+       0.0458103347034645
+      ],
+      "clear": false,
+      "resnet50_95": [
+       0.6922932330827067,
+       0.8397022900763358
+      ],
+      "efficientnet_b3_95": [
+       0.6592550505050505,
+       0.8153846153846154
+      ]
+     }
+    }
+   },
+   "agreement": {
+    "melanomas_found_by_both": 76,
+    "melanomas_found_by_resnet50_only": 14,
+    "melanomas_found_by_efficientnet_b3_only": 9,
+    "melanomas_missed_by_both": 10,
+    "false_alarms_by_both": 29,
+    "false_alarms_resnet50_only": 24,
+    "false_alarms_efficientnet_b3_only": 14,
+    "probability_correlation_spearman": 0.509985674819381
+   }
+  },
+  "final_round50": {
+   "all_rows": {
+    "rows": 1952,
+    "malignant": 109,
+    "patients": 637,
+    "resamples": 2000,
+    "metrics": {
+     "roc_auc": {
+      "resnet50": 0.9474455788577658,
+      "efficientnet_b3": 0.9672900685459984,
+      "difference": 0.019844489688232603,
+      "difference_95": [
+       -0.006693605628689129,
+       0.05540975810618332
+      ],
+      "clear": false,
+      "resnet50_95": [
+       0.9128954529497548,
+       0.9721040753924086
+      ],
+      "efficientnet_b3_95": [
+       0.9527611145838492,
+       0.9785754994670234
+      ]
+     },
+     "pr_auc": {
+      "resnet50": 0.6899229971295955,
+      "efficientnet_b3": 0.691355380302136,
+      "difference": 0.0014323831725404634,
+      "difference_95": [
+       -0.09131488965669536,
+       0.09163567470368757
+      ],
+      "clear": false,
+      "resnet50_95": [
+       0.5910219729953267,
+       0.7826090844201119
+      ],
+      "efficientnet_b3_95": [
+       0.5995358607333562,
+       0.7713943343321197
+      ]
+     },
+     "recall": {
+      "resnet50": 0.6972477064220184,
+      "efficientnet_b3": 0.6788990825688074,
+      "difference": -0.01834862385321101,
+      "difference_95": [
+       -0.10576923076923073,
+       0.07342879190602743
+      ],
+      "clear": false,
+      "resnet50_95": [
+       0.6041568396226414,
+       0.7798165137614679
+      ],
+      "efficientnet_b3_95": [
+       0.5855499063419856,
+       0.7678736772486772
+      ]
+     },
+     "precision": {
+      "resnet50": 0.5984251968503937,
+      "efficientnet_b3": 0.6218487394957983,
+      "difference": 0.023423542645404583,
+      "difference_95": [
+       -0.057425309432351725,
+       0.10306071006858392
+      ],
+      "clear": false,
+      "resnet50_95": [
+       0.508764495985727,
+       0.6846153846153846
+      ],
+      "efficientnet_b3_95": [
+       0.5293976244343892,
+       0.7083333333333334
+      ]
+     },
+     "f1": {
+      "resnet50": 0.6440677966101696,
+      "efficientnet_b3": 0.649122807017544,
+      "difference": 0.005055010407374438,
+      "difference_95": [
+       -0.06738934938907776,
+       0.07842567818096181
+      ],
+      "clear": false,
+      "resnet50_95": [
+       0.5665198070568574,
+       0.7120048780487805
+      ],
+      "efficientnet_b3_95": [
+       0.5686249626754255,
+       0.7203929240603988
+      ]
+     },
+     "accuracy": {
+      "resnet50": 0.9569672131147541,
+      "efficientnet_b3": 0.9590163934426229,
+      "difference": 0.002049180327868827,
+      "difference_95": [
+       -0.007624592324075843,
+       0.011659728664899944
+      ],
+      "clear": false,
+      "resnet50_95": [
+       0.9449338006043457,
+       0.9669160600964352
+      ],
+      "efficientnet_b3_95": [
+       0.9469693544851773,
+       0.9686918087534786
+      ]
+     }
+    }
+   },
+   "histopathology_confirmed_only": {
+    "rows": 295,
+    "malignant": 109,
+    "patients": 259,
+    "resamples": 2000,
+    "metrics": {
+     "roc_auc": {
+      "resnet50": 0.7814935385222453,
+      "efficientnet_b3": 0.7844529939824405,
+      "difference": 0.0029594554601951595,
+      "difference_95": [
+       -0.060433280170122325,
+       0.06328669699844389
+      ],
+      "clear": false,
+      "resnet50_95": [
+       0.7213498223959482,
+       0.8372966025371821
+      ],
+      "efficientnet_b3_95": [
+       0.7287884326184176,
+       0.8349072372421429
+      ]
+     },
+     "pr_auc": {
+      "resnet50": 0.7074811922955838,
+      "efficientnet_b3": 0.7072752792522498,
+      "difference": -0.00020591304333406057,
+      "difference_95": [
+       -0.09008034247198693,
+       0.08519483646930989
+      ],
+      "clear": false,
+      "resnet50_95": [
+       0.6076907038857222,
+       0.7965962651831757
+      ],
+      "efficientnet_b3_95": [
+       0.6162677341145959,
+       0.7841656724577153
+      ]
+     },
+     "recall": {
+      "resnet50": 0.6972477064220184,
+      "efficientnet_b3": 0.6788990825688074,
+      "difference": -0.01834862385321101,
+      "difference_95": [
+       -0.10891921124885597,
+       0.0714285714285714
+      ],
+      "clear": false,
+      "resnet50_95": [
+       0.6057692307692307,
+       0.7768105158730158
+      ],
+      "efficientnet_b3_95": [
+       0.5855800922874094,
+       0.7657657657657657
+      ]
+     },
+     "precision": {
+      "resnet50": 0.6031746031746031,
+      "efficientnet_b3": 0.6218487394957983,
+      "difference": 0.01867413632119519,
+      "difference_95": [
+       -0.06175658350276222,
+       0.09813155344902585
+      ],
+      "clear": false,
+      "resnet50_95": [
+       0.5149198858647938,
+       0.6880018348623853
+      ],
+      "efficientnet_b3_95": [
+       0.5284514496088357,
+       0.7132059800664451
+      ]
+     },
+     "f1": {
+      "resnet50": 0.6468085106382979,
+      "efficientnet_b3": 0.649122807017544,
+      "difference": 0.0023142963792460725,
+      "difference_95": [
+       -0.06934181452078306,
+       0.0733299610685685
+      ],
+      "clear": false,
+      "resnet50_95": [
+       0.5713990554899644,
+       0.7120111587982833
+      ],
+      "efficientnet_b3_95": [
+       0.5697389420884633,
+       0.7210370787307393
+      ]
+     },
+     "accuracy": {
+      "resnet50": 0.7186440677966102,
+      "efficientnet_b3": 0.7288135593220338,
+      "difference": 0.01016949152542368,
+      "difference_95": [
+       -0.048447111687812454,
+       0.0692101595540176
+      ],
+      "clear": false,
+      "resnet50_95": [
+       0.6622917589720868,
+       0.7681660899653979
+      ],
+      "efficientnet_b3_95": [
+       0.6780764457111337,
+       0.7824599542334095
+      ]
+     }
+    }
+   },
+   "neither_patient_nor_lesion_seen": {
+    "rows": 130,
+    "malignant": 42,
+    "patients": 122,
+    "resamples": 2000,
+    "metrics": {
+     "roc_auc": {
+      "resnet50": 0.7930194805194806,
+      "efficientnet_b3": 0.8024891774891775,
+      "difference": 0.009469696969696906,
+      "difference_95": [
+       -0.07732302954913163,
+       0.10066557431795126
+      ],
+      "clear": false,
+      "resnet50_95": [
+       0.6948833913410325,
+       0.8835082150024358
+      ],
+      "efficientnet_b3_95": [
+       0.7180475154294003,
+       0.8748266358463727
+      ]
+     },
+     "pr_auc": {
+      "resnet50": 0.7076053012752339,
+      "efficientnet_b3": 0.6743726887549888,
+      "difference": -0.03323261252024512,
+      "difference_95": [
+       -0.16223641407162673,
+       0.09109483148655786
+      ],
+      "clear": false,
+      "resnet50_95": [
+       0.5629660476909341,
+       0.8341557633279966
+      ],
+      "efficientnet_b3_95": [
+       0.5121751946433281,
+       0.8050753715362716
+      ]
+     },
+     "recall": {
+      "resnet50": 0.6666666666666666,
+      "efficientnet_b3": 0.6904761904761905,
+      "difference": 0.023809523809523836,
+      "difference_95": [
+       -0.11634828349944627,
+       0.1707317073170731
+      ],
+      "clear": false,
+      "resnet50_95": [
+       0.5135135135135135,
+       0.813953488372093
+      ],
+      "efficientnet_b3_95": [
+       0.5404885654885655,
+       0.8333333333333334
+      ]
+     },
+     "precision": {
+      "resnet50": 0.5384615384615384,
+      "efficientnet_b3": 0.5918367346938775,
+      "difference": 0.053375196232339106,
+      "difference_95": [
+       -0.0652403956751783,
+       0.16916581275892098
+      ],
+      "clear": false,
+      "resnet50_95": [
+       0.39285714285714285,
+       0.68
+      ],
+      "efficientnet_b3_95": [
+       0.44680851063829785,
+       0.7307926829268291
+      ]
+     },
+     "f1": {
+      "resnet50": 0.5957446808510638,
+      "efficientnet_b3": 0.6373626373626373,
+      "difference": 0.04161795651157352,
+      "difference_95": [
+       -0.06847041847041849,
+       0.15053763440860202
+      ],
+      "clear": false,
+      "resnet50_95": [
+       0.46511627906976744,
+       0.709692493216762
+      ],
+      "efficientnet_b3_95": [
+       0.5066666666666667,
+       0.7474835309617919
+      ]
+     },
+     "accuracy": {
+      "resnet50": 0.7076923076923077,
+      "efficientnet_b3": 0.7461538461538462,
+      "difference": 0.038461538461538436,
+      "difference_95": [
+       -0.047244094488189003,
+       0.12310077519379832
+      ],
+      "clear": false,
+      "resnet50_95": [
+       0.6220472440944882,
+       0.7878787878787878
+      ],
+      "efficientnet_b3_95": [
+       0.6693532512065024,
+       0.8175348374253483
+      ]
+     }
+    }
+   },
+   "agreement": {
+    "melanomas_found_by_both": 61,
+    "melanomas_found_by_resnet50_only": 15,
+    "melanomas_found_by_efficientnet_b3_only": 13,
+    "melanomas_missed_by_both": 20,
+    "false_alarms_by_both": 18,
+    "false_alarms_resnet50_only": 33,
+    "false_alarms_efficientnet_b3_only": 27,
+    "probability_correlation_spearman": 0.40216747825476196
+   }
+  }
+ },
+ "finals": {
+  "resnet50": {
+   "final_best": {
+    "accuracy": 0.9631147540983607,
+    "precision": 0.6293706293706294,
+    "recall": 0.8256880733944955,
+    "f1": 0.7142857142857143,
+    "roc_auc": 0.9767531000014934,
+    "sensitivity": 0.8256880733944955,
+    "specificity": 0.9712425393380358,
+    "ppv": 0.6293706293706294,
+    "npv": 0.9894969596462134,
+    "balanced_accuracy": 0.8984653063662656,
+    "mcc": 0.7022780979893198,
+    "pr_auc": 0.7711106601998388,
+    "tn": 1790.0,
+    "fp": 53.0,
+    "fn": 19.0,
+    "tp": 90.0
+   },
+   "final_round50": {
+    "accuracy": 0.9569672131147541,
+    "precision": 0.5984251968503937,
+    "recall": 0.6972477064220184,
+    "f1": 0.6440677966101694,
+    "roc_auc": 0.9474455788577658,
+    "sensitivity": 0.6972477064220184,
+    "specificity": 0.972327726532827,
+    "ppv": 0.5984251968503937,
+    "npv": 0.9819178082191781,
+    "balanced_accuracy": 0.8347877164774227,
+    "mcc": 0.6233645954670304,
+    "pr_auc": 0.6899229971295955,
+    "tn": 1792.0,
+    "fp": 51.0,
+    "fn": 33.0,
+    "tp": 76.0
+   }
+  },
+  "efficientnet_b3": {
+   "final_best": {
+    "accuracy": 0.9656762295081968,
+    "precision": 0.6640625,
+    "recall": 0.7798165137614679,
+    "f1": 0.7172995780590717,
+    "roc_auc": 0.9788687172390448,
+    "sensitivity": 0.7798165137614679,
+    "specificity": 0.9766684753119913,
+    "ppv": 0.6640625,
+    "npv": 0.9868421052631579,
+    "balanced_accuracy": 0.8782424945367295,
+    "mcc": 0.7017118804754301,
+    "pr_auc": 0.7467974672715928,
+    "tn": 1800.0,
+    "fp": 43.0,
+    "fn": 24.0,
+    "tp": 85.0
+   },
+   "final_round50": {
+    "accuracy": 0.9590163934426229,
+    "precision": 0.6218487394957983,
+    "recall": 0.6788990825688074,
+    "f1": 0.6491228070175439,
+    "roc_auc": 0.9672900685459984,
+    "sensitivity": 0.6788990825688074,
+    "specificity": 0.9755832881172002,
+    "ppv": 0.6218487394957983,
+    "npv": 0.9809056192034915,
+    "balanced_accuracy": 0.8272411853430037,
+    "mcc": 0.6280860622739811,
+    "pr_auc": 0.691355380302136,
+    "tn": 1798.0,
+    "fp": 45.0,
+    "fn": 35.0,
+    "tp": 74.0
+   }
+  }
+ },
+ "thresholds": {
+  "resnet50": {
+   "final_best": [
+    {
+     "threshold": 0.1,
+     "precision": 0.432653,
+     "recall": 0.972477,
+     "f1": 0.59887,
+     "specificity": 0.924579,
+     "tn": 1704,
+     "fp": 139,
+     "fn": 3,
+     "tp": 106,
+     "accuracy": 0.9272540983606558
+    },
+    {
+     "threshold": 0.3,
+     "precision": 0.570621,
+     "recall": 0.926606,
+     "f1": 0.706294,
+     "specificity": 0.958763,
+     "tn": 1767,
+     "fp": 76,
+     "fn": 8,
+     "tp": 101,
+     "accuracy": 0.956967213114754
+    },
+    {
+     "threshold": 0.5,
+     "precision": 0.629371,
+     "recall": 0.825688,
+     "f1": 0.714286,
+     "specificity": 0.971243,
+     "tn": 1790,
+     "fp": 53,
+     "fn": 19,
+     "tp": 90,
+     "accuracy": 0.9631147540983608
+    },
+    {
+     "threshold": 0.7,
+     "precision": 0.727273,
+     "recall": 0.66055,
+     "f1": 0.692308,
+     "specificity": 0.98535,
+     "tn": 1816,
+     "fp": 27,
+     "fn": 37,
+     "tp": 72,
+     "accuracy": 0.9672131147540984
+    },
+    {
+     "threshold": 0.9,
+     "precision": 0.847826,
+     "recall": 0.357798,
+     "f1": 0.503226,
+     "specificity": 0.996202,
+     "tn": 1836,
+     "fp": 7,
+     "fn": 70,
+     "tp": 39,
+     "accuracy": 0.9605532786885246
+    }
+   ],
+   "final_round50": [
+    {
+     "threshold": 0.1,
+     "precision": 0.517857,
+     "recall": 0.798165,
+     "f1": 0.628159,
+     "specificity": 0.95605,
+     "tn": 1762,
+     "fp": 81,
+     "fn": 22,
+     "tp": 87,
+     "accuracy": 0.9472336065573772
+    },
+    {
+     "threshold": 0.3,
+     "precision": 0.561644,
+     "recall": 0.752294,
+     "f1": 0.643137,
+     "specificity": 0.965274,
+     "tn": 1779,
+     "fp": 64,
+     "fn": 27,
+     "tp": 82,
+     "accuracy": 0.9533811475409836
+    },
+    {
+     "threshold": 0.5,
+     "precision": 0.598425,
+     "recall": 0.697248,
+     "f1": 0.644068,
+     "specificity": 0.972328,
+     "tn": 1792,
+     "fp": 51,
+     "fn": 33,
+     "tp": 76,
+     "accuracy": 0.956967213114754
+    },
+    {
+     "threshold": 0.7,
+     "precision": 0.643478,
+     "recall": 0.678899,
+     "f1": 0.660714,
+     "specificity": 0.977754,
+     "tn": 1802,
+     "fp": 41,
+     "fn": 35,
+     "tp": 74,
+     "accuracy": 0.9610655737704918
+    },
+    {
+     "threshold": 0.9,
+     "precision": 0.697674,
+     "recall": 0.550459,
+     "f1": 0.615385,
+     "specificity": 0.985893,
+     "tn": 1817,
+     "fp": 26,
+     "fn": 49,
+     "tp": 60,
+     "accuracy": 0.961577868852459
+    }
+   ]
+  },
+  "efficientnet_b3": {
+   "final_best": [
+    {
+     "threshold": 0.1,
+     "precision": 0.541899,
+     "recall": 0.889908,
+     "f1": 0.673611,
+     "specificity": 0.955507,
+     "tn": 1761,
+     "fp": 82,
+     "fn": 12,
+     "tp": 97,
+     "accuracy": 0.951844262295082
+    },
+    {
+     "threshold": 0.3,
+     "precision": 0.62069,
+     "recall": 0.825688,
+     "f1": 0.708661,
+     "specificity": 0.970157,
+     "tn": 1788,
+     "fp": 55,
+     "fn": 19,
+     "tp": 90,
+     "accuracy": 0.9620901639344264
+    },
+    {
+     "threshold": 0.5,
+     "precision": 0.664062,
+     "recall": 0.779817,
+     "f1": 0.7173,
+     "specificity": 0.976668,
+     "tn": 1800,
+     "fp": 43,
+     "fn": 24,
+     "tp": 85,
+     "accuracy": 0.9656762295081968
+    },
+    {
+     "threshold": 0.7,
+     "precision": 0.700935,
+     "recall": 0.688073,
+     "f1": 0.694444,
+     "specificity": 0.982637,
+     "tn": 1811,
+     "fp": 32,
+     "fn": 34,
+     "tp": 75,
+     "accuracy": 0.966188524590164
+    },
+    {
+     "threshold": 0.9,
+     "precision": 0.80597,
+     "recall": 0.495413,
+     "f1": 0.613636,
+     "specificity": 0.992946,
+     "tn": 1830,
+     "fp": 13,
+     "fn": 55,
+     "tp": 54,
+     "accuracy": 0.9651639344262296
+    }
+   ],
+   "final_round50": [
+    {
+     "threshold": 0.1,
+     "precision": 0.533333,
+     "recall": 0.733945,
+     "f1": 0.617761,
+     "specificity": 0.962018,
+     "tn": 1773,
+     "fp": 70,
+     "fn": 29,
+     "tp": 80,
+     "accuracy": 0.949282786885246
+    },
+    {
+     "threshold": 0.3,
+     "precision": 0.607692,
+     "recall": 0.724771,
+     "f1": 0.661088,
+     "specificity": 0.972328,
+     "tn": 1792,
+     "fp": 51,
+     "fn": 30,
+     "tp": 79,
+     "accuracy": 0.9585040983606558
+    },
+    {
+     "threshold": 0.5,
+     "precision": 0.621849,
+     "recall": 0.678899,
+     "f1": 0.649123,
+     "specificity": 0.975583,
+     "tn": 1798,
+     "fp": 45,
+     "fn": 35,
+     "tp": 74,
+     "accuracy": 0.9590163934426228
+    },
+    {
+     "threshold": 0.7,
+     "precision": 0.654206,
+     "recall": 0.642202,
+     "f1": 0.648148,
+     "specificity": 0.979924,
+     "tn": 1806,
+     "fp": 37,
+     "fn": 39,
+     "tp": 70,
+     "accuracy": 0.9610655737704918
+    },
+    {
+     "threshold": 0.9,
+     "precision": 0.691358,
+     "recall": 0.513761,
+     "f1": 0.589474,
+     "specificity": 0.986435,
+     "tn": 1818,
+     "fp": 25,
+     "fn": 53,
+     "tp": 56,
+     "accuracy": 0.9600409836065574
+    }
+   ]
+  }
+ },
+ "convergence": {
+  "resnet50": {
+   "best_round": 20,
+   "best_selected_clients_roc_auc": 0.9877038313222868,
+   "first_round_at_or_above": {
+    "0.9": 2,
+    "0.95": 7,
+    "0.97": 8
+   },
+   "mean_roc_auc": {
+    "rounds_2_10": 0.9388157621765151,
+    "rounds_11_30": 0.9649263764338297,
+    "rounds_31_50": 0.9555619835193496
+   },
+   "std_roc_auc_rounds_31_50": 0.01860932415317272,
+   "mean_train_loss": {
+    "rounds_2_10": 0.0010163374046147113,
+    "rounds_31_50": 0.0023909047844302193
+   },
+   "mean_eval_focal_loss": {
+    "rounds_2_10": 0.02012836920327339,
+    "rounds_11_30": 0.027605708577346927,
+    "rounds_31_50": 0.048483055560872894
+   }
+  },
+  "efficientnet_b3": {
+   "best_round": 24,
+   "best_selected_clients_roc_auc": 0.9801292777797852,
+   "first_round_at_or_above": {
+    "0.9": 2,
+    "0.95": 5,
+    "0.97": 8
+   },
+   "mean_roc_auc": {
+    "rounds_2_10": 0.9516771257765241,
+    "rounds_11_30": 0.9697244577452093,
+    "rounds_31_50": 0.9597629775377469
+   },
+   "std_roc_auc_rounds_31_50": 0.014559220636811235,
+   "mean_train_loss": {
+    "rounds_2_10": 0.0006295072644044778,
+    "rounds_31_50": 0.0012479138438184854
+   },
+   "mean_eval_focal_loss": {
+    "rounds_2_10": 0.01647745690288391,
+    "rounds_11_30": 0.04016804790324635,
+    "rounds_31_50": 0.0910396427463965
+   }
+  },
+  "paired_rounds_2_50": {
+   "efficientnet_b3_higher": 32,
+   "resnet50_higher": 17,
+   "mean_difference": 0.006035383244808461,
+   "note": "Both runs evaluate the same selected hospitals in each round. Rounds are descriptive, not independent."
+  }
+ },
+ "federation": {
+  "resnet50": {
+   "completed_rounds": 50,
+   "empty_rounds": 1,
+   "quorum_label_rounds": 27,
+   "mean_selected": 5.98,
+   "mean_aggregated": 4.64,
+   "mean_failed": 1.3,
+   "mean_new_stragglers": 1.44,
+   "window_mean": 14.261739080211505,
+   "window_min": 4.545610968793086,
+   "window_max": 43.936596822846724,
+   "schedule_matches_plan": 50,
+   "hash_failures": 0,
+   "broken_hash_chain": 0,
+   "resumes": 6,
+   "aggregated_updates_total": 232,
+   "new_stragglers_total": 72,
+   "failed_total": 65,
+   "participation": [
+    {
+     "client_id": 0,
+     "hospital": "CityGeneral_Multispecialty_Hospital",
+     "tier": "reliable",
+     "selected": 36,
+     "on_time": 33,
+     "late": 2,
+     "failed": 1,
+     "aggregated": 35
+    },
+    {
+     "client_id": 1,
+     "hospital": "GoldenSun_Public_Health_Screening_Camp",
+     "tier": "moderate",
+     "selected": 31,
+     "on_time": 7,
+     "late": 17,
+     "failed": 7,
+     "aggregated": 24
+    },
+    {
+     "client_id": 2,
+     "hospital": "Greenfield_Rural_Community_Health_Center",
+     "tier": "high_straggler",
+     "selected": 23,
+     "on_time": 1,
+     "late": 10,
+     "failed": 12,
+     "aggregated": 11
+    },
+    {
+     "client_id": 3,
+     "hospital": "Lakeside_Regional_Mixed_Hospital",
+     "tier": "reliable",
+     "selected": 38,
+     "on_time": 35,
+     "late": 0,
+     "failed": 3,
+     "aggregated": 35
+    },
+    {
+     "client_id": 4,
+     "hospital": "MetroSkin_Dermatology_Research_Clinic",
+     "tier": "moderate",
+     "selected": 21,
+     "on_time": 8,
+     "late": 8,
+     "failed": 5,
+     "aggregated": 15
+    },
+    {
+     "client_id": 5,
+     "hospital": "NorthCare_Tertiary_Melanoma_Institute",
+     "tier": "high_straggler",
+     "selected": 13,
+     "on_time": 0,
+     "late": 4,
+     "failed": 9,
+     "aggregated": 4
+    },
+    {
+     "client_id": 6,
+     "hospital": "Pinewood_Oncology_Biopsy_Center",
+     "tier": "reliable",
+     "selected": 42,
+     "on_time": 37,
+     "late": 2,
+     "failed": 3,
+     "aggregated": 39
+    },
+    {
+     "client_id": 7,
+     "hospital": "SunRay_Community_Outreach_Clinic",
+     "tier": "moderate",
+     "selected": 31,
+     "on_time": 7,
+     "late": 14,
+     "failed": 10,
+     "aggregated": 21
+    },
+    {
+     "client_id": 8,
+     "hospital": "TeleDerm_National_Screening_Network",
+     "tier": "high_straggler",
+     "selected": 25,
+     "on_time": 0,
+     "late": 13,
+     "failed": 12,
+     "aggregated": 12
+    },
+    {
+     "client_id": 9,
+     "hospital": "Westbridge_Academic_Dermoscopy_Unit",
+     "tier": "reliable",
+     "selected": 39,
+     "on_time": 34,
+     "late": 2,
+     "failed": 3,
+     "aggregated": 36
+    }
+   ]
+  },
+  "efficientnet_b3": {
+   "completed_rounds": 50,
+   "empty_rounds": 1,
+   "quorum_label_rounds": 27,
+   "mean_selected": 5.98,
+   "mean_aggregated": 4.64,
+   "mean_failed": 1.3,
+   "mean_new_stragglers": 1.44,
+   "window_mean": 14.261739080211505,
+   "window_min": 4.545610968793086,
+   "window_max": 43.936596822846724,
+   "schedule_matches_plan": 50,
+   "hash_failures": 0,
+   "broken_hash_chain": 0,
+   "resumes": 0,
+   "aggregated_updates_total": 232,
+   "new_stragglers_total": 72,
+   "failed_total": 65,
+   "participation": [
+    {
+     "client_id": 0,
+     "hospital": "CityGeneral_Multispecialty_Hospital",
+     "tier": "reliable",
+     "selected": 36,
+     "on_time": 33,
+     "late": 2,
+     "failed": 1,
+     "aggregated": 35
+    },
+    {
+     "client_id": 1,
+     "hospital": "GoldenSun_Public_Health_Screening_Camp",
+     "tier": "moderate",
+     "selected": 31,
+     "on_time": 7,
+     "late": 17,
+     "failed": 7,
+     "aggregated": 24
+    },
+    {
+     "client_id": 2,
+     "hospital": "Greenfield_Rural_Community_Health_Center",
+     "tier": "high_straggler",
+     "selected": 23,
+     "on_time": 1,
+     "late": 10,
+     "failed": 12,
+     "aggregated": 11
+    },
+    {
+     "client_id": 3,
+     "hospital": "Lakeside_Regional_Mixed_Hospital",
+     "tier": "reliable",
+     "selected": 38,
+     "on_time": 35,
+     "late": 0,
+     "failed": 3,
+     "aggregated": 35
+    },
+    {
+     "client_id": 4,
+     "hospital": "MetroSkin_Dermatology_Research_Clinic",
+     "tier": "moderate",
+     "selected": 21,
+     "on_time": 8,
+     "late": 8,
+     "failed": 5,
+     "aggregated": 15
+    },
+    {
+     "client_id": 5,
+     "hospital": "NorthCare_Tertiary_Melanoma_Institute",
+     "tier": "high_straggler",
+     "selected": 13,
+     "on_time": 0,
+     "late": 4,
+     "failed": 9,
+     "aggregated": 4
+    },
+    {
+     "client_id": 6,
+     "hospital": "Pinewood_Oncology_Biopsy_Center",
+     "tier": "reliable",
+     "selected": 42,
+     "on_time": 37,
+     "late": 2,
+     "failed": 3,
+     "aggregated": 39
+    },
+    {
+     "client_id": 7,
+     "hospital": "SunRay_Community_Outreach_Clinic",
+     "tier": "moderate",
+     "selected": 31,
+     "on_time": 7,
+     "late": 14,
+     "failed": 10,
+     "aggregated": 21
+    },
+    {
+     "client_id": 8,
+     "hospital": "TeleDerm_National_Screening_Network",
+     "tier": "high_straggler",
+     "selected": 25,
+     "on_time": 0,
+     "late": 13,
+     "failed": 12,
+     "aggregated": 12
+    },
+    {
+     "client_id": 9,
+     "hospital": "Westbridge_Academic_Dermoscopy_Unit",
+     "tier": "reliable",
+     "selected": 39,
+     "on_time": 34,
+     "late": 2,
+     "failed": 3,
+     "aggregated": 36
+    }
+   ]
+  },
+  "rounds_with_identical_client_sets_and_window": 50
+ },
+ "compute": {
+  "resnet50": {
+   "wall_seconds": 21100.30168390274,
+   "kept_round_seconds": 18561.69673895836,
+   "lost_seconds": 2538.6049449443817,
+   "mean_round_seconds": 371.23393477916716,
+   "median_round_seconds": 347.8362514972687,
+   "client_fits": 299,
+   "mean_client_fit_seconds": 59.28277935232207,
+   "total_client_fit_seconds": 17725.5510263443,
+   "train_images_processed": 1142000,
+   "train_images_per_second": 64.42677005091248,
+   "peak_torch_allocated_mb": 2069.52001953125,
+   "peak_device_memory_mb": 2649.0,
+   "mean_gpu_util_pct": 92.27193828351012,
+   "peak_gpu_temp_c": 83.0,
+   "mean_gpu_power_w": 38.3245274831244,
+   "peak_process_rss_gb": 2.8391265869140625,
+   "min_free_ram_gb": 0.315765380859375,
+   "min_free_commit_gb": 0.1607170104980468,
+   "commit_limit_max_gb": 20.22895050048828,
+   "crashes": 6,
+   "resume_state_mb": 282.917278
+  },
+  "efficientnet_b3": {
+   "wall_seconds": 24977.998871564865,
+   "kept_round_seconds": 24976.663408041,
+   "lost_seconds": 1.335463523864746,
+   "mean_round_seconds": 499.53326816082,
+   "median_round_seconds": 498.8644120693207,
+   "client_fits": 299,
+   "mean_client_fit_seconds": 81.20016698295058,
+   "total_client_fit_seconds": 24278.84992790222,
+   "train_images_processed": 1142000,
+   "train_images_per_second": 47.03682437146943,
+   "peak_torch_allocated_mb": 3527.54052734375,
+   "peak_device_memory_mb": 3957.0,
+   "mean_gpu_util_pct": 95.12056451612904,
+   "peak_gpu_temp_c": 80.0,
+   "mean_gpu_power_w": 34.3073629032258,
+   "peak_process_rss_gb": 2.5654220581054688,
+   "min_free_ram_gb": 0.4098701477050781,
+   "min_free_commit_gb": 0.4015426635742187,
+   "commit_limit_max_gb": 19.495037078857425,
+   "crashes": 0,
+   "resume_state_mb": 129.627278
+  }
+ },
+ "historical_efficientnet_b3": {
+  "accuracy": 0.9559000000000001,
+  "precision": 0.5983,
+  "recall": 0.6422,
+  "f1": 0.6195,
+  "roc_auc": 0.9609,
+  "pr_auc": 0.6916,
+  "tn": 1796,
+  "fp": 47,
+  "fn": 39,
+  "tp": 70,
+  "note": "Historical, indicative only: different mapping and transport; no per-image predictions."
+ }
+}

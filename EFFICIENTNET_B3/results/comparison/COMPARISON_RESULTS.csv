@@ -1,0 +1,131 @@
+section,item,resnet50,efficientnet_b3,difference_b_minus_a,difference_95_low,difference_95_high,clear,note
+A architecture,state_tensors,329,583,,,,,
+A architecture,parameters,23515298,10702474,,,,,
+A architecture,backbone_parameters,23508032,10696232,,,,,
+A architecture,non_backbone_parameters,7266,6242,,,,,
+A architecture,fusion_inputs,2080,1568,,,,,
+A architecture,image_features,2048,1536,,,,,
+A architecture,weights_mb,94.274616,43.160224,,,,,
+A architecture,checkpoint_file_mb,94.380783,43.347101,,,,,
+B classification,final_best/all_rows/roc_auc,0.9767531000014934,0.9788687172390448,0.0021156172375513815,-0.01240582590352341,0.024732142857142928,False,"rows 1952, patients 637"
+B classification,final_best/all_rows/pr_auc,0.7711106601998388,0.7467974672715928,-0.024313192928245964,-0.11001460815662793,0.06967923468488345,False,"rows 1952, patients 637"
+B classification,final_best/all_rows/recall,0.8256880733944955,0.7798165137614679,-0.04587155963302758,-0.13043478260869568,0.03450304259634873,False,"rows 1952, patients 637"
+B classification,final_best/all_rows/precision,0.6293706293706294,0.6640625,0.034691870629370625,-0.03170688608776841,0.10328647273515043,False,"rows 1952, patients 637"
+B classification,final_best/all_rows/f1,0.7142857142857142,0.7172995780590717,0.00301386377335755,-0.06090445011051233,0.06774246852131628,False,"rows 1952, patients 637"
+B classification,final_best/all_rows/accuracy,0.9631147540983607,0.9656762295081968,0.0025614754098360892,-0.005721206645343857,0.011162451916065054,False,"rows 1952, patients 637"
+B classification,final_best/histopathology_confirmed_only/roc_auc,0.8549373581927593,0.843642103186347,-0.011295255006412264,-0.0602490601237147,0.037763055993099384,False,"rows 295, patients 259"
+B classification,final_best/histopathology_confirmed_only/pr_auc,0.775195547354763,0.7605931450570037,-0.014602402297759332,-0.10085462117473615,0.07215055458889566,False,"rows 295, patients 259"
+B classification,final_best/histopathology_confirmed_only/recall,0.8256880733944955,0.7798165137614679,-0.04587155963302758,-0.13159525880817743,0.04275362318840566,False,"rows 295, patients 259"
+B classification,final_best/histopathology_confirmed_only/precision,0.6293706293706294,0.6692913385826772,0.03992070921204782,-0.028945179237764147,0.10774562419405283,False,"rows 295, patients 259"
+B classification,final_best/histopathology_confirmed_only/f1,0.7142857142857142,0.7203389830508474,0.006053268765133235,-0.05768543239400484,0.07168333054215711,False,"rows 295, patients 259"
+B classification,final_best/histopathology_confirmed_only/accuracy,0.7559322033898305,0.7762711864406779,0.02033898305084747,-0.036915858811831966,0.07793648331190987,False,"rows 295, patients 259"
+B classification,final_best/neither_patient_nor_lesion_seen/roc_auc,0.8847402597402596,0.8484848484848484,-0.03625541125541121,-0.11968672280640509,0.047322189745463344,False,"rows 130, patients 122"
+B classification,final_best/neither_patient_nor_lesion_seen/pr_auc,0.8080713852743787,0.7085336042834967,-0.09953778099088206,-0.2430671937231823,0.03615056544908976,False,"rows 130, patients 122"
+B classification,final_best/neither_patient_nor_lesion_seen/recall,0.8809523809523809,0.7857142857142857,-0.09523809523809523,-0.241405433646813,0.051315789473684065,False,"rows 130, patients 122"
+B classification,final_best/neither_patient_nor_lesion_seen/precision,0.5967741935483871,0.5689655172413793,-0.027808676307007785,-0.11515901956432134,0.057778386855652994,False,"rows 130, patients 122"
+B classification,final_best/neither_patient_nor_lesion_seen/f1,0.7115384615384616,0.66,-0.05153846153846153,-0.14899473253906445,0.04552054680336747,False,"rows 130, patients 122"
+B classification,final_best/neither_patient_nor_lesion_seen/accuracy,0.7692307692307693,0.7384615384615385,-0.03076923076923077,-0.10606060606060608,0.0458103347034645,False,"rows 130, patients 122"
+B classification,final_best/tn,1790.0,1800.0,,,,,
+B classification,final_best/fp,53.0,43.0,,,,,
+B classification,final_best/fn,19.0,24.0,,,,,
+B classification,final_best/tp,90.0,85.0,,,,,
+B thresholds,final_best/t0.1/precision,0.432653,0.541899,0.10924600000000001,,,,
+B thresholds,final_best/t0.1/recall,0.972477,0.889908,-0.082569,,,,
+B thresholds,final_best/t0.1/f1,0.59887,0.673611,0.07474099999999995,,,,
+B thresholds,final_best/t0.1/specificity,0.924579,0.955507,0.030927999999999956,,,,
+B thresholds,final_best/t0.3/precision,0.570621,0.62069,0.05006899999999992,,,,
+B thresholds,final_best/t0.3/recall,0.926606,0.825688,-0.10091800000000006,,,,
+B thresholds,final_best/t0.3/f1,0.706294,0.708661,0.002367000000000008,,,,
+B thresholds,final_best/t0.3/specificity,0.958763,0.970157,0.011394000000000015,,,,
+B thresholds,final_best/t0.5/precision,0.629371,0.664062,0.03469100000000003,,,,
+B thresholds,final_best/t0.5/recall,0.825688,0.779817,-0.045870999999999995,,,,
+B thresholds,final_best/t0.5/f1,0.714286,0.7173,0.003014000000000072,,,,
+B thresholds,final_best/t0.5/specificity,0.971243,0.976668,0.005425000000000013,,,,
+B thresholds,final_best/t0.7/precision,0.727273,0.700935,-0.026337999999999973,,,,
+B thresholds,final_best/t0.7/recall,0.66055,0.688073,0.027523000000000075,,,,
+B thresholds,final_best/t0.7/f1,0.692308,0.694444,0.0021359999999999157,,,,
+B thresholds,final_best/t0.7/specificity,0.98535,0.982637,-0.0027129999999999654,,,,
+B thresholds,final_best/t0.9/precision,0.847826,0.80597,-0.041856000000000004,,,,
+B thresholds,final_best/t0.9/recall,0.357798,0.495413,0.137615,,,,
+B thresholds,final_best/t0.9/f1,0.503226,0.613636,0.11041000000000001,,,,
+B thresholds,final_best/t0.9/specificity,0.996202,0.992946,-0.0032560000000000366,,,,
+B classification,final_round50/all_rows/roc_auc,0.9474455788577658,0.9672900685459984,0.019844489688232603,-0.006693605628689129,0.05540975810618332,False,"rows 1952, patients 637"
+B classification,final_round50/all_rows/pr_auc,0.6899229971295955,0.691355380302136,0.0014323831725404634,-0.09131488965669536,0.09163567470368757,False,"rows 1952, patients 637"
+B classification,final_round50/all_rows/recall,0.6972477064220184,0.6788990825688074,-0.01834862385321101,-0.10576923076923073,0.07342879190602743,False,"rows 1952, patients 637"
+B classification,final_round50/all_rows/precision,0.5984251968503937,0.6218487394957983,0.023423542645404583,-0.057425309432351725,0.10306071006858392,False,"rows 1952, patients 637"
+B classification,final_round50/all_rows/f1,0.6440677966101696,0.649122807017544,0.005055010407374438,-0.06738934938907776,0.07842567818096181,False,"rows 1952, patients 637"
+B classification,final_round50/all_rows/accuracy,0.9569672131147541,0.9590163934426229,0.002049180327868827,-0.007624592324075843,0.011659728664899944,False,"rows 1952, patients 637"
+B classification,final_round50/histopathology_confirmed_only/roc_auc,0.7814935385222453,0.7844529939824405,0.0029594554601951595,-0.060433280170122325,0.06328669699844389,False,"rows 295, patients 259"
+B classification,final_round50/histopathology_confirmed_only/pr_auc,0.7074811922955838,0.7072752792522498,-0.00020591304333406057,-0.09008034247198693,0.08519483646930989,False,"rows 295, patients 259"
+B classification,final_round50/histopathology_confirmed_only/recall,0.6972477064220184,0.6788990825688074,-0.01834862385321101,-0.10891921124885597,0.0714285714285714,False,"rows 295, patients 259"
+B classification,final_round50/histopathology_confirmed_only/precision,0.6031746031746031,0.6218487394957983,0.01867413632119519,-0.06175658350276222,0.09813155344902585,False,"rows 295, patients 259"
+B classification,final_round50/histopathology_confirmed_only/f1,0.6468085106382979,0.649122807017544,0.0023142963792460725,-0.06934181452078306,0.0733299610685685,False,"rows 295, patients 259"
+B classification,final_round50/histopathology_confirmed_only/accuracy,0.7186440677966102,0.7288135593220338,0.01016949152542368,-0.048447111687812454,0.0692101595540176,False,"rows 295, patients 259"
+B classification,final_round50/neither_patient_nor_lesion_seen/roc_auc,0.7930194805194806,0.8024891774891775,0.009469696969696906,-0.07732302954913163,0.10066557431795126,False,"rows 130, patients 122"
+B classification,final_round50/neither_patient_nor_lesion_seen/pr_auc,0.7076053012752339,0.6743726887549888,-0.03323261252024512,-0.16223641407162673,0.09109483148655786,False,"rows 130, patients 122"
+B classification,final_round50/neither_patient_nor_lesion_seen/recall,0.6666666666666666,0.6904761904761905,0.023809523809523836,-0.11634828349944627,0.1707317073170731,False,"rows 130, patients 122"
+B classification,final_round50/neither_patient_nor_lesion_seen/precision,0.5384615384615384,0.5918367346938775,0.053375196232339106,-0.0652403956751783,0.16916581275892098,False,"rows 130, patients 122"
+B classification,final_round50/neither_patient_nor_lesion_seen/f1,0.5957446808510638,0.6373626373626373,0.04161795651157352,-0.06847041847041849,0.15053763440860202,False,"rows 130, patients 122"
+B classification,final_round50/neither_patient_nor_lesion_seen/accuracy,0.7076923076923077,0.7461538461538462,0.038461538461538436,-0.047244094488189003,0.12310077519379832,False,"rows 130, patients 122"
+B classification,final_round50/tn,1792.0,1798.0,,,,,
+B classification,final_round50/fp,51.0,45.0,,,,,
+B classification,final_round50/fn,33.0,35.0,,,,,
+B classification,final_round50/tp,76.0,74.0,,,,,
+B thresholds,final_round50/t0.1/precision,0.517857,0.533333,0.015475999999999934,,,,
+B thresholds,final_round50/t0.1/recall,0.798165,0.733945,-0.06422000000000005,,,,
+B thresholds,final_round50/t0.1/f1,0.628159,0.617761,-0.010398000000000018,,,,
+B thresholds,final_round50/t0.1/specificity,0.95605,0.962018,0.005968000000000084,,,,
+B thresholds,final_round50/t0.3/precision,0.561644,0.607692,0.04604799999999998,,,,
+B thresholds,final_round50/t0.3/recall,0.752294,0.724771,-0.027522999999999964,,,,
+B thresholds,final_round50/t0.3/f1,0.643137,0.661088,0.01795100000000005,,,,
+B thresholds,final_round50/t0.3/specificity,0.965274,0.972328,0.007054000000000005,,,,
+B thresholds,final_round50/t0.5/precision,0.598425,0.621849,0.023424,,,,
+B thresholds,final_round50/t0.5/recall,0.697248,0.678899,-0.01834899999999995,,,,
+B thresholds,final_round50/t0.5/f1,0.644068,0.649123,0.005055000000000032,,,,
+B thresholds,final_round50/t0.5/specificity,0.972328,0.975583,0.003255000000000008,,,,
+B thresholds,final_round50/t0.7/precision,0.643478,0.654206,0.01072799999999996,,,,
+B thresholds,final_round50/t0.7/recall,0.678899,0.642202,-0.03669699999999998,,,,
+B thresholds,final_round50/t0.7/f1,0.660714,0.648148,-0.012566000000000077,,,,
+B thresholds,final_round50/t0.7/specificity,0.977754,0.979924,0.0021700000000000053,,,,
+B thresholds,final_round50/t0.9/precision,0.697674,0.691358,-0.006315999999999988,,,,
+B thresholds,final_round50/t0.9/recall,0.550459,0.513761,-0.03669800000000001,,,,
+B thresholds,final_round50/t0.9/f1,0.615385,0.589474,-0.025910999999999906,,,,
+B thresholds,final_round50/t0.9/specificity,0.985893,0.986435,0.0005419999999999314,,,,
+C federated,completed_rounds,50,50,,,,,
+C federated,empty_rounds,1,1,,,,,
+C federated,quorum_label_rounds,27,27,,,,,
+C federated,mean_selected,5.98,5.98,,,,,
+C federated,mean_aggregated,4.64,4.64,,,,,
+C federated,mean_failed,1.3,1.3,,,,,
+C federated,mean_new_stragglers,1.44,1.44,,,,,
+C federated,aggregated_updates_total,232,232,,,,,
+C federated,new_stragglers_total,72,72,,,,,
+C federated,failed_total,65,65,,,,,
+C federated,schedule_matches_plan,50,50,,,,,
+C federated,hash_failures,0,0,,,,,
+C federated,broken_hash_chain,0,0,,,,,
+C federated,resumes,6,0,,,,,
+C convergence,best_round,20,24,,,,,
+C convergence,best_selected_clients_roc_auc,0.9877038313222868,0.9801292777797852,,,,,
+C convergence,std_roc_auc_rounds_31_50,0.01860932415317272,0.014559220636811235,,,,,
+D compute,wall_seconds,21100.30168390274,24977.998871564865,,,,,
+D compute,kept_round_seconds,18561.69673895836,24976.663408041,,,,,
+D compute,lost_seconds,2538.6049449443817,1.335463523864746,,,,,
+D compute,mean_round_seconds,371.23393477916716,499.53326816082,,,,,
+D compute,median_round_seconds,347.8362514972687,498.8644120693207,,,,,
+D compute,client_fits,299,299,,,,,
+D compute,mean_client_fit_seconds,59.28277935232207,81.20016698295058,,,,,
+D compute,total_client_fit_seconds,17725.5510263443,24278.84992790222,,,,,
+D compute,train_images_processed,1142000,1142000,,,,,
+D compute,train_images_per_second,64.42677005091248,47.03682437146943,,,,,
+D compute,peak_torch_allocated_mb,2069.52001953125,3527.54052734375,,,,,
+D compute,peak_device_memory_mb,2649.0,3957.0,,,,,
+D compute,mean_gpu_util_pct,92.27193828351012,95.12056451612904,,,,,
+D compute,peak_gpu_temp_c,83.0,80.0,,,,,
+D compute,mean_gpu_power_w,38.3245274831244,34.3073629032258,,,,,
+D compute,peak_process_rss_gb,2.8391265869140625,2.5654220581054688,,,,,
+D compute,min_free_ram_gb,0.315765380859375,0.4098701477050781,,,,,
+D compute,min_free_commit_gb,0.1607170104980468,0.4015426635742187,,,,,
+D compute,commit_limit_max_gb,20.22895050048828,19.495037078857425,,,,,
+D compute,crashes,6,0,,,,,
+D compute,resume_state_mb,282.917278,129.627278,,,,,
