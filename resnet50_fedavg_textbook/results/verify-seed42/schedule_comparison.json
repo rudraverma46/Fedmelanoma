@@ -1,0 +1,14 @@
+{
+ "rounds_compared": 2,
+ "mismatches": 0,
+ "rows": [
+  {
+   "round": 1,
+   "matches_plan": true
+  },
+  {
+   "round": 2,
+   "matches_plan": true
+  }
+ ]
+}

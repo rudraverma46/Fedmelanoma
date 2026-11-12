@@ -1,0 +1,46 @@
+[92mINFO [0m:      configure_fit: strategy sampled 6 clients (out of 10)
+Epoch Progress: 10.0% | ETA Epoch: 0.40 min
+Epoch Progress: 10.0% | ETA Epoch: 0.07 min
+Epoch Progress: 10.0% | ETA Epoch: 0.07 min
+Epoch Progress: 10.0% | ETA Epoch: 0.07 min
+Epoch Progress: 10.0% | ETA Epoch: 0.07 min
+Epoch Progress: 10.0% | ETA Epoch: 0.08 min
+Epoch Progress: 10.0% | ETA Epoch: 0.07 min
+Epoch Progress: 10.0% | ETA Epoch: 0.07 min
+Epoch Progress: 10.0% | ETA Epoch: 0.07 min
+Epoch Progress: 10.0% | ETA Epoch: 0.07 min
+Epoch Progress: 3.8% | ETA Epoch: 0.21 min
+Epoch Progress: 3.8% | ETA Epoch: 0.19 min
+Epoch Progress: 3.8% | ETA Epoch: 0.20 min
+Epoch Progress: 3.8% | ETA Epoch: 0.19 min
+Epoch Progress: 3.8% | ETA Epoch: 0.19 min
+Epoch Progress: 8.3% | ETA Epoch: 0.09 min
+Epoch Progress: 8.3% | ETA Epoch: 0.09 min
+Epoch Progress: 8.3% | ETA Epoch: 0.08 min
+Epoch Progress: 8.3% | ETA Epoch: 0.08 min
+Epoch Progress: 8.3% | ETA Epoch: 0.08 min
+Epoch Progress: 12.5% | ETA Epoch: 0.06 min
+Epoch Progress: 12.5% | ETA Epoch: 0.05 min
+Epoch Progress: 12.5% | ETA Epoch: 0.05 min
+Epoch Progress: 12.5% | ETA Epoch: 0.05 min
+Epoch Progress: 12.5% | ETA Epoch: 0.05 min
+Epoch Progress: 1.9% | ETA Epoch: 0.44 min
+Epoch Progress: 1.9% | ETA Epoch: 0.43 min
+Epoch Progress: 1.9% | ETA Epoch: 0.42 min
+Epoch Progress: 1.9% | ETA Epoch: 0.27 min
+Epoch Progress: 1.9% | ETA Epoch: 0.27 min
+[92mINFO [0m:      aggregate_fit: received 6 results and 0 failures
+[92mINFO [0m:      configure_evaluate: strategy sampled 6 clients (out of 10)
+D:\MAIN BACKUP\backup 3\Fedmelanoma\FedAvg_RESNET 50\.venv\Lib\site-packages\matplotlib\_fontconfig_pattern.py:64: PyparsingDeprecationWarning: 'oneOf' deprecated - use 'one_of'
+  prop = Group((name + Suppress("=") + comma_separated(value)) | oneOf(_CONSTANTS))
+D:\MAIN BACKUP\backup 3\Fedmelanoma\FedAvg_RESNET 50\.venv\Lib\site-packages\matplotlib\_fontconfig_pattern.py:85: PyparsingDeprecationWarning: 'parseString' deprecated - use 'parse_string'
+  parse = parser.parseString(pattern)
+D:\MAIN BACKUP\backup 3\Fedmelanoma\FedAvg_RESNET 50\.venv\Lib\site-packages\matplotlib\_fontconfig_pattern.py:89: PyparsingDeprecationWarning: 'resetCache' deprecated - use 'reset_cache'
+  parser.resetCache()
+D:\MAIN BACKUP\backup 3\Fedmelanoma\FedAvg_RESNET 50\.venv\Lib\site-packages\matplotlib\_mathtext.py:45: PyparsingDeprecationWarning: 'enablePackrat' deprecated - use 'enable_packrat'
+  ParserElement.enablePackrat()
+In D:\MAIN BACKUP\backup 3\Fedmelanoma\FedAvg_RESNET 50\.venv\Lib\site-packages\matplotlib\mpl-data\stylelib\classic.mplstyle: 'parseString' deprecated - use 'parse_string'
+In D:\MAIN BACKUP\backup 3\Fedmelanoma\FedAvg_RESNET 50\.venv\Lib\site-packages\matplotlib\mpl-data\stylelib\classic.mplstyle: 'resetCache' deprecated - use 'reset_cache'
+[92mINFO [0m:      aggregate_evaluate: received 6 results and 0 failures
+[run] round 1/2 279 s train_loss=0.000824588829404744 roc_auc=0.886109937654383
+[run] stopping after round 1 as requested
