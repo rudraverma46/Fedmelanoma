@@ -1,0 +1,10 @@
+============================= test session starts =============================
+platform win32 -- Python 3.11.9, pytest-8.3.3, pluggy-1.7.0 -- D:\MAIN BACKUP\backup 3\Fedmelanoma\FedAvg_RESNET 50\.venv\Scripts\python.exe
+rootdir: D:\MAIN BACKUP\backup 3\Fedmelanoma\resnet50_fedavg_textbook
+collecting ... collected 2 items
+
+tests/test_04_transport_equivalence.py::test_19_fit_identical_through_both_routes PASSED [ 50%]
+tests/test_04_transport_equivalence.py::test_19_evaluate_identical_through_both_routes PASSED [100%]
+
+- generated xml file: D:\MAIN BACKUP\backup 3\Fedmelanoma\resnet50_fedavg_textbook\results\verification\test_19_transport.xml -
+======================== 2 passed in 72.83s (0:01:12) =========================
