@@ -1,0 +1,19 @@
+{
+  "checkpoint": "D:\\MAIN BACKUP\\backup 3\\Fedmelanoma\\RESNET 50_ fed novelty\\RESNET50_EFFICIENTNET_B3_EQUIVALENT\\checkpoints\\resnet50-seed42\\best_global_model.pth",
+  "accuracy": 0.9631147540983607,
+  "precision": 0.6293706293706294,
+  "recall": 0.8256880733944955,
+  "f1": 0.7142857142857143,
+  "roc_auc": 0.9767531000014934,
+  "sensitivity": 0.8256880733944955,
+  "specificity": 0.9712425393380358,
+  "ppv": 0.6293706293706294,
+  "npv": 0.9894969596462134,
+  "balanced_accuracy": 0.8984653063662656,
+  "mcc": 0.7022780979893198,
+  "pr_auc": 0.7711106601998388,
+  "tn": 1790.0,
+  "fp": 53.0,
+  "fn": 19.0,
+  "tp": 90.0
+}

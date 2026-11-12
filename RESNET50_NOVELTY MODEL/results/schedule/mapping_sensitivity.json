@@ -1,0 +1,73 @@
+{
+ "permutations": 10000,
+ "note": "Arithmetic on the planned schedule. Not a measurement of model performance.",
+ "fixed_mapping": {
+  "hospital_weight_share": {
+   "CityGeneral_Multispecialty_Hospital": 0.12018754399664697,
+   "GoldenSun_Public_Health_Screening_Camp": 0.03506024602071695,
+   "Greenfield_Rural_Community_Health_Center": 0.01962357773896126,
+   "Lakeside_Regional_Mixed_Hospital": 0.0918006482269403,
+   "MetroSkin_Dermatology_Research_Clinic": 0.10166229615564855,
+   "NorthCare_Tertiary_Melanoma_Institute": 0.022673574739930504,
+   "Pinewood_Oncology_Biopsy_Center": 0.3509585822879062,
+   "SunRay_Community_Outreach_Clinic": 0.046915372045845866,
+   "TeleDerm_National_Screening_Network": 0.014568168067858144,
+   "Westbridge_Academic_Dermoscopy_Unit": 0.1965499907195453
+  },
+  "malignant_rate_of_weighted_data": 0.050505128879402145
+ },
+ "random_mapping": {
+  "hospital_weight_share_p5_p95": {
+   "CityGeneral_Multispecialty_Hospital": [
+    0.014568168067858144,
+    0.3509585822879062
+   ],
+   "GoldenSun_Public_Health_Screening_Camp": [
+    0.014568168067858144,
+    0.3509585822879062
+   ],
+   "Greenfield_Rural_Community_Health_Center": [
+    0.014568168067858144,
+    0.3509585822879062
+   ],
+   "Lakeside_Regional_Mixed_Hospital": [
+    0.014568168067858144,
+    0.3509585822879062
+   ],
+   "MetroSkin_Dermatology_Research_Clinic": [
+    0.014568168067858144,
+    0.3509585822879062
+   ],
+   "NorthCare_Tertiary_Melanoma_Institute": [
+    0.014568168067858144,
+    0.3509585822879062
+   ],
+   "Pinewood_Oncology_Biopsy_Center": [
+    0.014568168067858144,
+    0.3509585822879062
+   ],
+   "SunRay_Community_Outreach_Clinic": [
+    0.014568168067858144,
+    0.3509585822879062
+   ],
+   "TeleDerm_National_Screening_Network": [
+    0.014568168067858144,
+    0.3509585822879062
+   ],
+   "Westbridge_Academic_Dermoscopy_Unit": [
+    0.014568168067858144,
+    0.3509585822879062
+   ]
+  },
+  "malignant_rate_mean": 0.046078316413157336,
+  "malignant_rate_p5_p95": [
+   0.037863143250578234,
+   0.055084935672227706
+  ],
+  "fraction_of_weight_moved_to_other_hospitals_mean": 0.5009415525570803,
+  "fraction_of_weight_moved_p5_p95": [
+   0.2769707685563254,
+   0.6531910492863648
+  ]
+ }
+}

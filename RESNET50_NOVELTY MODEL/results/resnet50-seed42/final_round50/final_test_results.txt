@@ -1,0 +1,32 @@
+============================================================
+FEDMELANOMAMODEL – FINAL TEST RESULTS
+============================================================
+
+Standard Metrics
+----------------------------------------
+  Accuracy           : 95.70%
+  Precision          : 0.5984
+  Recall             : 0.6972
+  F1 Score           : 0.6441
+  ROC-AUC            : 0.9474
+
+Medical AI Metrics
+----------------------------------------
+  Sensitivity        : 0.6972  (= Recall / TP rate)
+  Specificity        : 0.9723  (= TN / (TN + FP))
+  PPV                : 0.5984  (= Precision)
+  NPV                : 0.9819  (= TN / (TN + FN))
+
+Imbalanced-Dataset Metrics
+----------------------------------------
+  Balanced Accuracy  : 0.8348
+  MCC                : 0.6234
+  PR-AUC             : 0.6899
+
+Confusion Matrix
+----------------------------------------
+                   Pred Benign    Pred Malignant
+  True Benign           1,792              51
+  True Malignant           33              76
+
+============================================================

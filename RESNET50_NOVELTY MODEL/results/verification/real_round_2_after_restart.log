@@ -1,0 +1,59 @@
+[run] resumed after round 1
+    [Selector] All scores: C2=1.7000  C3=1.1293  C4=1.1135  C5=1.2630  C6=1.2013  C8=1.6179
+[92mINFO [0m:      configure_fit: strategy sampled 6 clients (out of 10)
+Epoch Progress: 10.0% | ETA Epoch: 0.21 min
+Epoch Progress: 10.0% | ETA Epoch: 0.05 min
+Epoch Progress: 10.0% | ETA Epoch: 0.05 min
+Epoch Progress: 10.0% | ETA Epoch: 0.05 min
+Epoch Progress: 10.0% | ETA Epoch: 0.05 min
+Epoch Progress: 12.5% | ETA Epoch: 0.04 min
+Epoch Progress: 12.5% | ETA Epoch: 0.04 min
+Epoch Progress: 12.5% | ETA Epoch: 0.04 min
+Epoch Progress: 12.5% | ETA Epoch: 0.04 min
+Epoch Progress: 12.5% | ETA Epoch: 0.04 min
+Epoch Progress: 1.2% | ETA Epoch: 0.44 min
+Epoch Progress: 1.2% | ETA Epoch: 0.41 min
+Epoch Progress: 1.2% | ETA Epoch: 0.41 min
+Epoch Progress: 1.2% | ETA Epoch: 0.42 min
+Epoch Progress: 1.2% | ETA Epoch: 0.41 min
+Epoch Progress: 1.2% | ETA Epoch: 0.47 min
+Epoch Progress: 1.2% | ETA Epoch: 0.44 min
+Epoch Progress: 1.2% | ETA Epoch: 0.43 min
+Epoch Progress: 1.2% | ETA Epoch: 0.43 min
+Epoch Progress: 1.2% | ETA Epoch: 0.44 min
+Epoch Progress: 1.3% | ETA Epoch: 0.43 min
+Epoch Progress: 1.3% | ETA Epoch: 0.40 min
+Epoch Progress: 1.3% | ETA Epoch: 0.40 min
+Epoch Progress: 1.3% | ETA Epoch: 0.40 min
+Epoch Progress: 1.3% | ETA Epoch: 0.40 min
+Epoch Progress: 3.8% | ETA Epoch: 0.14 min
+Epoch Progress: 3.8% | ETA Epoch: 0.13 min
+Epoch Progress: 3.8% | ETA Epoch: 0.13 min
+Epoch Progress: 3.8% | ETA Epoch: 0.13 min
+Epoch Progress: 3.8% | ETA Epoch: 0.13 min
+[92mINFO [0m:      aggregate_fit: received 6 results and 0 failures
+      [Straggler] C2: ✗ FAILED — no update (δ^s=0.0, N_eff unchanged)
+      [Straggler] C8: ✗ FAILED — no update (δ^s=0.0, N_eff unchanged)
+      [Straggler] C5: ⟳ LATE (t=197.54s > W_t=33.48s) → BUFFERED  s=1, δ^s=0.9000
+      [Straggler] C6: ✓ ON-TIME (t=4.22s ≤ W_t=33.48s) δ^s=1.0000
+      [Straggler] C4: ✓ ON-TIME (t=24.51s ≤ W_t=33.48s) δ^s=1.0000
+      [Straggler] C3: ✓ ON-TIME (t=4.66s ≤ W_t=33.48s) δ^s=1.0000
+      [Buffer] C7: ↩ DRAINED (gen_round=1, current=2, s=1, δ^s=0.9000)
+      [Buffer] C1: ↩ DRAINED (gen_round=1, current=2, s=1, δ^s=0.9000)
+      [Buffer] C0: ↩ DRAINED (gen_round=1, current=2, s=1, δ^s=0.9000)
+      [Buffer] C9: ↩ DRAINED (gen_round=1, current=2, s=1, δ^s=0.9000)
+      [Window] W_t=33.48s  | on-time=7  | buffered=1  | failed=2  | quorum_threshold=5  | trigger=QUORUM ✓
+[92mINFO [0m:      configure_evaluate: strategy sampled 6 clients (out of 10)
+D:\MAIN BACKUP\backup 3\Fedmelanoma\FedAvg_RESNET 50\.venv\Lib\site-packages\matplotlib\_fontconfig_pattern.py:64: PyparsingDeprecationWarning: 'oneOf' deprecated - use 'one_of'
+  prop = Group((name + Suppress("=") + comma_separated(value)) | oneOf(_CONSTANTS))
+D:\MAIN BACKUP\backup 3\Fedmelanoma\FedAvg_RESNET 50\.venv\Lib\site-packages\matplotlib\_fontconfig_pattern.py:85: PyparsingDeprecationWarning: 'parseString' deprecated - use 'parse_string'
+  parse = parser.parseString(pattern)
+D:\MAIN BACKUP\backup 3\Fedmelanoma\FedAvg_RESNET 50\.venv\Lib\site-packages\matplotlib\_fontconfig_pattern.py:89: PyparsingDeprecationWarning: 'resetCache' deprecated - use 'reset_cache'
+  parser.resetCache()
+D:\MAIN BACKUP\backup 3\Fedmelanoma\FedAvg_RESNET 50\.venv\Lib\site-packages\matplotlib\_mathtext.py:45: PyparsingDeprecationWarning: 'enablePackrat' deprecated - use 'enable_packrat'
+  ParserElement.enablePackrat()
+In D:\MAIN BACKUP\backup 3\Fedmelanoma\FedAvg_RESNET 50\.venv\Lib\site-packages\matplotlib\mpl-data\stylelib\classic.mplstyle: 'parseString' deprecated - use 'parse_string'
+In D:\MAIN BACKUP\backup 3\Fedmelanoma\FedAvg_RESNET 50\.venv\Lib\site-packages\matplotlib\mpl-data\stylelib\classic.mplstyle: 'resetCache' deprecated - use 'reset_cache'
+[92mINFO [0m:      aggregate_evaluate: received 6 results and 0 failures
+[run] round 2/2 474 s train_loss=0.0020156952575302698 roc_auc=0.9075995112179499
+[run] finished

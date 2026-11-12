@@ -1,0 +1,11 @@
+============================= test session starts =============================
+platform win32 -- Python 3.11.9, pytest-8.3.3, pluggy-1.7.0 -- D:\MAIN BACKUP\backup 3\Fedmelanoma\FedAvg_RESNET 50\.venv\Scripts\python.exe
+rootdir: D:\MAIN BACKUP\backup 3\Fedmelanoma\RESNET 50_ fed novelty\RESNET50_EFFICIENTNET_B3_EQUIVALENT
+collecting ... collected 3 items
+
+tests/test_03_real_round.py::test_16_real_round_matches_schedule_and_hash_chain PASSED [ 33%]
+tests/test_03_real_round.py::test_17_checkpoint_reload_and_resume PASSED [ 66%]
+tests/test_03_real_round.py::test_18_evaluation_outputs_exist_and_agree PASSED [100%]
+
+- generated xml file: D:\MAIN BACKUP\backup 3\Fedmelanoma\RESNET 50_ fed novelty\RESNET50_EFFICIENTNET_B3_EQUIVALENT\results\verification\tests_16_to_18.xml -
+============================== 3 passed in 6.13s ==============================

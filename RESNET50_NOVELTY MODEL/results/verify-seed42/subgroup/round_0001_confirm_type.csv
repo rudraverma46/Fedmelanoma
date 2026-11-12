@@ -1,0 +1,5 @@
+subgroup,n_samples,n_benign,n_malignant,prevalence,accuracy,roc_auc,pr_auc,precision,ppv,npv,recall,sensitivity,f1,specificity,balanced_accuracy,mcc
+histopathology,65,40,25,0.38461538461538464,0.4,,,0.36,0.36,0.5333333333333333,0.72,0.72,0.4799999999999999,0.2,0.45999999999999996,-0.09237604307034013
+serial imaging showing no change,99,99,0,0.0,0.26262626262626265,,,0.0,0.0,1.0,,,,0.26262626262626265,,
+single image expert consensus,101,101,0,0.0,0.0891089108910891,,,0.0,0.0,1.0,,,,0.0891089108910891,,
+single contributor clinical assessment,339,339,0,0.0,0.23893805309734514,,,0.0,0.0,1.0,,,,0.23893805309734514,,

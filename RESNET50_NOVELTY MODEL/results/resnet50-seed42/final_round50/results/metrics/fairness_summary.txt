@@ -1,0 +1,14 @@
+============================================================
+FAIRNESS / SUBGROUP SUMMARY
+============================================================
+Fitzpatrick fairness gap (max-min sensitivity): 0.3117
+  Best group : II (sensitivity=0.7662)
+  Worst group: III (sensitivity=0.4545)
+  Excluded groups (sensitivity undefined): ['V', 'VI']
+
+Worst-group AUROC by hospital (client type, Blueprint WGA): Lakeside_Regional_Mixed_Hospital = 0.7917
+
+Worst-group AUROC by metadata axis:
+  skin_type: II = 0.9185
+  image_type: clinical: overview = 0.9015
+  confirm_type: histopathology = 0.7815

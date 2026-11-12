@@ -1,0 +1,149 @@
+
+============================================================
+FedMelanomaModel – Evaluation Script
+============================================================
+Device     : cuda
+Checkpoint : D:\MAIN BACKUP\backup 3\Fedmelanoma\RESNET 50_ fed novelty\RESNET50_EFFICIENTNET_B3_EQUIVALENT\checkpoints\verify-seed42\global_round_0002.pth
+Batch size : 20
+
+[✓] Loaded checkpoint: D:\MAIN BACKUP\backup 3\Fedmelanoma\RESNET 50_ fed novelty\RESNET50_EFFICIENTNET_B3_EQUIVALENT\checkpoints\verify-seed42\global_round_0002.pth
+    Saved at epoch unknown  |  Validation ROC-AUC at save time: nan
+
+Building test DataLoader …
+  Loaded 10 hospital partition(s).
+  Total test samples : 1,952
+
+Running inference …
+  Inference: 50/98 batches (51.0%)  |  ETA: 5.5s
+  Inference: 98/98 batches (100.0%)  |  ETA: 0.0s
+  Inference completed in 11.0s
+
+Computing metrics …
+
+============================================================
+FINAL TEST SET EVALUATION
+============================================================
+
+  — Standard Metrics —
+  Accuracy           : 95.18%
+  Precision          : 0.5714
+  Recall             : 0.5505
+  F1 Score           : 0.5607
+  ROC-AUC            : 0.9187
+
+  — Medical AI Metrics —
+  Sensitivity        : 0.5505  (= Recall)
+  Specificity        : 0.9756
+  PPV                : 0.5714  (= Precision)
+  NPV                : 0.9735
+
+  — Imbalanced-Dataset Metrics —
+  Balanced Accuracy  : 0.7630
+  MCC                : 0.5354
+  PR-AUC             : 0.6191
+
+  — Confusion Matrix —
+                   Pred Benign    Pred Malignant
+  True Benign           1,798              45
+  True Malignant           49              60
+
+============================================================
+
+
+Computing subgroup metrics (skin type / imaging modality / confirmation type) …
+  [✓] Saved: results/metrics\skin_type_metrics.csv
+  [✓] Saved: results/metrics\image_type_metrics.csv
+  [✓] Saved: results/metrics\confirm_type_metrics.csv
+
+============================================================
+FAIRNESS / SUBGROUP SUMMARY
+============================================================
+Fitzpatrick fairness gap (max-min sensitivity): 0.1634
+  Best group : II (sensitivity=0.5844)
+  Worst group: I (sensitivity=0.4211)
+  Excluded groups (sensitivity undefined): ['V', 'VI']
+
+Worst-group AUROC by hospital (client type, Blueprint WGA): Lakeside_Regional_Mixed_Hospital = 0.7718
+
+Worst-group AUROC by metadata axis:
+  skin_type: I = 0.9006
+  image_type: dermoscopic = 0.9016
+  confirm_type: histopathology = 0.7656
+  [✓] Saved: results/metrics/fairness_summary.txt
+Generating plots …
+  [✓] Saved: confusion_matrix.png
+  [✓] Saved: roc_curve.png
+  [✓] Saved: pr_curve.png
+
+  — Threshold Analysis —
+   Threshold |  Precision |     Recall |         F1 |  Specificity
+  ----------------------------------------------------------------
+        0.30 |     0.2473 |     0.8532 |     0.3835 |       0.8464
+        0.40 |     0.4286 |     0.6881 |     0.5282 |       0.9457
+        0.50 |     0.5714 |     0.5505 |     0.5607 |       0.9756
+        0.60 |     0.7000 |     0.3853 |     0.4970 |       0.9902
+        0.70 |     0.9394 |     0.2844 |     0.4366 |       0.9989
+  ----------------------------------------------------------------
+
+  [✓] Saved: threshold_analysis.csv
+
+  Classification Report:
+              precision    recall  f1-score   support
+
+      Benign       0.97      0.98      0.97      1843
+   Malignant       0.57      0.55      0.56       109
+
+    accuracy                           0.95      1952
+   macro avg       0.77      0.76      0.77      1952
+weighted avg       0.95      0.95      0.95      1952
+
+  [✓] Saved: classification_report.txt
+============================================================
+FEDMELANOMAMODEL – FINAL TEST RESULTS
+============================================================
+
+Standard Metrics
+----------------------------------------
+  Accuracy           : 95.18%
+  Precision          : 0.5714
+  Recall             : 0.5505
+  F1 Score           : 0.5607
+  ROC-AUC            : 0.9187
+
+Medical AI Metrics
+----------------------------------------
+  Sensitivity        : 0.5505  (= Recall / TP rate)
+  Specificity        : 0.9756  (= TN / (TN + FP))
+  PPV                : 0.5714  (= Precision)
+  NPV                : 0.9735  (= TN / (TN + FN))
+
+Imbalanced-Dataset Metrics
+----------------------------------------
+  Balanced Accuracy  : 0.7630
+  MCC                : 0.5354
+  PR-AUC             : 0.6191
+
+Confusion Matrix
+----------------------------------------
+                   Pred Benign    Pred Malignant
+  True Benign           1,798              45
+  True Malignant           49              60
+
+============================================================
+
+  [✓] Saved: final_test_results.txt
+
+[✓] Evaluation complete.
+
+
+  — Threshold Analysis —
+   Threshold |  Precision |     Recall |         F1 |  Specificity
+  ----------------------------------------------------------------
+        0.10 |     0.0640 |     1.0000 |     0.1202 |       0.1346
+        0.30 |     0.2473 |     0.8532 |     0.3835 |       0.8464
+        0.50 |     0.5714 |     0.5505 |     0.5607 |       0.9756
+        0.70 |     0.9394 |     0.2844 |     0.4366 |       0.9989
+        0.90 |     1.0000 |     0.0275 |     0.0536 |       1.0000
+  ----------------------------------------------------------------
+
+  [✓] Saved: threshold_analysis_requested.csv
