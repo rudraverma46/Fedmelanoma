@@ -1,0 +1,19 @@
+{
+  "checkpoint": "D:\\MAIN BACKUP\\backup 3\\Fedmelanoma\\resnet50_fedprox_textbook\\checkpoints\\verify-seed42\\global_round_0002.pth",
+  "accuracy": 0.8683401639344263,
+  "precision": 0.2716049382716049,
+  "recall": 0.8073394495412844,
+  "f1": 0.4064665127020785,
+  "roc_auc": 0.9175456848875237,
+  "sensitivity": 0.8073394495412844,
+  "specificity": 0.8719479110146501,
+  "ppv": 0.2716049382716049,
+  "npv": 0.9871007371007371,
+  "balanced_accuracy": 0.8396436802779672,
+  "mcc": 0.41920817666705723,
+  "pr_auc": 0.47054027265851933,
+  "tn": 1607.0,
+  "fp": 236.0,
+  "fn": 21.0,
+  "tp": 88.0
+}
