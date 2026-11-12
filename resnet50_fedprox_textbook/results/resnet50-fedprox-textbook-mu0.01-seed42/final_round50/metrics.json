@@ -1,0 +1,19 @@
+{
+  "checkpoint": "D:\\MAIN BACKUP\\backup 3\\Fedmelanoma\\resnet50_fedprox_textbook\\checkpoints\\resnet50-fedprox-textbook-mu0.01-seed42\\global_round_0050.pth",
+  "accuracy": 0.9631147540983607,
+  "precision": 0.6554621848739496,
+  "recall": 0.7155963302752294,
+  "f1": 0.6842105263157895,
+  "roc_auc": 0.9786845340913051,
+  "sensitivity": 0.7155963302752294,
+  "specificity": 0.9777536625067824,
+  "ppv": 0.6554621848739496,
+  "npv": 0.9830878341516639,
+  "balanced_accuracy": 0.8466749963910059,
+  "mcc": 0.665386091741,
+  "pr_auc": 0.7915702603776538,
+  "tn": 1802.0,
+  "fp": 41.0,
+  "fn": 31.0,
+  "tp": 78.0
+}
