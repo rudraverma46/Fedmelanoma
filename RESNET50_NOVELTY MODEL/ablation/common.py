@@ -17,7 +17,7 @@ import yaml
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 REGISTRY_PATH = os.path.join(ROOT, "ablation", "experiments.yaml")
 BASE_CONFIG_PATH = os.path.join(ROOT, "configs", "experiment_config.yaml")
-RAW_DIR = os.path.join(ROOT, "results", "raw")
+RAW_DIR = os.environ.get("FEDMEL_RAW_DIR", os.path.join(ROOT, "results", "raw"))   # smoke tests use another dir
 
 DEFAULT_DATA = "/kaggle/input/datasets/visheshkumarbansal/fedmel01/hospital_partitions"
 DEFAULT_CACHE = "/tmp/fedmel_cache"   # outside /kaggle/working, so it is not saved as output
@@ -83,7 +83,7 @@ def build_run_config(exp_id: str, seed: int, registry: Dict[str, Any] | None = N
 
     cfg = copy.deepcopy(cfg)
     cfg["experiment"]["seed"] = int(seed)
-    cfg["federation"]["num_server_rounds"] = int(common["num_server_rounds"])
+    cfg["federation"]["num_server_rounds"] = int(os.environ.get("FEDMEL_ROUNDS", common["num_server_rounds"]))
     cfg["local_training"]["focal_gamma"] = float(variant["focal_gamma"])
     cfg["data"] = {"partitions_root": partitions_root, "cache_dir": cache_dir}
     cfg["runtime"]["dataloader_workers"] = int(os.environ.get("FEDMEL_WORKERS", 4))

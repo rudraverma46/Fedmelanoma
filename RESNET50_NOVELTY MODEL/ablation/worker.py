@@ -85,9 +85,26 @@ def write_metrics_csv(rid: str, out: str) -> int:
     return len(rows)
 
 
+def write_test_rows(partitions_root: str, out: str) -> None:
+    """Patient / lesion ids of the pooled test rows and whether either also occurs in any training split,
+    so the analysis can cluster by patient and report unseen-patient scores without the dataset."""
+    import pandas as pd
+    cols = ["isic_id", "patient_id", "lesion_id", "diagnosis_confirm_type"]
+    from hospital_registry import discover_hospitals
+    hospitals = discover_hospitals(partitions_root)
+    read = lambda split: pd.concat(  # noqa: E731
+        [pd.read_csv(os.path.join(partitions_root, h, f"metadata_{split}.csv"), usecols=cols, low_memory=False)
+         .assign(hospital=h) for h in hospitals], ignore_index=True)
+    train, test = read("train"), read("test")
+    test = test.assign(seen_patient=test.patient_id.isin(set(train.patient_id.dropna())),
+                       seen_lesion=test.lesion_id.isin(set(train.lesion_id.dropna())))
+    test.to_csv(os.path.join(out, "test_rows.csv"), index=False)
+
+
 def finalise(exp: str, seed: int, rid: str, rounds: int, out: str, env: Dict[str, str]) -> None:
     """Evaluate round-N and best checkpoints on the pooled test set, copy logs, prune checkpoints."""
     ckpt_dir = os.path.join(ROOT, "checkpoints", rid)
+    write_test_rows(build_run_config(exp, seed)["data"]["partitions_root"], out)
     done_rounds = write_metrics_csv(rid, out)
     if done_rounds != rounds:
         raise RuntimeError(f"incomplete run: {done_rounds}/{rounds} rounds in the round log")

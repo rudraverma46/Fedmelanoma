@@ -4,3 +4,5 @@ __pycache__/
 cache/
 checkpoints/
 logs/
+ablation/kaggle_jobs/
+results/kaggle/
