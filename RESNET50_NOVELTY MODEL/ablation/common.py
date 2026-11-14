@@ -24,6 +24,10 @@ DEFAULT_CACHE = "/tmp/fedmel_cache"   # outside /kaggle/working, so it is not sa
 
 VARIANT_DEFAULTS = {"selection": "boltzmann", "aggregation": "fedmelanoma", "straggler_buffer": True,
                     "focal_gamma": 2.0}
+# Blueprint v4 Section 7 knobs. A run's variant holds these only when its experiment sets them, so their
+# introduction left every earlier run id (config hash) unchanged.
+OPTIONAL_VARIANT_DEFAULTS = {"attenuation": True, "reliability": "ema", "diversity_metric": "ot",
+                             "synchronous": False}
 
 
 def load_registry(path: str = REGISTRY_PATH) -> Dict[str, Any]:
@@ -33,7 +37,7 @@ def load_registry(path: str = REGISTRY_PATH) -> Dict[str, Any]:
 
 def variant_of(registry: Dict[str, Any], exp_id: str) -> Dict[str, Any]:
     overrides = registry["experiments"][exp_id]
-    unknown = set(overrides) - set(VARIANT_DEFAULTS)
+    unknown = set(overrides) - set(VARIANT_DEFAULTS) - set(OPTIONAL_VARIANT_DEFAULTS)
     if unknown:
         raise ValueError(f"{exp_id}: unknown variant keys {sorted(unknown)}")
     return {**VARIANT_DEFAULTS, **overrides}

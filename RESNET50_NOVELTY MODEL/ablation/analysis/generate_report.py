@@ -16,7 +16,7 @@ import yaml
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.insert(0, ROOT)
-from ablation.analysis import ablation_plots, aggregate_metrics, statistical_analysis  # noqa: E402
+from ablation.analysis import ablation_plots, aggregate_metrics, blueprint_metrics, statistical_analysis  # noqa: E402
 from ablation.analysis.aggregate_metrics import PROCESSED  # noqa: E402
 
 REPORTS = os.path.join(os.path.dirname(PROCESSED), "reports")
@@ -29,7 +29,51 @@ DESCRIPTIONS = {
     "E05_no_straggler_buffer": "Late updates discarded instead of buffered (R_i, N_eff updates unchanged)",
     "E06_no_focal": "Class-weighted cross-entropy instead of focal loss (γ_f = 0)",
     "R01_fedavg_reference": "Reference FedAvg: uniform selection + n_i/n weights + no buffer (not an ablation)",
+    "A1_no_diversity": "Blueprint A1: γ = 0 in both selection and aggregation",
+    "A2_no_attenuation": "Blueprint A2: λ = 0, the diversity bonus never decays with N_eff",
+    "A3_greedy_selection": "Blueprint A3: deterministic top-6 by score instead of Boltzmann sampling (τ → 0)",
+    "A4_binary_reliability": "Blueprint A4: R_i = 1[on-time] instead of the staleness-adjusted EMA",
+    "A5_static_reliability": "Blueprint A5: R_i = 1 for every client and round",
+    "A6_tv_diversity": "Blueprint A6: D_i from total variation distance instead of optimal transport",
+    "A8_synchronous": "Blueprint A8: synchronous, waits for every client that completes; no straggler buffer",
 }
+# Blueprint v4 Section 7 arm -> experiment id here (A7 is post-hoc temperature scaling on the A0 runs)
+BLUEPRINT_ARMS = {"A0": "E00_full", "A1": "A1_no_diversity", "A2": "A2_no_attenuation", "A3": "A3_greedy_selection",
+                  "A4": "A4_binary_reliability", "A5": "A5_static_reliability", "A6": "A6_tv_diversity",
+                  "A8": "A8_synchronous"}
+
+
+def blueprint_section(bp: pd.DataFrame) -> list:
+    """Section 7 of blueprint v4: each arm against A0 on the quantity the blueprint predicts it changes."""
+    if bp.empty:
+        return ["_no completed runs yet_"]
+    g = bp.groupby("experiment")
+    cols = {"fairness_gap": "Fitzpatrick gap (A1)", "late_round_gain": "AUC gain r21-30 vs r11-20 (A2)",
+            "min_selections": "Fewest selections of a client (A3, A6)", "never_selected": "Clients never selected",
+            "selection_gini": "Selection Gini", "sim_hours_window": "Sim. hours, window (A0)",
+            "sim_hours_sync": "Sim. hours, wait-for-all (A8)"}
+    rows = []
+    for arm, exp in BLUEPRINT_ARMS.items():
+        if exp not in g.groups:
+            rows.append({"Arm": arm, "Experiment": exp, **{v: "not run yet" for v in cols.values()}, "Seeds": 0})
+            continue
+        d = g.get_group(exp)
+        rows.append({"Arm": arm, "Experiment": exp,
+                     **{label: pm(d[c].mean(), d[c].std(ddof=1), 3) for c, label in cols.items()},
+                     "Seeds": d.seed.nunique()})
+    a0 = bp[bp.experiment == BLUEPRINT_ARMS["A0"]]
+    a7 = (["A7 (no calibration) is evaluated on the A0 runs: the same final-round predictions without temperature "
+           "scaling (T = 1) and with it. No validation split exists, so T is fitted by 2-fold cross-fitting on the "
+           "pooled test rows with patient-grouped folds.", "",
+           md_table(pd.DataFrame([{"Variant": "A0 (temperature scaled)", "ECE": pm(a0.ece_ts.mean(), a0.ece_ts.std(ddof=1)),
+                                   "T": pm(a0.temperature.mean(), a0.temperature.std(ddof=1), 2), "Seeds": len(a0)},
+                                  {"Variant": "A7 (T = 1)", "ECE": pm(a0.ece_raw.mean(), a0.ece_raw.std(ddof=1)),
+                                   "T": "1", "Seeds": len(a0)}]))] if len(a0) else ["A7: no A0 run yet."])
+    return [md_table(pd.DataFrame(rows)), "",
+            "Simulated hours are not GPU time: they add up the simulated latencies and windows of the straggler "
+            "environment (all clients really train one after another). A8 is compared with A0 through "
+            f"wait-for-all time (a failed client costs the {blueprint_metrics.SYNC_TIMEOUT_S:.0f} s timeout W_max) "
+            "against windowed time.", "", *a7]
 
 
 def pm(mean, sd, digits=4) -> str:
@@ -61,6 +105,8 @@ def main() -> None:
         raise SystemExit("No completed runs yet; nothing to report.")
     statistical_analysis.main()
     ablation_plots.main()
+    blueprint_metrics.main()
+    bp = pd.read_csv(os.path.join(PROCESSED, "blueprint_metrics.csv"))
     summary = pd.read_csv(os.path.join(PROCESSED, "experiment_summary.csv"))
     stats_df = pd.read_csv(os.path.join(PROCESSED, "statistical_summary.csv"))
     boot = pd.read_csv(os.path.join(PROCESSED, "bootstrap_delta_auc.csv"))
@@ -140,6 +186,11 @@ def main() -> None:
         "Per seed, patient-clustered bootstrap of ΔROC-AUC on identical test rows (2,000 resamples):",
         md_table(boot_tbl) if len(boot_tbl) else "_no paired runs yet_", "",
         "ROC-AUC by test subset (mean over seeds):", md_table(sub_tbl), "",
+        "### Blueprint v4 Section 7 predictions",
+        "Arms A0-A8 of `docs/FedMelanoma_Blueprint_v4.md` Section 7, at 30 rounds instead of the blueprint's 50 and "
+        "with the ResNet-50 backbone instead of EfficientNet-B3. Arms run before the switch to the blueprint "
+        "(E01, E03-E06) have fewer seeds and are supplementary.", "",
+        *blueprint_section(bp), "",
         "## 8. Visualisations",
         "![Convergence](../plots/convergence.png)", "",
         "Per-round curves use the reference evaluation, which scores only the clients selected that round, so "

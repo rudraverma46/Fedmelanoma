@@ -24,7 +24,7 @@ import psutil  # noqa: E402
 import runtime.resources as resources  # noqa: E402
 import runtime.run_experiment as rx  # noqa: E402  (chdir to ROOT, utf-8 streams)
 from ablation.common import atomic_write_json, build_run_config, code_hash, config_hash, run_dir, split_id  # noqa: E402
-from ablation.variants import apply_variant  # noqa: E402
+from ablation.variants import apply_variant, prepare_variant  # noqa: E402
 
 
 def linux_memory_snapshot():
@@ -80,6 +80,7 @@ def main() -> int:
     reference_server_fn = rx.server_fn
 
     def server_fn(context):
+        prepare_variant(ablation["variant"])
         components = reference_server_fn(context)
         apply_variant(components.strategy, ablation["variant"], ablation["harness"], args.seed)
         return components

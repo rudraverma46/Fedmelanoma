@@ -101,6 +101,16 @@ def write_test_rows(partitions_root: str, out: str) -> None:
     test.to_csv(os.path.join(out, "test_rows.csv"), index=False)
 
 
+def copy_straggler_log(rid: str, out: str) -> bool:
+    """Per-client outcomes and per-round window (logs/op/stragglers), used for the blueprint selection metrics."""
+    src = os.path.join(ROOT, "logs", "op", "stragglers", f"{rid}.jsonl")
+    if not os.path.isfile(src):
+        return False
+    os.makedirs(os.path.join(out, "logs"), exist_ok=True)
+    shutil.copy2(src, os.path.join(out, "logs", "stragglers.jsonl"))
+    return True
+
+
 def finalise(exp: str, seed: int, rid: str, rounds: int, out: str, env: Dict[str, str]) -> None:
     """Evaluate round-N and best checkpoints on the pooled test set, copy logs, prune checkpoints."""
     ckpt_dir = os.path.join(ROOT, "checkpoints", rid)
@@ -123,6 +133,7 @@ def finalise(exp: str, seed: int, rid: str, rounds: int, out: str, env: Dict[str
         for src in glob.glob(os.path.join(ROOT, "logs", kind, f"{rid}.*")):
             os.makedirs(os.path.join(out, "logs"), exist_ok=True)
             shutil.copy2(src, os.path.join(out, "logs", f"{kind}{os.path.splitext(src)[1]}"))
+    copy_straggler_log(rid, out)
     keep = {os.path.basename(p) for p in targets.values()}
     os.makedirs(os.path.join(out, "checkpoint"), exist_ok=True)
     for name in keep:

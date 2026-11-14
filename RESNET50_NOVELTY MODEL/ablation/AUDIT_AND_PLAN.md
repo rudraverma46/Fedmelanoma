@@ -103,6 +103,31 @@ Statistics: per arm mean ± SD over 3 seeds; paired differences vs E00 per seed,
 (t, n=3); paired t-test and per-seed sign shown, and patient-clustered bootstrap CI on the pooled test
 set for each run. With n=3 seeds, small differences will be descriptive, not significant; the report will say so.
 
+## 4b. Blueprint v4 Section 7 arms (added 2026-11-15)
+
+The audit above was written without the blueprint: `docs/FedMelanoma_Blueprint_v4.md` is on the repository's
+`main` branch, not on `resnet50-novelty`. Its Section 7 defines the ablations below. Batch 1 matched only A0, so
+from job a2 on the chain runs these instead (approved 2026-11-15; 30 rounds kept, the blueprint says T = 50).
+
+| Blueprint | Experiment id | Implementation (ablation/variants.py, no reference file edited) |
+|---|---|---|
+| A0 Full v4 | E00_full | unchanged |
+| A1 No diversity bonus (γ = 0 in selector and aggregation) | A1_no_diversity | `Selector(gamma=0)` + aggregation with γ = 0 (E02 + E03 together) |
+| A2 No attenuation (λ = 0) | A2_no_attenuation | `Selector(lambda_=0)` |
+| A3 Greedy selection (τ → 0) | A3_greedy_selection | `GreedySelector`: the selector's own `greedy_selection` (top-6 by score) |
+| A4 Binary reliability, R_i ← 1[on-time] | A4_binary_reliability | `update_reliability` sets R_i = 1 if s = 0 else 0 (literal reading: no EMA) |
+| A5 Static reliability, R_i = 1 | A5_static_reliability | `update_reliability` keeps R_i = 1 |
+| A6 TV instead of OT diversity | A6_tv_diversity | D_i = max-normalised 0.40/0.35/0.25 sum of per-axis total variation, installed before the strategy is built |
+| A7 No calibration (T* = 1) | none (analysis) | no temperature scaling exists in the code, so A0's final predictions are scored with and without post-hoc temperature scaling (T fitted by patient-grouped 2-fold cross-fitting; no validation split exists) |
+| A8 Synchronous (wait for all C, no buffer) | A8_synchronous | `WaitForAll`: every client that completes is aggregated this round with s = 0; failures still send nothing |
+
+The new keys stay out of a run's variant unless set, so every earlier run id is unchanged and a2 resumes a1's
+interrupted E00 runs. N_eff is updated as in A0 in A4/A5. Differences from the blueprint: 30 rounds (not 50),
+ResNet-50 (not EfficientNet-B3), simulated rather than real asynchrony (Section 3, row 1), so A8's predicted
+600 s round delays appear as simulated time (`blueprint_metrics.py`), not GPU time.
+Predicted effects are measured by `ablation/analysis/blueprint_metrics.py`: Fitzpatrick sensitivity gap (A1),
+late-round AUC gain (A2), per-client selection counts (A3, A6), simulated round time (A8), ECE (A7).
+
 ## 5. Harness changes that need approval
 
 | # | Change | Why | Effect on method |

@@ -20,7 +20,8 @@ sys.path.insert(0, ROOT)
 from ablation.analysis.aggregate_metrics import PROCESSED  # noqa: E402
 
 PLOTS = os.path.join(os.path.dirname(PROCESSED), "plots")
-PALETTE = ["#2a78d6", "#eb6834", "#1baf7a", "#eda100", "#e87ba4", "#008300", "#6250d6", "#e34948"]
+PALETTE = ["#2a78d6", "#eb6834", "#1baf7a", "#eda100", "#e87ba4", "#008300", "#6250d6", "#e34948",
+           "#00a3b4", "#8c564b", "#7f7f7f", "#b5a300", "#3b3b98", "#d2691e", "#2f4f4f"]
 SURFACE, INK, INK2, GRID = "#fcfcfb", "#0b0b0b", "#52514e", "#e4e3df"
 BASELINE = "E00_full"
 

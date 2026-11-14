@@ -13,6 +13,12 @@ common:
 #   aggregation:      fedmelanoma (default) | no_diversity | fedavg
 #   straggler_buffer: true (default) | false
 #   focal_gamma:      2.0 (default) | any float
+# Optional keys (blueprint v4 Section 7), stored in a run's variant only when set:
+#   selection:        greedy (A3, top-K, blueprint tau -> 0)
+#   attenuation:      true (default) | false (lambda = 0)
+#   reliability:      ema (default) | binary (R_i = 1[on-time]) | static (R_i = 1)
+#   diversity_metric: ot (default) | tv (total variation instead of optimal transport)
+#   synchronous:      false (default) | true (wait for every client that completes; no buffer)
 experiments:
   E00_full: {}
   E01_random_selection: {selection: uniform}
@@ -22,8 +28,19 @@ experiments:
   E05_no_straggler_buffer: {straggler_buffer: false}
   E06_no_focal: {focal_gamma: 0.0}
   R01_fedavg_reference: {selection: uniform, aggregation: fedavg, straggler_buffer: false}
+  # Blueprint v4 Section 7 (A0 = E00_full; A7 is post-hoc temperature scaling, no training run)
+  A1_no_diversity: {selection: no_diversity, aggregation: no_diversity}
+  A2_no_attenuation: {attenuation: false}
+  A3_greedy_selection: {selection: greedy}
+  A4_binary_reliability: {reliability: binary}
+  A5_static_reliability: {reliability: static}
+  A6_tv_diversity: {diversity_metric: tv}
+  A8_synchronous: {synchronous: true}
 
 batches:
   batch1: [E00_full, E01_random_selection, E03_agg_no_diversity, E04_fedavg_weights,
            E05_no_straggler_buffer, E06_no_focal]
   batch2: [E02_selection_no_diversity, R01_fedavg_reference]
+  # Approved 2026-11-15: replaces the rest of batch1 from job a2 on (30 rounds kept).
+  blueprint: [E00_full, A1_no_diversity, A2_no_attenuation, A3_greedy_selection, A4_binary_reliability,
+              A5_static_reliability, A6_tv_diversity, A8_synchronous]

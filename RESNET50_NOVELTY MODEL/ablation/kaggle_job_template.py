@@ -73,7 +73,18 @@ def main():
         prev_cache = find_dir("fedmel_cache", prev)
         if prev_cache:
             shutil.copytree(prev_cache, CACHE, dirs_exist_ok=True)
-        status(stage="restored", previous=PARAMS["previous"], cache_reused=bool(prev_cache), runs=run_states())
+        backfilled = 0   # runs finished before the straggler log was copied into the run folder
+        for done in glob.glob(os.path.join(ROOT, "results", "raw", "*", "seed_*", "DONE.json")):
+            out = os.path.dirname(done)
+            with open(done, encoding="utf-8") as fh:
+                rid = json.load(fh)["run_id"]
+            src = os.path.join(ROOT, "logs", "op", "stragglers", f"{rid}.jsonl")
+            if not os.path.isfile(os.path.join(out, "logs", "stragglers.jsonl")) and os.path.isfile(src):
+                os.makedirs(os.path.join(out, "logs"), exist_ok=True)
+                shutil.copy2(src, os.path.join(out, "logs", "stragglers.jsonl"))
+                backfilled += 1
+        status(stage="restored", previous=PARAMS["previous"], cache_reused=bool(prev_cache), runs=run_states(),
+               straggler_logs_backfilled=backfilled)
 
     data = find_dir("hospital_partitions")
     cached = find_dir(PARAMS["cache_dataset"].split("/")[-1]) if PARAMS.get("cache_dataset") else None
@@ -86,15 +97,17 @@ def main():
     status(stage="cache_ready", seconds=round(time.time() - T0))
 
     if PARAMS.get("smoke"):   # whole pipeline (train, variant, finalise, evaluation) on 2 rounds, separate folder
+        smoke_runs = PARAMS["smoke"] if isinstance(PARAMS["smoke"], list) else SMOKE_RUNS
         smoke_env = {**env, "FEDMEL_ROUNDS": "2", "FEDMEL_RAW_DIR": os.path.join(WORK, "smoke", "raw")}
-        procs = [subprocess.Popen([sys.executable, "-m", "ablation.worker", "--gpu", str(g), "--runs", run],
+        procs = [subprocess.Popen([sys.executable, "-m", "ablation.worker", "--gpu", str(g), "--runs",
+                                   *smoke_runs[g::len(PARAMS["queues"])]],
                                   cwd=ROOT, env=smoke_env, stdout=open(os.path.join(WORK, f"smoke_gpu{g}.log"), "w"),
-                                  stderr=subprocess.STDOUT) for g, run in enumerate(SMOKE_RUNS)]
+                                  stderr=subprocess.STDOUT) for g in range(min(len(PARAMS["queues"]), len(smoke_runs)))]
         codes = [p.wait() for p in procs]
         done = [os.path.isfile(os.path.join(WORK, "smoke", "raw", r.split(":")[0], f"seed_{r.split(':')[1]}",
-                                            "DONE.json")) for r in SMOKE_RUNS]
+                                            "DONE.json")) for r in smoke_runs]
         rounds = {}
-        for r in SMOKE_RUNS:
+        for r in smoke_runs:
             path = os.path.join(WORK, "smoke", "raw", r.split(":")[0], f"seed_{r.split(':')[1]}", "metrics.csv")
             if os.path.isfile(path):
                 with open(path, encoding="utf-8") as fh:

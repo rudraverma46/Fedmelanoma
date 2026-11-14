@@ -6,6 +6,8 @@ pick up where the last one stopped.
     python -m ablation.kaggle_launcher status                               job state + per-run progress
     python -m ablation.kaggle_launcher advance                              continue chains whose job ended
     python -m ablation.kaggle_launcher collect                              download results (no checkpoints)
+    python -m ablation.kaggle_launcher requeue --chain batch1-a --batch blueprint
+                                            after a job ended: the chain's next jobs run this batch instead
 
 A chain is a sequence of jobs over the same run queues; job k+1 reads job k's output, so runs
 resume from their last completed round. Completed runs (DONE.json) are skipped by the worker, so a
@@ -26,13 +28,14 @@ from typing import Dict, List, Optional
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT)
 
-from ablation.common import atomic_write_json, batch_runs, build_run_config, config_hash  # noqa: E402
+from ablation.common import atomic_write_json, batch_runs, build_run_config, config_hash, load_registry  # noqa: E402
 
 REPO_URL = "https://github.com/rudraverma46/Fedmelanoma"
 BRANCH = "resnet50-novelty-ablation"
 DATASET = "visheshkumarbansal/fedmel01"
 CACHE_DATASET = os.environ.get("FEDMEL_CACHE_DATASET", "")   # e.g. visheshkumarbansal/fedmel01-cache224
 JOB_HOURS = 11.0          # Kaggle stops sessions at 12 h; the worker stops after the round that would cross this
+SMOKE_AFTER_REQUEUE = ["A6_tv_diversity:42", "A8_synchronous:42", "A3_greedy_selection:42", "A4_binary_reliability:42"]
 MAX_FAILED_JOBS = 2       # consecutive jobs of a chain that end without a STATUS "end" line
 MANIFESTS = os.path.join(ROOT, "manifests")
 JOBS_DIR = os.path.join(ROOT, "ablation", "kaggle_jobs")
@@ -106,13 +109,13 @@ def write_experiments_manifest(batch: str) -> None:
 
 
 def push_job(user: str, batch: str, chain: str, part: int, queues: List[List[str]], commit: str,
-             previous: Optional[str]) -> Dict:
+             previous: Optional[str], smoke: Optional[List[str]] = None) -> Dict:
     slug = f"fedmel-{batch}-{chain}{part}"
     folder = os.path.join(JOBS_DIR, slug)
     os.makedirs(folder, exist_ok=True)
     params = {"slug": slug, "batch": batch, "chain": chain, "part": part, "queues": queues, "repo": REPO_URL,
               "branch": BRANCH, "commit": commit, "previous": previous, "hours": JOB_HOURS,
-              "cache_dataset": CACHE_DATASET, "smoke": part == 1}
+              "cache_dataset": CACHE_DATASET, "smoke": smoke or part == 1}
     with open(os.path.join(ROOT, "ablation", "kaggle_job_template.py"), encoding="utf-8") as fh:
         body = fh.read().replace("PARAMS = {}  # filled in by kaggle_launcher.py", f"PARAMS = {params!r}")
     with open(os.path.join(folder, "job.py"), "w", encoding="utf-8") as fh:
@@ -224,11 +227,48 @@ def cmd_advance(args) -> None:
         try:
             part = len(chain["jobs"]) + 1
             chain["jobs"].append(push_job(user, chain["batch"], chain["chain"], part, chain["queues"],
-                                          pinned_commit(), previous))
+                                          pinned_commit(), previous, chain.get("smoke_next")))
+            chain.pop("smoke_next", None)
             print(f"{key}: submitted part {part}")
         except RuntimeError as exc:
             print(f"{key}: push refused, will retry: {exc}")
         atomic_write_json(JOBS_PATH, jobs)
+
+
+def cmd_requeue(args) -> None:
+    """Point a chain at another batch from its next job on. Runs the ended job finished are dropped, runs it left
+    part-way go first (they resume from their checkpoint), and the rest are split over the two GPUs by rounds left."""
+    jobs = cmd_status(args)
+    chain = jobs["chains"].get(args.chain)
+    if not chain or not chain["jobs"]:
+        raise SystemExit(f"no started chain {args.chain!r}")
+    last = chain["jobs"][-1]
+    st = last_status(last["slug"])
+    if last.get("state") in ("running", "queued", "new", "pending") or not (st and st.get("stage") == "end"):
+        raise SystemExit(f"{last['slug']} has not ended cleanly yet ({last.get('state')}); requeue after it ends")
+    states = st.get("runs") or {}
+    rounds = int(load_registry()["common"]["num_server_rounds"])
+    todo = [f"{exp}:{seed}" for exp, seed in batch_runs(args.batch)
+            if (states.get(f"{exp}:{seed}") or {}).get("state") != "COMPLETED"]
+    done_rounds = {r: (states.get(r) or {}).get("rounds_done") or 0 for r in todo}
+    todo.sort(key=lambda r: done_rounds[r] == 0)   # stable: started runs first, then batch order
+    queues, load = [[], []], [0, 0]
+    for run in todo:
+        gpu = load.index(min(load))
+        queues[gpu].append(run)
+        load[gpu] += rounds - done_rounds[run]
+    dropped = sorted(r for q in chain["queues"] for r in q
+                     if r not in todo and (states.get(r) or {}).get("state") != "COMPLETED")
+    chain.setdefault("history", []).append({"at": time.time(), "after_job": last["slug"], "from_batch": chain["batch"],
+                                            "to_batch": args.batch, "old_queues": chain["queues"],
+                                            "dropped_unfinished": dropped})
+    chain.update(batch=args.batch, queues=queues, finished=False, failed_jobs=0)
+    chain["smoke_next"] = SMOKE_AFTER_REQUEUE   # the next job first runs these for 2 rounds (new code paths on GPU)
+    write_experiments_manifest(args.batch)
+    atomic_write_json(JOBS_PATH, jobs)
+    for gpu, queue in enumerate(queues):
+        print(f"{args.chain} gpu{gpu}: {len(queue)} runs, {load[gpu]} rounds: {' '.join(queue)}")
+    print(f"unfinished runs left behind: {', '.join(dropped) or 'none'}")
 
 
 def cmd_collect(args) -> None:
@@ -262,9 +302,12 @@ def main() -> None:
         p.add_argument("--chains", type=int, default=1)
     for name in ("status", "advance", "collect"):
         sub.add_parser(name)
+    p = sub.add_parser("requeue")
+    p.add_argument("--chain", required=True)
+    p.add_argument("--batch", required=True)
     args = parser.parse_args()
     {"plan": cmd_plan, "submit": cmd_submit, "status": cmd_status, "advance": cmd_advance,
-     "collect": cmd_collect}[args.cmd](args)
+     "collect": cmd_collect, "requeue": cmd_requeue}[args.cmd](args)
 
 
 if __name__ == "__main__":

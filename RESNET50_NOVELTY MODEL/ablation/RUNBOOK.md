@@ -31,6 +31,20 @@ python -m ablation.kaggle_launcher collect                        # download res
 python -m ablation.analysis.generate_report                       # results/reports/ablation_report.md
 ```
 
+**Switch to the blueprint arms (approved 2026-11-15).** Job a1 runs Batch 1. When it has ended, and before
+`advance`, point the chain at blueprint v4 Section 7 (A0-A8, 30 rounds):
+
+```
+python -m ablation.kaggle_launcher requeue --chain batch1-a --batch blueprint   # prints the two new queues
+python -m ablation.kaggle_launcher advance                                     # job a2 (fedmel-blueprint-a2)
+```
+
+`requeue` drops runs a1 finished, puts runs a1 left part-way first, and splits the rest over the two GPUs by
+rounds left. Batch 1 arms that are not in the blueprint (E01, E03-E06) keep whatever seeds a1 finished and are
+reported as supplementary. The first job after a requeue first runs A6, A8, A3, A4 for 2 rounds (smoke test of
+the new code paths) and stops if any fails. `kaggle kernels logs` is empty while a job runs; the job's
+Logs tab on kaggle.com shows the live STATUS lines.
+
 Each job stops itself after the round that would cross 11 h (Kaggle's limit is 12 h), so its output is
 always saved. `advance` is safe to run any time: it does nothing while a job is running, continues a chain
 whose job ended, stops a chain after 2 jobs in a row end without a clean finish (then read
