@@ -51,13 +51,16 @@ def kaggle(*args: str, check: bool = True) -> str:
 
 
 def username() -> str:
-    path = os.path.join(os.path.expanduser("~"), ".kaggle", "kaggle.json")
+    """Owner of the jobs. The access_token file (API tokens) carries no username, so it is the dataset owner."""
+    home = os.path.join(os.path.expanduser("~"), ".kaggle")
     if os.environ.get("KAGGLE_USERNAME"):
         return os.environ["KAGGLE_USERNAME"]
-    if not os.path.isfile(path):
-        raise SystemExit(f"No Kaggle API token: create one at kaggle.com -> Settings -> API and save it to {path}")
-    with open(path, encoding="utf-8") as fh:
-        return json.load(fh)["username"]
+    if os.path.isfile(os.path.join(home, "kaggle.json")):
+        with open(os.path.join(home, "kaggle.json"), encoding="utf-8") as fh:
+            return json.load(fh)["username"]
+    if os.path.isfile(os.path.join(home, "access_token")) or os.environ.get("KAGGLE_API_TOKEN"):
+        return DATASET.split("/")[0]
+    raise SystemExit(f"No Kaggle API token: create one at kaggle.com -> Settings -> API Tokens, save to {home}")
 
 
 def pinned_commit() -> str:
@@ -109,9 +112,9 @@ def push_job(user: str, batch: str, chain: str, part: int, queues: List[List[str
     os.makedirs(folder, exist_ok=True)
     params = {"slug": slug, "batch": batch, "chain": chain, "part": part, "queues": queues, "repo": REPO_URL,
               "branch": BRANCH, "commit": commit, "previous": previous, "hours": JOB_HOURS,
-              "cache_dataset": CACHE_DATASET}
+              "cache_dataset": CACHE_DATASET, "smoke": part == 1}
     with open(os.path.join(ROOT, "ablation", "kaggle_job_template.py"), encoding="utf-8") as fh:
-        body = fh.read().replace("PARAMS = {}  # filled in by kaggle_launcher.py", f"PARAMS = {json.dumps(params)}")
+        body = fh.read().replace("PARAMS = {}  # filled in by kaggle_launcher.py", f"PARAMS = {params!r}")
     with open(os.path.join(folder, "job.py"), "w", encoding="utf-8") as fh:
         fh.write(body)
     meta = {"id": f"{user}/{slug}", "title": slug, "code_file": "job.py", "language": "python",
