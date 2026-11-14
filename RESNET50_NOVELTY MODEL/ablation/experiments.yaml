@@ -1,0 +1,29 @@
+# Ablation registry. One factor changes per experiment; everything else is the base config
+# (configs/experiment_config.yaml) plus `common`. Approved 2026-11-14: Batch 1, harness H1 only.
+# See ablation/AUDIT_AND_PLAN.md for the reasoning behind each arm.
+
+common:
+  num_server_rounds: 30
+  seeds: [42, 43, 44]
+  harness:
+    crn_environment: true       # H1: straggler/failure draws keyed by (seed, round, client)
+
+# Variant keys:
+#   selection:        boltzmann (default) | uniform | no_diversity
+#   aggregation:      fedmelanoma (default) | no_diversity | fedavg
+#   straggler_buffer: true (default) | false
+#   focal_gamma:      2.0 (default) | any float
+experiments:
+  E00_full: {}
+  E01_random_selection: {selection: uniform}
+  E02_selection_no_diversity: {selection: no_diversity}
+  E03_agg_no_diversity: {aggregation: no_diversity}
+  E04_fedavg_weights: {aggregation: fedavg}
+  E05_no_straggler_buffer: {straggler_buffer: false}
+  E06_no_focal: {focal_gamma: 0.0}
+  R01_fedavg_reference: {selection: uniform, aggregation: fedavg, straggler_buffer: false}
+
+batches:
+  batch1: [E00_full, E01_random_selection, E03_agg_no_diversity, E04_fedavg_weights,
+           E05_no_straggler_buffer, E06_no_focal]
+  batch2: [E02_selection_no_diversity, R01_fedavg_reference]
