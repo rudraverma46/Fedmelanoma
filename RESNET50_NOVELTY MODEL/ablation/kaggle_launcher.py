@@ -134,13 +134,18 @@ def push_job(user: str, batch: str, chain: str, part: int, queues: List[List[str
 
 
 def last_status(slug: str) -> Optional[Dict]:
+    """Last STATUS line of a job. Kaggle returns the log of an ended job as a JSON list of stream records."""
     logs = kaggle("kernels", "logs", slug, check=False)
+    try:
+        lines = [rec.get("data", "") for rec in json.loads(logs)]
+    except ValueError:
+        lines = logs.splitlines()
     found = None
-    for line in logs.splitlines():
+    for line in "".join(lines).splitlines():
         m = re.search(r"STATUS (\{.*\})", line)
         if m:
             try:
-                found = json.loads(m.group(1).replace('\\"', '"'))
+                found = json.loads(m.group(1))
             except ValueError:
                 pass
     return found
