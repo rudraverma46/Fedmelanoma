@@ -4,6 +4,7 @@ pick up where the last one stopped.
     python -m ablation.kaggle_launcher plan    --batch batch1 [--chains 1]
     python -m ablation.kaggle_launcher submit  --batch batch1 [--chains 1]   first job of each chain
     python -m ablation.kaggle_launcher submit  --batch blueprint --seeds 44 --chain b    a teammate's share
+    python -m ablation.kaggle_launcher submit  --chain d --runs A2_no_attenuation:43 ...   an explicit run list
     python -m ablation.kaggle_launcher status                               job state + per-run progress
     python -m ablation.kaggle_launcher advance                              continue chains whose job ended
     python -m ablation.kaggle_launcher collect                              download results (no checkpoints)
@@ -90,11 +91,13 @@ def load_jobs() -> Dict:
 
 
 def assignment(batch: str, chains: int, seeds: Optional[List[int]] = None,
-               first: str = "a") -> Dict[str, List[List[str]]]:
-    runs = [f"{exp}:{seed}" for exp, seed in batch_runs(batch) if not seeds or seed in seeds]
+               first: str = "a", runs: Optional[List[str]] = None) -> Dict[str, List[List[str]]]:
+    """runs, if given, is an explicit exp:seed list (e.g. a chunk handed to a collaborator's own account)
+    and is used as-is instead of being computed from batch + seeds."""
+    all_runs = runs if runs else [f"{exp}:{seed}" for exp, seed in batch_runs(batch) if not seeds or seed in seeds]
     plan = {}
     for c in range(chains):
-        mine = runs[c::chains]
+        mine = all_runs[c::chains]
         plan[chr(ord(first) + c)] = [mine[0::2], mine[1::2]]   # one queue per T4
     return plan
 
@@ -160,7 +163,7 @@ def job_state(slug: str) -> str:
 
 
 def cmd_plan(args) -> None:
-    for chain, queues in assignment(args.batch, args.chains, args.seeds, args.chain).items():
+    for chain, queues in assignment(args.batch, args.chains, args.seeds, args.chain, args.runs).items():
         for gpu, queue in enumerate(queues):
             print(f"chain {chain} gpu{gpu}: {len(queue)} runs: {' '.join(queue)}")
 
@@ -169,7 +172,7 @@ def cmd_submit(args) -> None:
     user, commit = username(), pinned_commit()
     jobs = load_jobs()
     write_experiments_manifest(args.batch)
-    for chain, queues in assignment(args.batch, args.chains, args.seeds, args.chain).items():
+    for chain, queues in assignment(args.batch, args.chains, args.seeds, args.chain, args.runs).items():
         key = f"{args.batch}-{chain}"
         if key in jobs["chains"]:
             print(f"chain {key} already submitted; use advance")
@@ -310,6 +313,8 @@ def main() -> None:
         p.add_argument("--chains", type=int, default=1)
         p.add_argument("--seeds", type=int, nargs="+", help="only these seeds (e.g. 44 for a second account's share)")
         p.add_argument("--chain", default="a", help="letter of the first chain (b for a second account)")
+        p.add_argument("--runs", nargs="+", help="explicit exp:seed list handed to this account; "
+                       "overrides --batch/--seeds selection")
     for name in ("status", "advance", "collect"):
         sub.add_parser(name)
     p = sub.add_parser("requeue")
