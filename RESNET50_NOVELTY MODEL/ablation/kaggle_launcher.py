@@ -3,6 +3,7 @@ pick up where the last one stopped.
 
     python -m ablation.kaggle_launcher plan    --batch batch1 [--chains 1]
     python -m ablation.kaggle_launcher submit  --batch batch1 [--chains 1]   first job of each chain
+    python -m ablation.kaggle_launcher submit  --batch blueprint --seeds 44 --chain b    a teammate's share
     python -m ablation.kaggle_launcher status                               job state + per-run progress
     python -m ablation.kaggle_launcher advance                              continue chains whose job ended
     python -m ablation.kaggle_launcher collect                              download results (no checkpoints)
@@ -88,12 +89,13 @@ def load_jobs() -> Dict:
     return {"chains": {}}
 
 
-def assignment(batch: str, chains: int) -> Dict[str, List[List[str]]]:
-    runs = [f"{exp}:{seed}" for exp, seed in batch_runs(batch)]
+def assignment(batch: str, chains: int, seeds: Optional[List[int]] = None,
+               first: str = "a") -> Dict[str, List[List[str]]]:
+    runs = [f"{exp}:{seed}" for exp, seed in batch_runs(batch) if not seeds or seed in seeds]
     plan = {}
     for c in range(chains):
         mine = runs[c::chains]
-        plan[chr(ord("a") + c)] = [mine[0::2], mine[1::2]]   # one queue per T4
+        plan[chr(ord(first) + c)] = [mine[0::2], mine[1::2]]   # one queue per T4
     return plan
 
 
@@ -158,7 +160,7 @@ def job_state(slug: str) -> str:
 
 
 def cmd_plan(args) -> None:
-    for chain, queues in assignment(args.batch, args.chains).items():
+    for chain, queues in assignment(args.batch, args.chains, args.seeds, args.chain).items():
         for gpu, queue in enumerate(queues):
             print(f"chain {chain} gpu{gpu}: {len(queue)} runs: {' '.join(queue)}")
 
@@ -167,13 +169,14 @@ def cmd_submit(args) -> None:
     user, commit = username(), pinned_commit()
     jobs = load_jobs()
     write_experiments_manifest(args.batch)
-    for chain, queues in assignment(args.batch, args.chains).items():
+    for chain, queues in assignment(args.batch, args.chains, args.seeds, args.chain).items():
         key = f"{args.batch}-{chain}"
         if key in jobs["chains"]:
             print(f"chain {key} already submitted; use advance")
             continue
         try:
-            job = push_job(user, args.batch, chain, 1, queues, commit, None)
+            job = push_job(user, args.batch, chain, 1, queues, commit, None,
+                           None if args.batch == "batch1" else SMOKE_AFTER_REQUEUE)
         except RuntimeError as exc:
             print(f"chain {key}: push refused, will retry on advance: {exc}")
             job = None
@@ -305,6 +308,8 @@ def main() -> None:
         p = sub.add_parser(name)
         p.add_argument("--batch", default="batch1")
         p.add_argument("--chains", type=int, default=1)
+        p.add_argument("--seeds", type=int, nargs="+", help="only these seeds (e.g. 44 for a second account's share)")
+        p.add_argument("--chain", default="a", help="letter of the first chain (b for a second account)")
     for name in ("status", "advance", "collect"):
         sub.add_parser(name)
     p = sub.add_parser("requeue")
