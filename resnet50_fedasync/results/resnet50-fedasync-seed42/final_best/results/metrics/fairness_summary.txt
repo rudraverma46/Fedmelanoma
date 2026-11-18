@@ -1,0 +1,14 @@
+============================================================
+FAIRNESS / SUBGROUP SUMMARY
+============================================================
+Fitzpatrick fairness gap (max-min sensitivity): 0.3684
+  Best group : IV (sensitivity=1.0000)
+  Worst group: I (sensitivity=0.6316)
+  Excluded groups (sensitivity undefined): ['V', 'VI']
+
+Worst-group AUROC by hospital (client type, Blueprint WGA): TeleDerm_National_Screening_Network = 0.9474
+
+Worst-group AUROC by metadata axis:
+  skin_type: II = 0.9523
+  image_type: clinical: overview = 0.9091
+  confirm_type: histopathology = 0.8026

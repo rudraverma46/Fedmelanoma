@@ -1,0 +1,60 @@
+# FedAsync (Xie, Koyejo, Gupta, arXiv 1903.03934) in the NOVELTY straggler environment. Created 2026-11-14 from
+# resnet50_fedasync_textbook (which was created 2026-11-13 from
+# resnet50_fedavg_textbook/configs/experiment_config.yaml. The sections data, local_training, model, runtime
+# and reference_constants have the textbook FedAvg values (tests/test_00 asserts it); the
+# federation section keeps num_clients and local_epochs; everything FedAsync-specific is in `fedasync`.
+# Difference to the textbook run: arrival times and failures come from the novelty simulator (`environment`).
+
+experiment:
+  run_id: resnet50-fedasync-seed42
+  seed: 42                      # same seed policy as textbook FedAvg
+
+data:
+  partitions_root: ../without_federated/client/hospital_partitions
+  cache_dir: ../resnet 50_novelty_fedavg/cache   # opened read-only (numpy mmap_mode="r")
+
+federation:
+  num_clients: 10
+  local_epochs: 5               # textbook FedAvg's E; the paper leaves H unspecified
+
+fedasync:                       # user decisions 2026-11-13
+  total_dispatches: 300         # user decision 2026-11-14: = novelty's 50 rounds x 6 selected clients; applied updates can be fewer
+  concurrency: 6                # workers training at any moment (textbook FedAvg trains 6 per round)
+  scheduler: uniform_idle       # a freed slot triggers a uniformly random idle client
+  alpha: 0.6                    # mixing hyperparameter
+  staleness_function: hinge     # s(t - tau) = 1 if t - tau <= b else 1 / (a (t - tau - b) + 1)
+  staleness_a: 10
+  staleness_b: 4
+  rho: 0.005                    # worker proximal weight, paper's CIFAR-10 value
+  reject_stale: false           # the paper accepts every update
+  eval_every_updates: 6         # one evaluation + checkpoint per 6 applied updates
+  arrival_time: novelty_lognormal      # virtual clock; duration = LogNormal draw of the client's tier (real GPU time only logged)
+  drain_in_flight_at_budget: true      # after the 300th dispatch, in-flight updates still arrive and are applied (completed work is never thrown away)
+
+environment:                    # the novelty straggler environment (sim/environment.py), user decision 2026-11-14
+  kind: novelty_tiers
+  failure: none                 # user decision 2026-11-14: FedAsync as published has no failure mechanism; only the tier LogNormal delay is used
+  trace_seed: 42
+
+local_training:
+  batch_size: 20
+  learning_rate: 1.0e-4
+  weight_decay: 1.0e-4
+  focal_gamma: 2.0
+
+model:
+  backbone: resnet50
+  feature_dim: 2048
+  metadata_dim: 32
+  fusion_dim: 2080
+  dropout: 0.3
+  num_classes: 2
+
+runtime:
+  dataloader_workers: 0
+  pin_memory: true
+  commit_floor_gb: 0.2
+  monitor_interval_seconds: 10
+
+reference_constants:
+  evaluation_thresholds: [0.30, 0.40, 0.50, 0.60, 0.70]

@@ -1,0 +1,5 @@
+subgroup,n_samples,n_benign,n_malignant,prevalence,accuracy,precision,recall,f1,roc_auc,sensitivity,specificity,ppv,npv,balanced_accuracy,mcc,pr_auc,unavailable_reason
+histopathology,295,186,109,0.3694915254237288,0.7966101694915254,0.7578947368421053,0.6605504587155964,0.7058823529411765,0.8264279372595442,0.6605504587155964,0.8763440860215054,0.7578947368421053,0.815,0.7684472723685509,0.5546026135163121,0.792199298571903,
+serial imaging showing no change,317,317,0,0.0,1.0,0.0,,,,,1.0,0.0,1.0,,,,"recall, sensitivity, f1, roc_auc, pr_auc, mcc, balanced_accuracy unavailable: 0 malignant samples"
+single image expert consensus,347,347,0,0.0,1.0,0.0,,,,,1.0,0.0,1.0,,,,"recall, sensitivity, f1, roc_auc, pr_auc, mcc, balanced_accuracy unavailable: 0 malignant samples"
+single contributor clinical assessment,993,993,0,0.0,0.9979859013091642,0.0,,,,,0.9979859013091642,0.0,1.0,,,,"recall, sensitivity, f1, roc_auc, pr_auc, mcc, balanced_accuracy unavailable: 0 malignant samples"
