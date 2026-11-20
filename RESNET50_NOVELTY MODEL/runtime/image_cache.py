@@ -99,5 +99,11 @@ def build_cached_dataset(partitions_root: str, cache_dir: str, hospital: str, sp
 
 
 def build_loader(dataset, batch_size: int, shuffle: bool, workers: int, pin_memory: bool) -> DataLoader:
-    """Same batch size and shuffle flags as client/client.py build_hospital_dataloaders."""
-    return DataLoader(dataset, batch_size=batch_size, shuffle=shuffle, num_workers=workers, pin_memory=pin_memory)
+    """Same batch size and shuffle flags as client/client.py build_hospital_dataloaders.
+
+    A training split whose size leaves a final batch of one row drops that row each epoch: BatchNorm1d in the
+    metadata MLP cannot train on a single sample. Splits of every other size are unaffected.
+    """
+    drop_last = shuffle and len(dataset) % batch_size == 1
+    return DataLoader(dataset, batch_size=batch_size, shuffle=shuffle, num_workers=workers, pin_memory=pin_memory,
+                      drop_last=drop_last)
