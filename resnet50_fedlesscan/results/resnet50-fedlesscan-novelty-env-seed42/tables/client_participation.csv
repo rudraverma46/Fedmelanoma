@@ -1,0 +1,11 @@
+client_id,hospital,tier,selected,on_time,late,failed,latency_median,latency_max,aggregated
+0,CityGeneral_Multispecialty_Hospital,reliable,50,36,0,5,3.8980220083540726,8.25943999510813,36
+1,GoldenSun_Public_Health_Screening_Camp,moderate,50,27,0,11,15.908958865522067,28.024760919241064,27
+2,Greenfield_Rural_Community_Health_Center,high_straggler,50,0,2,4,92.08125724595286,144.69171491138678,1
+3,Lakeside_Regional_Mixed_Hospital,reliable,50,42,0,2,4.151820641398134,7.924333077152139,42
+4,MetroSkin_Dermatology_Research_Clinic,moderate,50,16,4,10,20.874537831426544,56.83816295263288,20
+5,NorthCare_Tertiary_Melanoma_Institute,high_straggler,50,0,1,5,38.387084498656804,38.387084498656804,1
+6,Pinewood_Oncology_Biopsy_Center,reliable,50,43,0,1,3.8004791968832876,8.018399767945754,43
+7,SunRay_Community_Outreach_Clinic,moderate,50,29,1,8,15.972946138754454,39.31932533925058,30
+8,TeleDerm_National_Screening_Network,high_straggler,50,0,2,6,135.34733881673958,180.24419358989584,2
+9,Westbridge_Academic_Dermoscopy_Unit,reliable,50,43,0,2,4.0760677789337105,8.953618086583164,43

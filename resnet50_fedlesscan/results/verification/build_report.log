@@ -1,0 +1,77 @@
+  [plot] saved results\resnet50-fedlesscan-novelty-env-seed42\plots\training_loss.png
+  [plot] saved results\resnet50-fedlesscan-novelty-env-seed42\plots\global_auroc.png
+  [plot] saved results\resnet50-fedlesscan-novelty-env-seed42\plots\global_auprc.png
+  [plot] saved results\resnet50-fedlesscan-novelty-env-seed42\plots\global_sensitivity.png
+  [plot] saved results\resnet50-fedlesscan-novelty-env-seed42\plots\global_specificity.png
+  [plot] saved results\resnet50-fedlesscan-novelty-env-seed42\plots\global_f1.png
+  [plot] saved results\resnet50-fedlesscan-novelty-env-seed42\plots\global_balanced_accuracy.png
+  [plot] saved results\resnet50-fedlesscan-novelty-env-seed42\plots\fairness_gap.png
+  [plot] saved results\resnet50-fedlesscan-novelty-env-seed42\plots\round_deadline.png
+  [plot] saved results\resnet50-fedlesscan-novelty-env-seed42\plots\staleness.png
+  [plot] saved results\resnet50-fedlesscan-novelty-env-seed42\plots\broadcast_verification_timeline.png
+  [plot] saved results\resnet50-fedlesscan-novelty-env-seed42\plots\client_selection_frequency.png
+  [plot] saved results\resnet50-fedlesscan-novelty-env-seed42\plots\aggregation_weights.png
+  [plot] saved results\resnet50-fedlesscan-novelty-env-seed42\plots\client_latency.png
+  [plot] saved results\resnet50-fedlesscan-novelty-env-seed42\plots\subgroup_fitzpatrick_sensitivity.png
+  [plot] saved results\resnet50-fedlesscan-novelty-env-seed42\plots\subgroup_fitzpatrick_auroc.png
+  [plot] saved results\resnet50-fedlesscan-novelty-env-seed42\plots\subgroup_modality_sensitivity.png
+  [plot] saved results\resnet50-fedlesscan-novelty-env-seed42\plots\subgroup_modality_auroc.png
+  [plot] saved results\resnet50-fedlesscan-novelty-env-seed42\plots\subgroup_diagnosis_sensitivity.png
+  [plot] saved results\resnet50-fedlesscan-novelty-env-seed42\plots\subgroup_diagnosis_auroc.png
+{
+ "run_id": "resnet50-fedlesscan-novelty-env-seed42",
+ "stats": {
+  "completed_rounds": 50,
+  "empty_rounds": 0,
+  "mean_selected": 6.0,
+  "mean_aggregated": 4.86,
+  "mean_failed": 1.08,
+  "mean_new_stragglers": 0.2,
+  "round_deadline_s": 30.0,
+  "late_updates_in_flight_at_end": 0
+ },
+ "best": {
+  "round": 44,
+  "roc_auc": 0.9917479891959716
+ },
+ "plots_written": [
+  "training_loss",
+  "global_auroc",
+  "global_auprc",
+  "global_sensitivity",
+  "global_specificity",
+  "global_f1",
+  "global_balanced_accuracy",
+  "fairness_gap",
+  "adaptive_window",
+  "staleness",
+  "broadcast_verification_timeline",
+  "client_selection_frequency",
+  "aggregation_weights",
+  "client_latency",
+  "subgroup_fitzpatrick_sensitivity.png",
+  "subgroup_fitzpatrick_auroc.png",
+  "subgroup_modality_sensitivity.png",
+  "subgroup_modality_auroc.png",
+  "subgroup_diagnosis_sensitivity.png",
+  "subgroup_diagnosis_auroc.png"
+ ],
+ "schedule_mismatches": 0,
+ "rounds_compared": 50,
+ "hash_failures": 0,
+ "broken_hash_chain": 0,
+ "resumes": 1,
+ "safe_stops": 1,
+ "exceptions": [],
+ "run_end_logged": true,
+ "train_seconds": 9178.186977148056,
+ "resources": {
+  "commit_free_min_gb": 1734.7440223693848,
+  "ram_free_min_gb": 1734.7440223693848,
+  "process_rss_max_gb": 9.604137420654297,
+  "gpu_mem_max_mb": NaN,
+  "gpu_util_mean_pct": NaN,
+  "gpu_temp_max_c": NaN,
+  "commit_limit_max_gb": 2015.5638847351076
+ }
+}

@@ -1,0 +1,179 @@
+
+============================================================
+FedMelanomaModel – Evaluation Script
+============================================================
+Device     : cuda
+Checkpoint : D:\MAIN BACKUP\backup 3\Fedmelanoma\resnet50_fedlesscan_novelty_env\checkpoints\resnet50-fedlesscan-novelty-env-seed42\global_round_0050.pth
+Batch size : 20
+
+[✓] Loaded checkpoint: D:\MAIN BACKUP\backup 3\Fedmelanoma\resnet50_fedlesscan_novelty_env\checkpoints\resnet50-fedlesscan-novelty-env-seed42\global_round_0050.pth
+    Saved at epoch unknown  |  Validation ROC-AUC at save time: nan
+
+Building test DataLoader …
+  Loaded 10 hospital partition(s).
+  Total test samples : 1,952
+
+Running inference …
+  Inference: 50/98 batches (51.0%)  |  ETA: 5.6s
+  Inference: 98/98 batches (100.0%)  |  ETA: 0.0s
+  Inference completed in 11.3s
+
+Computing metrics …
+
+============================================================
+FINAL TEST SET EVALUATION
+============================================================
+
+  — Standard Metrics —
+  Accuracy           : 95.70%
+  Precision          : 0.5874
+  Recall             : 0.7706
+  F1 Score           : 0.6667
+  ROC-AUC            : 0.9756
+
+  — Medical AI Metrics —
+  Sensitivity        : 0.7706  (= Recall)
+  Specificity        : 0.9680
+  PPV                : 0.5874  (= Precision)
+  NPV                : 0.9862
+
+  — Imbalanced-Dataset Metrics —
+  Balanced Accuracy  : 0.8693
+  MCC                : 0.6509
+  PR-AUC             : 0.7443
+
+  — Confusion Matrix —
+                   Pred Benign    Pred Malignant
+  True Benign           1,784              59
+  True Malignant           25              84
+
+============================================================
+
+
+Computing subgroup metrics (skin type / imaging modality / confirmation type) …
+D:\MAIN BACKUP\backup 3\Fedmelanoma\FedAvg_RESNET 50\.venv\Lib\site-packages\sklearn\metrics\_classification.py:409: UserWarning: A single label was found in 'y_true' and 'y_pred'. For the confusion matrix to have the correct shape, use the 'labels' parameter to pass all known labels.
+  warnings.warn(
+D:\MAIN BACKUP\backup 3\Fedmelanoma\FedAvg_RESNET 50\.venv\Lib\site-packages\sklearn\metrics\_classification.py:409: UserWarning: A single label was found in 'y_true' and 'y_pred'. For the confusion matrix to have the correct shape, use the 'labels' parameter to pass all known labels.
+  warnings.warn(
+D:\MAIN BACKUP\backup 3\Fedmelanoma\FedAvg_RESNET 50\.venv\Lib\site-packages\sklearn\metrics\_ranking.py:1030: UserWarning: No positive class found in y_true, recall is set to one for all thresholds.
+  warnings.warn(
+D:\MAIN BACKUP\backup 3\Fedmelanoma\FedAvg_RESNET 50\.venv\Lib\site-packages\sklearn\metrics\_classification.py:409: UserWarning: A single label was found in 'y_true' and 'y_pred'. For the confusion matrix to have the correct shape, use the 'labels' parameter to pass all known labels.
+  warnings.warn(
+D:\MAIN BACKUP\backup 3\Fedmelanoma\FedAvg_RESNET 50\.venv\Lib\site-packages\sklearn\metrics\_classification.py:409: UserWarning: A single label was found in 'y_true' and 'y_pred'. For the confusion matrix to have the correct shape, use the 'labels' parameter to pass all known labels.
+  warnings.warn(
+D:\MAIN BACKUP\backup 3\Fedmelanoma\FedAvg_RESNET 50\.venv\Lib\site-packages\sklearn\metrics\_ranking.py:1030: UserWarning: No positive class found in y_true, recall is set to one for all thresholds.
+  warnings.warn(
+D:\MAIN BACKUP\backup 3\Fedmelanoma\FedAvg_RESNET 50\.venv\Lib\site-packages\sklearn\metrics\_classification.py:409: UserWarning: A single label was found in 'y_true' and 'y_pred'. For the confusion matrix to have the correct shape, use the 'labels' parameter to pass all known labels.
+  warnings.warn(
+D:\MAIN BACKUP\backup 3\Fedmelanoma\FedAvg_RESNET 50\.venv\Lib\site-packages\sklearn\metrics\_classification.py:409: UserWarning: A single label was found in 'y_true' and 'y_pred'. For the confusion matrix to have the correct shape, use the 'labels' parameter to pass all known labels.
+  warnings.warn(
+D:\MAIN BACKUP\backup 3\Fedmelanoma\FedAvg_RESNET 50\.venv\Lib\site-packages\sklearn\metrics\_ranking.py:1030: UserWarning: No positive class found in y_true, recall is set to one for all thresholds.
+  warnings.warn(
+D:\MAIN BACKUP\backup 3\Fedmelanoma\FedAvg_RESNET 50\.venv\Lib\site-packages\sklearn\metrics\_classification.py:409: UserWarning: A single label was found in 'y_true' and 'y_pred'. For the confusion matrix to have the correct shape, use the 'labels' parameter to pass all known labels.
+  warnings.warn(
+D:\MAIN BACKUP\backup 3\Fedmelanoma\FedAvg_RESNET 50\.venv\Lib\site-packages\sklearn\metrics\_classification.py:409: UserWarning: A single label was found in 'y_true' and 'y_pred'. For the confusion matrix to have the correct shape, use the 'labels' parameter to pass all known labels.
+  warnings.warn(
+D:\MAIN BACKUP\backup 3\Fedmelanoma\FedAvg_RESNET 50\.venv\Lib\site-packages\sklearn\metrics\_ranking.py:1030: UserWarning: No positive class found in y_true, recall is set to one for all thresholds.
+  warnings.warn(
+D:\MAIN BACKUP\backup 3\Fedmelanoma\FedAvg_RESNET 50\.venv\Lib\site-packages\sklearn\metrics\_classification.py:409: UserWarning: A single label was found in 'y_true' and 'y_pred'. For the confusion matrix to have the correct shape, use the 'labels' parameter to pass all known labels.
+  warnings.warn(
+D:\MAIN BACKUP\backup 3\Fedmelanoma\FedAvg_RESNET 50\.venv\Lib\site-packages\sklearn\metrics\_classification.py:409: UserWarning: A single label was found in 'y_true' and 'y_pred'. For the confusion matrix to have the correct shape, use the 'labels' parameter to pass all known labels.
+  warnings.warn(
+D:\MAIN BACKUP\backup 3\Fedmelanoma\FedAvg_RESNET 50\.venv\Lib\site-packages\sklearn\metrics\_ranking.py:1030: UserWarning: No positive class found in y_true, recall is set to one for all thresholds.
+  warnings.warn(
+  [✓] Saved: results/metrics\skin_type_metrics.csv
+  [✓] Saved: results/metrics\image_type_metrics.csv
+  [✓] Saved: results/metrics\confirm_type_metrics.csv
+
+============================================================
+FAIRNESS / SUBGROUP SUMMARY
+============================================================
+Fitzpatrick fairness gap (max-min sensitivity): 0.5455
+  Best group : IV (sensitivity=1.0000)
+  Worst group: III (sensitivity=0.4545)
+  Excluded groups (sensitivity undefined): ['V', 'VI']
+
+Worst-group AUROC by hospital (client type, Blueprint WGA): Pinewood_Oncology_Biopsy_Center = 0.9641
+
+Worst-group AUROC by metadata axis:
+  skin_type: III = 0.9529
+  image_type: clinical: overview = 0.9621
+  confirm_type: histopathology = 0.8102
+  [✓] Saved: results/metrics/fairness_summary.txt
+Generating plots …
+  [✓] Saved: confusion_matrix.png
+  [✓] Saved: roc_curve.png
+  [✓] Saved: pr_curve.png
+
+  — Threshold Analysis —
+   Threshold |  Precision |     Recall |         F1 |  Specificity
+  ----------------------------------------------------------------
+        0.30 |     0.5427 |     0.8165 |     0.6520 |       0.9593
+        0.40 |     0.5658 |     0.7890 |     0.6590 |       0.9642
+        0.50 |     0.5874 |     0.7706 |     0.6667 |       0.9680
+        0.60 |     0.6194 |     0.7615 |     0.6831 |       0.9723
+        0.70 |     0.6417 |     0.7064 |     0.6725 |       0.9767
+  ----------------------------------------------------------------
+
+  [✓] Saved: threshold_analysis.csv
+
+  Classification Report:
+              precision    recall  f1-score   support
+
+      Benign       0.99      0.97      0.98      1843
+   Malignant       0.59      0.77      0.67       109
+
+    accuracy                           0.96      1952
+   macro avg       0.79      0.87      0.82      1952
+weighted avg       0.96      0.96      0.96      1952
+
+  [✓] Saved: classification_report.txt
+============================================================
+FEDMELANOMAMODEL – FINAL TEST RESULTS
+============================================================
+
+Standard Metrics
+----------------------------------------
+  Accuracy           : 95.70%
+  Precision          : 0.5874
+  Recall             : 0.7706
+  F1 Score           : 0.6667
+  ROC-AUC            : 0.9756
+
+Medical AI Metrics
+----------------------------------------
+  Sensitivity        : 0.7706  (= Recall / TP rate)
+  Specificity        : 0.9680  (= TN / (TN + FP))
+  PPV                : 0.5874  (= Precision)
+  NPV                : 0.9862  (= TN / (TN + FN))
+
+Imbalanced-Dataset Metrics
+----------------------------------------
+  Balanced Accuracy  : 0.8693
+  MCC                : 0.6509
+  PR-AUC             : 0.7443
+
+Confusion Matrix
+----------------------------------------
+                   Pred Benign    Pred Malignant
+  True Benign           1,784              59
+  True Malignant           25              84
+
+============================================================
+
+  [✓] Saved: final_test_results.txt
+
+[✓] Evaluation complete.
+
+
+  — Threshold Analysis —
+   Threshold |  Precision |     Recall |         F1 |  Specificity
+  ----------------------------------------------------------------
+        0.10 |     0.5000 |     0.8716 |     0.6355 |       0.9485
+        0.30 |     0.5427 |     0.8165 |     0.6520 |       0.9593
+        0.50 |     0.5874 |     0.7706 |     0.6667 |       0.9680
+        0.70 |     0.6417 |     0.7064 |     0.6725 |       0.9767
+        0.90 |     0.7093 |     0.5596 |     0.6256 |       0.9864
+  ----------------------------------------------------------------
+
+  [✓] Saved: threshold_analysis_requested.csv

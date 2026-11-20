@@ -1,0 +1,2 @@
+completed_rounds,empty_rounds,mean_selected,mean_aggregated,mean_failed,mean_new_stragglers,round_deadline_s,late_updates_in_flight_at_end
+50,0,6.0,4.86,1.08,0.2,30.0,0

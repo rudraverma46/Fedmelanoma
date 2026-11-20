@@ -1,0 +1,19 @@
+{
+  "checkpoint": "D:\\MAIN BACKUP\\backup 3\\Fedmelanoma\\resnet50_fedlesscan_novelty_env\\checkpoints\\resnet50-fedlesscan-novelty-env-seed42\\best_global_model.pth",
+  "accuracy": 0.9600409836065574,
+  "precision": 0.6448598130841121,
+  "recall": 0.6330275229357798,
+  "f1": 0.6388888888888888,
+  "roc_auc": 0.9602164400882087,
+  "sensitivity": 0.6330275229357798,
+  "specificity": 0.979381443298969,
+  "ppv": 0.6448598130841121,
+  "npv": 0.978319783197832,
+  "balanced_accuracy": 0.8062044831173745,
+  "mcc": 0.6177708089070036,
+  "pr_auc": 0.7335228483703797,
+  "tn": 1805.0,
+  "fp": 38.0,
+  "fn": 40.0,
+  "tp": 69.0
+}

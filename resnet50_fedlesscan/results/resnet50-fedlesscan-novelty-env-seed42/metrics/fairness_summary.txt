@@ -1,0 +1,14 @@
+============================================================
+FAIRNESS / SUBGROUP SUMMARY
+============================================================
+Fitzpatrick fairness gap (max-min sensitivity): 0.5455
+  Best group : IV (sensitivity=1.0000)
+  Worst group: III (sensitivity=0.4545)
+  Excluded groups (sensitivity undefined): ['V', 'VI']
+
+Worst-group AUROC by hospital (client type, Blueprint WGA): NorthCare_Tertiary_Melanoma_Institute = 0.9128
+
+Worst-group AUROC by metadata axis:
+  skin_type: I = 0.9418
+  image_type: clinical: overview = 0.9091
+  confirm_type: histopathology = 0.8228
