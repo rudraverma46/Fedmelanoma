@@ -221,7 +221,7 @@ def server_fn(context: Context) -> ServerAppComponents:
     from server.strategy import FedMelanomaStrategy, HospitalConfig
     from monitoring.experiment_logging import ExperimentLogger, new_run_id
 
-    hospital_names, hospital_records, global_fitz, global_mod, global_conf = (
+    hospital_names, hospital_records, global_fitz, global_mod = (
         build_hospital_registry(partitions_root)
     )
     if not hospital_records:
@@ -252,7 +252,6 @@ def server_fn(context: Context) -> ServerAppComponents:
         hospital_configs=hospital_configs,
         global_fitzpatrick=global_fitz,
         global_modality=global_mod,
-        global_confirmation=global_conf,
         n_select=min(clients_per_round, len(hospital_configs)),
         initial_parameters=initial_parameters,
         local_epochs=local_epochs,

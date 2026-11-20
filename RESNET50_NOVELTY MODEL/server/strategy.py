@@ -128,17 +128,14 @@ class HospitalConfig:
     latency_sigma: float
     fitzpatrick_dist: Sequence[float]
     modality_dist: Sequence[float]
-    confirmation_dist: Sequence[float]
 
 
 def compute_normalized_diversity_priors(
     hospital_configs: Sequence[HospitalConfig],
     global_fitzpatrick: Sequence[float],
     global_modality: Sequence[float],
-    global_confirmation: Sequence[float],
     fitz_weight: float = 0.40,
     modality_weight: float = 0.35,
-    confirmation_weight: float = 0.25,
 ) -> List[float]:
     """
     ADAPTER: calls the UNMODIFIED EarthMoverDistance.compute_diversity_score
@@ -163,11 +160,8 @@ def compute_normalized_diversity_priors(
             client_fitzpatrick=hc.fitzpatrick_dist,
             global_modality=global_modality,
             client_modality=hc.modality_dist,
-            global_confirmation=global_confirmation,
-            client_confirmation=hc.confirmation_dist,
             fitz_weight=fitz_weight,
             modality_weight=modality_weight,
-            confirmation_weight=confirmation_weight,
         )
         raw_scores.append(result["raw_diversity_score"])
 
@@ -197,7 +191,6 @@ class FedMelanomaStrategy(Strategy):
         hospital_configs: Sequence[HospitalConfig],
         global_fitzpatrick: Sequence[float],
         global_modality: Sequence[float],
-        global_confirmation: Sequence[float],
         n_select: Optional[int] = None,
         initial_parameters: Optional[List[np.ndarray]] = None,
         selector: Optional[Selector] = None,
@@ -245,7 +238,7 @@ class FedMelanomaStrategy(Strategy):
         # computed once at client registration ... and remain fixed
         # throughout training" (Blueprint Section 3.2.6 / Phase 6).
         diversity_priors: List[float] = compute_normalized_diversity_priors(
-            self._hospital_configs, global_fitzpatrick, global_modality, global_confirmation,
+            self._hospital_configs, global_fitzpatrick, global_modality,
         )
 
         # ---- RESEARCH MODULE CALL (unmodified): selector.Client ----

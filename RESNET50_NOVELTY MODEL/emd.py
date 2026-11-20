@@ -13,14 +13,6 @@ class EarthMoverDistance:
         [0.70, 0.45, 0.00]
     ])
 
-    # Epistemic Cost Matrix for Confirmation Type
-    CONFIRMATION_COST_MATRIX = np.array([
-        [0.0, 1/3, 2/3, 1.0],
-        [1/3, 0.0, 1/3, 2/3],
-        [2/3, 1/3, 0.0, 1/3],
-        [1.0, 2/3, 1/3, 0.0]
-    ])
-
     @staticmethod
     def wasserstein_1d(global_dist, client_dist):
         """
@@ -92,14 +84,15 @@ class EarthMoverDistance:
         client_fitzpatrick,
         global_modality,
         client_modality,
-        global_confirmation,
-        client_confirmation,
         fitz_weight=0.40,
-        modality_weight=0.35,
-        confirmation_weight=0.25
+        modality_weight=0.35
     ):
         """
-        Computes raw diversity score for a client.
+        Computes raw diversity score for a client from skin type and imaging modality.
+
+        The confirmation-type axis (weight 0.25) is removed because diagnosis_confirm_type
+        leaks the label; D_i is max-normalised afterwards, so the remaining weights act as
+        0.40 / 0.75 and 0.35 / 0.75.
         """
 
         fitz_distance = cls.wasserstein_1d(
@@ -113,21 +106,13 @@ class EarthMoverDistance:
             cls.MODALITY_COST_MATRIX
         )
 
-        confirmation_distance = cls.optimal_transport_distance(
-            global_confirmation,
-            client_confirmation,
-            cls.CONFIRMATION_COST_MATRIX
-        )
-
         diversity_raw = (
             fitz_weight * fitz_distance
             + modality_weight * modality_distance
-            + confirmation_weight * confirmation_distance
         )
 
         return {
             "fitzpatrick_distance": fitz_distance,
             "modality_distance": modality_distance,
-            "confirmation_distance": confirmation_distance,
             "raw_diversity_score": diversity_raw
         }

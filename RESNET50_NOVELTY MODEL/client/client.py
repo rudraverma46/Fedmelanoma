@@ -151,7 +151,7 @@ def _iter_underlying_datasets(dataset) -> Iterator[MelanomaDataset]:
         yield dataset
 
 
-_METADATA_COLUMNS = ["fitzpatrick_skin_type", "image_type", "diagnosis_confirm_type"]
+_METADATA_COLUMNS = ["fitzpatrick_skin_type", "image_type"]
 
 
 def _extract_metadata_df(loader: DataLoader) -> pd.DataFrame:
@@ -360,8 +360,8 @@ class FedMelanomaClient(fl.client.NumPyClient):
             y_prob already computed locally by evaluate_model() above.
           - `subgroup_confusion_counts_json`: this client's LOCAL
             per-category confusion-matrix counts (tn/fp/fn/tp -- small
-            integers) for the blueprint's three metadata axes (skin
-            type, imaging modality, confirmation type), via
+            integers) for the metadata axes (skin type, imaging
+            modality), via
             monitoring.subgroup_metrics.local_all_axes_confusion_counts.
             Privacy constraint: raw metadata/images/labels never leave
             this method; only these aggregate counts are serialised.

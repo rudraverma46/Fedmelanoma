@@ -56,17 +56,15 @@ class StaticReliability:
         client.R = 1.0
 
 
-def total_variation_diversity_priors(hospital_configs, global_fitzpatrick, global_modality, global_confirmation,
-                                     fitz_weight: float = 0.40, modality_weight: float = 0.35,
-                                     confirmation_weight: float = 0.25) -> List[float]:
+def total_variation_diversity_priors(hospital_configs, global_fitzpatrick, global_modality,
+                                     fitz_weight: float = 0.40, modality_weight: float = 0.35) -> List[float]:
     """A6: D_i from total variation 0.5 * sum|p - q| per axis instead of OT, same axis weights and max-normalisation."""
     def tv(p, q) -> float:
         p, q = np.asarray(p, dtype=float), np.asarray(q, dtype=float)
         return 0.5 * float(np.abs(p / p.sum() - q / q.sum()).sum())
 
     raw = [fitz_weight * tv(global_fitzpatrick, hc.fitzpatrick_dist)
-           + modality_weight * tv(global_modality, hc.modality_dist)
-           + confirmation_weight * tv(global_confirmation, hc.confirmation_dist) for hc in hospital_configs]
+           + modality_weight * tv(global_modality, hc.modality_dist) for hc in hospital_configs]
     top = max(raw) if raw and max(raw) > 0 else 1.0
     return [r / top for r in raw]
 

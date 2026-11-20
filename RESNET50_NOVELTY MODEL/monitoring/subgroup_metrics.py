@@ -13,9 +13,9 @@ metadata_train.csv/metadata_test.csv schema:
     fitzpatrick_skin_type  -> I, II, III, IV, V, VI
     image_type             -> dermoscopic, clinical: close-up,
                                clinical: overview
-    diagnosis_confirm_type -> histopathology, serial imaging showing no
-                               change, single image expert consensus,
-                               single contributor clinical assessment
+
+diagnosis_confirm_type is not used as a subgroup axis: it leaks the label (every malignant
+image is histopathology-confirmed).
 
 Metric reuse: per-subgroup metrics are computed by calling
 evaluate.compute_metrics() (unmodified) on the boolean-masked subset,
@@ -44,7 +44,6 @@ from client.dataset import MelanomaDataset
 SUBGROUP_AXES: Dict[str, Sequence[str]] = {
     "skin_type": list(MelanomaDataset._SKIN_TYPES),
     "image_type": list(MelanomaDataset._IMAGE_TYPES),
-    "confirm_type": list(MelanomaDataset._CONFIRM_TYPES),
 }
 
 # Metrics that are mathematically undefined when the subgroup has zero
@@ -158,7 +157,6 @@ def compute_all_subgroup_axes(
     column_by_axis = {
         "skin_type": "fitzpatrick_skin_type",
         "image_type": "image_type",
-        "confirm_type": "diagnosis_confirm_type",
     }
     results: Dict[str, pd.DataFrame] = {}
     for axis, categories in SUBGROUP_AXES.items():
@@ -278,11 +276,10 @@ def local_all_axes_confusion_counts(
     metadata_df: pd.DataFrame,
     positive_class_idx: int = 1,
 ) -> Dict[str, Dict[str, Dict[str, int]]]:
-    """CLIENT-SIDE convenience: confusion counts for all three metadata axes at once."""
+    """CLIENT-SIDE convenience: confusion counts for every metadata axis at once."""
     column_by_axis = {
         "skin_type": "fitzpatrick_skin_type",
         "image_type": "image_type",
-        "confirm_type": "diagnosis_confirm_type",
     }
     out: Dict[str, Dict[str, Dict[str, int]]] = {}
     for axis, categories in SUBGROUP_AXES.items():
@@ -379,7 +376,7 @@ def compute_worst_group(
     """
     Worst-group value of *metric_col* among subgroups where it is defined
     -- the blueprint's WGA = min_g metric(g) (Section 5.3), applied here
-    per metadata axis (skin_type / image_type / confirm_type) rather than
+    per metadata axis (skin_type / image_type) rather than
     per-hospital "client type" grouping, since the centralized evaluation
     pipeline's held-out set is not currently tagged by originating
     hospital. This is a documented scope choice, not a redefinition of

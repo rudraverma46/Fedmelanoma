@@ -36,15 +36,14 @@ def quiet():
 def make_strategy(tmp_path, n_select, sizes=(100, 300, 600), rng=None):
     configs = [
         HospitalConfig(n_samples=n, tier="reliable", latency_mu=1.39, latency_sigma=0.3,
-                       fitzpatrick_dist=[1 - i * 0.3, i * 0.3, 0, 0, 0, 0], modality_dist=[1 - i * 0.2, i * 0.2, 0],
-                       confirmation_dist=[1 - i * 0.1, i * 0.1, 0, 0])
+                       fitzpatrick_dist=[1 - i * 0.3, i * 0.3, 0, 0, 0, 0], modality_dist=[1 - i * 0.2, i * 0.2, 0])
         for i, n in enumerate(sizes)
     ]
     initial = [np.array([0.0, 1.0, 2.0], dtype=np.float32), np.array(5, dtype=np.int64)]
     run_id = "unit"
     strategy = FedMelanomaStrategy(
         hospital_configs=configs, global_fitzpatrick=[0.6, 0.4, 0, 0, 0, 0], global_modality=[0.8, 0.2, 0],
-        global_confirmation=[0.9, 0.1, 0, 0], n_select=n_select, initial_parameters=initial,
+        n_select=n_select, initial_parameters=initial,
         rng=rng or np.random.default_rng(0), experiment_logger=ExperimentLogger(run_id, logs_root=str(tmp_path / "logs")),
         run_id=run_id, checkpoint_dir=str(tmp_path / "ckpt"), results_dir=str(tmp_path / "res"))
     manager = SimpleClientManager()
@@ -118,7 +117,7 @@ def test_11_diversity_prior_real_registry(cfg, planned):
     """D_i recomputed by a separate 1-D and LP calculation on the real distributions."""
     from scipy.optimize import linprog
 
-    _, records, g_fitz, g_mod, g_conf = build_hospital_registry(cfg["data"]["partitions_root"])
+    _, records, g_fitz, g_mod = build_hospital_registry(cfg["data"]["partitions_root"])
 
     def transport(p, q, cost):
         n = len(p)
@@ -126,15 +125,13 @@ def test_11_diversity_prior_real_registry(cfg, planned):
         return linprog(cost.flatten(), A_eq=np.array(rows), b_eq=np.r_[p, q], bounds=(0, None), method="highs").fun
 
     cost_mod = np.array([[0, .3, .7], [.3, 0, .45], [.7, .45, 0]])
-    cost_conf = np.abs(np.subtract.outer(np.arange(4), np.arange(4))) / 3
     raw = []
     for r in records:
         fitz = np.abs(np.cumsum(g_fitz) - np.cumsum(r["fitzpatrick_dist"])).sum()
-        raw.append(0.40 * fitz + 0.35 * transport(g_mod, r["modality_dist"], cost_mod)
-                   + 0.25 * transport(g_conf, r["confirmation_dist"], cost_conf))
+        raw.append(0.40 * fitz + 0.35 * transport(g_mod, r["modality_dist"], cost_mod))
     expected = np.array(raw) / max(raw)
     configs = [HospitalConfig(**r) for r in records]
-    assert np.allclose(compute_normalized_diversity_priors(configs, g_fitz, g_mod, g_conf), expected, atol=1e-6)
+    assert np.allclose(compute_normalized_diversity_priors(configs, g_fitz, g_mod), expected, atol=1e-6)
     assert np.allclose([h["D"] for h in planned["hospitals"]], expected, atol=1e-6)
 
 
@@ -276,11 +273,11 @@ def test_13_full_schedule_matches_independent_replay(planned):
 
 def test_13_strategy_reproduces_planned_schedule(tmp_path, cfg, planned):
     """The real FedMelanomaStrategy, driven for 50 rounds with tiny fake models."""
-    names, records, g_fitz, g_mod, g_conf = build_hospital_registry(cfg["data"]["partitions_root"])
+    names, records, g_fitz, g_mod = build_hospital_registry(cfg["data"]["partitions_root"])
     initial = [np.zeros(4, dtype=np.float32)]
     strategy = FedMelanomaStrategy(
         hospital_configs=[HospitalConfig(**r) for r in records], global_fitzpatrick=g_fitz, global_modality=g_mod,
-        global_confirmation=g_conf, n_select=6, initial_parameters=initial, local_epochs=5, rng=np.random.default_rng(42),
+        n_select=6, initial_parameters=initial, local_epochs=5, rng=np.random.default_rng(42),
         experiment_logger=ExperimentLogger("sched", logs_root=str(tmp_path / "logs")), run_id="sched",
         checkpoint_dir=str(tmp_path / "ckpt"), results_dir=str(tmp_path / "res"))
     manager = SimpleClientManager()

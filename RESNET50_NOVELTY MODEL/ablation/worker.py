@@ -89,7 +89,7 @@ def write_test_rows(partitions_root: str, out: str) -> None:
     """Patient / lesion ids of the pooled test rows and whether either also occurs in any training split,
     so the analysis can cluster by patient and report unseen-patient scores without the dataset."""
     import pandas as pd
-    cols = ["isic_id", "patient_id", "lesion_id", "diagnosis_confirm_type"]
+    cols = ["isic_id", "patient_id", "lesion_id"]
     from hospital_registry import discover_hospitals
     hospitals = discover_hospitals(partitions_root)
     read = lambda split: pd.concat(  # noqa: E731

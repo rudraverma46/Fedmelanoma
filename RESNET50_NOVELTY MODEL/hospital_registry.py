@@ -13,8 +13,10 @@ derives exactly the inputs server/strategy.py's HospitalConfig needs:
     n_samples          -- row count of the hospital's local training CSV
     fitzpatrick_dist   -- P(skin_type)   over client.dataset's 6 categories
     modality_dist      -- P(image_type)  over client.dataset's 3 categories
-    confirmation_dist  -- P(confirm_type) over client.dataset's 4 categories
     tier / latency_*   -- straggler-simulation parameters (see note below)
+
+diagnosis_confirm_type is not read: it leaks the label (every malignant image is
+histopathology-confirmed), so it is excluded from the diversity score as well as the model input.
 
 WHY distributions are computed from metadata_train.csv directly, not from
 the documented *_distribution.csv files:
@@ -133,14 +135,12 @@ def build_hospital_record(
     cheap to import, from client/client.py as well).
 
     Returns a dict with keys: n_samples, tier, latency_mu, latency_sigma,
-    fitzpatrick_dist, modality_dist, confirmation_dist (the last three are
-    plain Python lists of float, summing to 1.0).
+    fitzpatrick_dist, modality_dist (both plain Python lists of float, summing to 1.0).
     """
     df = pd.read_csv(_hospital_metadata_path(hospital, partitions_root))
 
     fitz = _category_distribution(df["fitzpatrick_skin_type"], MelanomaDataset._SKIN_TYPES)
     modality = _category_distribution(df["image_type"], MelanomaDataset._IMAGE_TYPES)
-    confirm = _category_distribution(df["diagnosis_confirm_type"], MelanomaDataset._CONFIRM_TYPES)
 
     tier = _TIER_CYCLE[index % len(_TIER_CYCLE)]
     latency_mu, latency_sigma = _TIER_LATENCY[tier]
@@ -152,7 +152,6 @@ def build_hospital_record(
         "latency_sigma": latency_sigma,
         "fitzpatrick_dist": fitz.tolist(),
         "modality_dist": modality.tolist(),
-        "confirmation_dist": confirm.tolist(),
     }
 
 
@@ -162,14 +161,14 @@ def build_hospital_record(
 
 def build_hospital_registry(
     partitions_root: str = DEFAULT_PARTITIONS_ROOT,
-) -> Tuple[List[str], List[Dict[str, object]], List[float], List[float], List[float]]:
+) -> Tuple[List[str], List[Dict[str, object]], List[float], List[float]]:
     """
     Discover hospitals and build every input server.strategy.FedMelanomaStrategy
     needs at construction time.
 
     Returns
     -------
-    (hospital_names, hospital_records, global_fitzpatrick, global_modality, global_confirmation)
+    (hospital_names, hospital_records, global_fitzpatrick, global_modality)
 
     hospital_records[i] corresponds to hospital_names[i]; that same index
     is the selector.py client_id FedMelanomaStrategy assigns it (see
@@ -182,17 +181,16 @@ def build_hospital_registry(
     distribution -- the reference centroid emd.py's EarthMoverDistance
     compares each hospital against (blueprint Phase 6: "global centroid").
 
-    Returns ([], [], [], [], []) when hospital_partitions/ is absent or
+    Returns ([], [], [], []) when hospital_partitions/ is absent or
     empty -- callers decide whether that is fatal for their purpose.
     """
     hospitals = discover_hospitals(partitions_root)
     if not hospitals:
-        return [], [], [], [], []
+        return [], [], [], []
 
     records: List[Dict[str, object]] = []
     fitz_rows: List[np.ndarray] = []
     mod_rows: List[np.ndarray] = []
-    conf_rows: List[np.ndarray] = []
     weights: List[float] = []
 
     for idx, hospital in enumerate(hospitals):
@@ -200,7 +198,6 @@ def build_hospital_registry(
         records.append(record)
         fitz_rows.append(np.array(record["fitzpatrick_dist"], dtype=float))
         mod_rows.append(np.array(record["modality_dist"], dtype=float))
-        conf_rows.append(np.array(record["confirmation_dist"], dtype=float))
         weights.append(float(record["n_samples"]))
 
     weights_arr = np.array(weights, dtype=float)
@@ -213,6 +210,5 @@ def build_hospital_registry(
 
     global_fitz = np.average(np.stack(fitz_rows), axis=0, weights=weights_arr)
     global_mod = np.average(np.stack(mod_rows), axis=0, weights=weights_arr)
-    global_conf = np.average(np.stack(conf_rows), axis=0, weights=weights_arr)
 
-    return hospitals, records, global_fitz.tolist(), global_mod.tolist(), global_conf.tolist()
+    return hospitals, records, global_fitz.tolist(), global_mod.tolist()

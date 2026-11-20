@@ -15,7 +15,7 @@ class MelanomaDataset(Dataset):
       1. Row caching           – df.to_dict("records") eliminates per-sample iloc overhead.
       2. Label tensor          – diagnosis_1 decoded into a single contiguous torch.long
                                  tensor at init; __getitem__ indexes it with zero allocation.
-      3. Metadata tensor       – encode_metadata() results stacked into one (N, 13)
+      3. Metadata tensor       – encode_metadata() results stacked into one (N, METADATA_DIM)
                                  float32 tensor; __getitem__ returns a view, not a copy.
       4. PIL removal           – cv2.resize() replaces ToPILImage + Resize, cutting one
                                  redundant format conversion per sample.
@@ -33,12 +33,9 @@ class MelanomaDataset(Dataset):
         "clinical: close-up",
         "clinical: overview",
     ]
-    _CONFIRM_TYPES: List[str] = [
-        "histopathology",
-        "serial imaging showing no change",
-        "single image expert consensus",
-        "single contributor clinical assessment",
-    ]
+    # diagnosis_confirm_type is deliberately not used: every malignant image is
+    # histopathology-confirmed, so the column gives the label away.
+    METADATA_DIM: int = len(_SKIN_TYPES) + len(_IMAGE_TYPES)
 
     def __init__(self, csv_file: str, image_dir: str) -> None:
         self.image_dir = image_dir
@@ -88,12 +85,12 @@ class MelanomaDataset(Dataset):
         #                                                                    #
         # Previously a List[torch.Tensor] – N separate heap objects, each  #
         # with its own storage pointer, reference count, and metadata       #
-        # header.  torch.stack() merges them into one contiguous (N, 13)   #
+        # header.  torch.stack() merges them into one contiguous (N, 9)    #
         # float32 tensor allocated in a single memory block.                #
         #                                                                    #
         # Benefits vs. List[torch.Tensor]:                                  #
         #   • One allocation instead of N allocations → less GC pressure.  #
-        #   • All 13-element rows are stored adjacently in memory; when the #
+        #   • All 9-element rows are stored adjacently in memory; when the  #
         #     DataLoader fetches indices that are close together (e.g.      #
         #     sequential or within the same batch), the CPU cache already   #
         #     holds nearby rows, reducing cache misses.                     #
@@ -101,8 +98,8 @@ class MelanomaDataset(Dataset):
         #     tensor, returning a view (not a copy) – zero allocation on    #
         #     the hot path.                                                 #
         #                                                                    #
-        # Shape:  (N, 13)   dtype: torch.float32  – identical per-row      #
-        # values to the original list of 1-D (13,) tensors.                #
+        # Shape:  (N, 9)    dtype: torch.float32  – identical per-row      #
+        # values to the original list of 1-D (9,) tensors.                 #
         #                                                                    #
         # DataLoader compatibility: same fork/spawn read-only sharing as   #
         # before; contiguous layout also makes shared-memory transfer       #
@@ -110,7 +107,7 @@ class MelanomaDataset(Dataset):
         # ---------------------------------------------------------------- #
         self.metadata_cache: torch.Tensor = torch.stack(
             [self.encode_metadata(row) for row in self.rows]
-        )  # shape: (N, 13), dtype: torch.float32
+        )  # shape: (N, METADATA_DIM), dtype: torch.float32
 
         # ---------------------------------------------------------------- #
         # Optimization 4 – Remove PIL conversion                            #
@@ -135,14 +132,11 @@ class MelanomaDataset(Dataset):
     # ------------------------------------------------------------------ #
     def encode_metadata(self, row: Dict[str, Any]) -> torch.Tensor:
         """
-        One-hot encode fitzpatrick_skin_type, image_type, and
-        diagnosis_confirm_type into a single 13-dim float32 tensor.
-
-        Logic is identical to the original implementation.
+        One-hot encode fitzpatrick_skin_type and image_type into a single
+        METADATA_DIM-dim float32 tensor.
         """
         skin    = [0] * len(self._SKIN_TYPES)
         image   = [0] * len(self._IMAGE_TYPES)
-        confirm = [0] * len(self._CONFIRM_TYPES)
 
         try:
             skin[self._SKIN_TYPES.index(str(row["fitzpatrick_skin_type"]).strip())] = 1
@@ -154,12 +148,7 @@ class MelanomaDataset(Dataset):
         except (ValueError, KeyError):
             pass
 
-        try:
-            confirm[self._CONFIRM_TYPES.index(str(row["diagnosis_confirm_type"]).strip())] = 1
-        except (ValueError, KeyError):
-            pass
-
-        return torch.tensor(skin + image + confirm, dtype=torch.float32)
+        return torch.tensor(skin + image, dtype=torch.float32)
 
     # ------------------------------------------------------------------ #
     #  Dataset protocol                                                    #
@@ -197,8 +186,8 @@ class MelanomaDataset(Dataset):
         image = self.transform(image)            # ToTensor + Normalize
 
         # ---------------------------------------------------------------- #
-        # Opt 3 – View into the (N, 13) stacked tensor; zero allocation.   #
-        #         Returns a 1-D (13,) float32 tensor – same shape & dtype  #
+        # Opt 3 – View into the (N, 9) stacked tensor; zero allocation.    #
+        #         Returns a 1-D (9,) float32 tensor – same shape & dtype   #
         #         as the original per-row tensors.                         #
         # ---------------------------------------------------------------- #
         metadata = self.metadata_cache[idx]   # view, not a copy

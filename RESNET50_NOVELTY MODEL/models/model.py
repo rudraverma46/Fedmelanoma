@@ -4,12 +4,16 @@ This is the only reference file whose content changes. Against the reference:
   - imports: `timm` -> `torchvision.models`
   - self.backbone: efficientnet_b3 (num_classes=0) -> resnet50 with fc = Identity
   - classifier input: 1536 + 32 -> 2048 + 32
-MetadataMLP, the dropout, forward() and the class names are unchanged, so every vendored
-module that imports FedMelanomaModel works without edits.
+  - MetadataMLP input: 13 -> 9 (diagnosis_confirm_type removed; it leaks the label)
+The dropout, forward() and the class names are unchanged, so every vendored module that imports
+FedMelanomaModel works without edits.
 """
 import torch
 import torch.nn as nn
 from torchvision.models import ResNet50_Weights, resnet50
+
+# Must equal client.dataset.MelanomaDataset.METADATA_DIM (6 skin types + 3 image types).
+METADATA_DIM = 9
 
 
 class MetadataMLP(nn.Module):
@@ -20,7 +24,7 @@ class MetadataMLP(nn.Module):
 
         self.network = nn.Sequential(
 
-            nn.Linear(13, 64),
+            nn.Linear(METADATA_DIM, 64),
             nn.BatchNorm1d(64),
             nn.ReLU(),
 

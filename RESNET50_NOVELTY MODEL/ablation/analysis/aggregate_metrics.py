@@ -97,9 +97,11 @@ def main() -> None:
         for hospital, g in pred.groupby("hospital"):
             per_hospital.append({"experiment": exp, "seed": seed, "hospital": hospital, "rows": len(g),
                                  "malignant": int(g.y_true.sum()), "roc_auc": _auc(g.y_true, g.y_prob)})
-        for name, mask in (("all", pred.index == pred.index), ("unseen_patient", ~pred.seen_patient.astype(bool)),
-                           ("unseen_lesion", ~pred.seen_lesion.astype(bool)),
-                           ("histopathology", pred.diagnosis_confirm_type.eq("histopathology"))):
+        masks = [("all", pred.index == pred.index), ("unseen_patient", ~pred.seen_patient.astype(bool)),
+                 ("unseen_lesion", ~pred.seen_lesion.astype(bool))]
+        if "diagnosis_confirm_type" in pred:   # runs trained on the dataset that still has the column
+            masks.append(("histopathology", pred.diagnosis_confirm_type.eq("histopathology")))
+        for name, mask in masks:
             g = pred[mask]
             subsets.append({"experiment": exp, "seed": seed, "subset": name, "rows": len(g),
                             "malignant": int(g.y_true.sum()), "roc_auc": _auc(g.y_true, g.y_prob),

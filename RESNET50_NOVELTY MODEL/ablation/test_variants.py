@@ -143,12 +143,12 @@ def test_reliability_modes(mode, expected):
 
 def test_total_variation_priors():
     from server.strategy import HospitalConfig
-    def hospital(f, m, c):
+    def hospital(f, m):
         return HospitalConfig(n_samples=10, tier="reliable", latency_mu=1.0, latency_sigma=0.3,
-                              fitzpatrick_dist=f, modality_dist=m, confirmation_dist=c)
-    g = ([0.5, 0.5], [1.0, 0.0], [0.5, 0.5])
-    hs = [hospital(*g), hospital([1.0, 0.0], [1.0, 0.0], [0.5, 0.5]), hospital([0.0, 1.0], [0.0, 1.0], [1.0, 0.0])]
-    raw = [0.0, 0.40 * 0.5, 0.40 * 0.5 + 0.35 * 1.0 + 0.25 * 0.5]
+                              fitzpatrick_dist=f, modality_dist=m)
+    g = ([0.5, 0.5], [1.0, 0.0])
+    hs = [hospital(*g), hospital([1.0, 0.0], [1.0, 0.0]), hospital([0.0, 1.0], [0.0, 1.0])]
+    raw = [0.0, 0.40 * 0.5, 0.40 * 0.5 + 0.35 * 1.0]
     assert total_variation_diversity_priors(hs, *g) == pytest.approx([r / raw[2] for r in raw])
 
 

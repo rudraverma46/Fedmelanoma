@@ -25,17 +25,16 @@ def model():
 def batch(n=4):
     g = torch.Generator().manual_seed(1)
     image = torch.randn(n, 3, 224, 224, generator=g)
-    meta = torch.zeros(n, 13)
+    meta = torch.zeros(n, MelanomaDataset.METADATA_DIM)
     rows = torch.arange(n)
     meta[rows, rows % 6] = 1              # varied rows: identical rows have zero BatchNorm variance
     meta[rows, 6 + rows % 3] = 1
-    meta[rows, 9 + rows % 4] = 1
     return image, meta
 
 
 def test_01_model_initialisation(model):
     assert len(model.state_dict()) == 329
-    assert sum(p.numel() for p in model.parameters()) == 23_515_298
+    assert sum(p.numel() for p in model.parameters()) == 23_515_042   # 9 metadata inputs (no confirm type)
     assert all(p.requires_grad for p in model.parameters())
     assert model.classifier.in_features == 2080 and model.classifier.out_features == 2
     assert model.dropout.p == 0.3
@@ -62,7 +61,7 @@ def test_03_metadata_mlp(model):
     assert out.shape == (4, 32) and (out >= 0).all()
     layers = [type(m).__name__ for m in MetadataMLP().network]
     assert layers == ["Linear", "BatchNorm1d", "ReLU", "Linear", "ReLU"]
-    assert model.metadata_mlp.network[0].in_features == 13
+    assert model.metadata_mlp.network[0].in_features == MelanomaDataset.METADATA_DIM == 9
     assert model.metadata_mlp.network[0].out_features == 64
     assert model.metadata_mlp.network[3].out_features == 32
 

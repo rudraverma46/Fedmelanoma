@@ -45,5 +45,5 @@ reference_constants:
   selector: {rho: 0.85, delta: 0.90, lambda: 0.05, gamma: 1.0, tau: 0.20}
   straggler: {s_max: 3, quorum_frac: 0.70, mad_k: 2.5, w_min: 2.0, delta: 0.90, history_len: 10}
   aggregation: {delta: 0.90, gamma: 1.0}
-  diversity: {fitz_weight: 0.40, modality_weight: 0.35, confirmation_weight: 0.25}
+  diversity: {fitz_weight: 0.40, modality_weight: 0.35}  # confirmation axis removed (label leakage)
   evaluation_thresholds: [0.30, 0.40, 0.50, 0.60, 0.70]

@@ -106,8 +106,8 @@ def build_test_loader(
     Returns:
       loader          : the combined DataLoader (unchanged behavior)
       loaded          : flat list of hospital names actually loaded
-      metadata_df     : DataFrame with columns fitzpatrick_skin_type,
-                         image_type, diagnosis_confirm_type, in the exact
+      metadata_df     : DataFrame with columns fitzpatrick_skin_type and
+                         image_type, in the exact
                          same row order run_inference()/evaluate_model()
                          will produce y_true/y_pred/y_prob in (loader uses
                          shuffle=False, so ConcatDataset order == this
@@ -154,7 +154,7 @@ def build_test_loader(
         pin_memory=True,
     )
 
-    metadata_columns = ["fitzpatrick_skin_type", "image_type", "diagnosis_confirm_type"]
+    metadata_columns = ["fitzpatrick_skin_type", "image_type"]
     metadata_df = pd.concat(
         [ds.df[metadata_columns] for ds in test_datasets], ignore_index=True
     )
@@ -672,7 +672,7 @@ def main() -> None:
         compute_subgroup_metrics,
     )
 
-    print("\nComputing subgroup metrics (skin type / imaging modality / confirmation type) …")
+    print("\nComputing subgroup metrics (skin type / imaging modality) …")
     subgroup_tables = compute_all_subgroup_axes(
         y_true, y_pred, y_prob, metadata_df, positive_class_idx=POSITIVE_CLASS_IDX
     )
@@ -682,7 +682,6 @@ def main() -> None:
     axis_to_filename = {
         "skin_type": "skin_type_metrics.csv",
         "image_type": "image_type_metrics.csv",
-        "confirm_type": "confirm_type_metrics.csv",
     }
     for axis, filename in axis_to_filename.items():
         path = os.path.join("results/metrics", filename)

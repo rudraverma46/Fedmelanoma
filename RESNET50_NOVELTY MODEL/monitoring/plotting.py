@@ -351,7 +351,7 @@ def plot_subgroup_bar(subgroup_csv_path: str, metric_col: str, title: str, out_p
 
 def plot_all_subgroup_bars(metrics_dir: str, out_dir: str) -> List[str]:
     """
-    Reads results/metrics/{skin_type,image_type,confirm_type}_metrics.csv
+    Reads results/metrics/{skin_type,image_type}_metrics.csv
     (written by evaluate.py) and produces the sensitivity/AUROC bar charts
     Requirement 7 names explicitly.
     """
@@ -361,8 +361,6 @@ def plot_all_subgroup_bars(metrics_dir: str, out_dir: str) -> List[str]:
         ("skin_type_metrics.csv", "roc_auc", "ROC-AUC by Fitzpatrick Skin Type", "subgroup_fitzpatrick_auroc.png"),
         ("image_type_metrics.csv", "sensitivity", "Sensitivity by Imaging Modality", "subgroup_modality_sensitivity.png"),
         ("image_type_metrics.csv", "roc_auc", "ROC-AUC by Imaging Modality", "subgroup_modality_auroc.png"),
-        ("confirm_type_metrics.csv", "sensitivity", "Sensitivity by Diagnosis Confirmation Type", "subgroup_diagnosis_sensitivity.png"),
-        ("confirm_type_metrics.csv", "roc_auc", "ROC-AUC by Diagnosis Confirmation Type", "subgroup_diagnosis_auroc.png"),
     ]
     for csv_name, metric, title, out_name in specs:
         if plot_subgroup_bar(os.path.join(metrics_dir, csv_name), metric, title, os.path.join(out_dir, out_name)):

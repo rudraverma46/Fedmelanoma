@@ -35,9 +35,9 @@ from server.strategy import HospitalConfig, compute_normalized_diversity_priors 
 
 
 def build_clients(partitions_root: str):
-    names, records, g_fitz, g_mod, g_conf = build_hospital_registry(partitions_root)
+    names, records, g_fitz, g_mod = build_hospital_registry(partitions_root)
     configs = [HospitalConfig(**r) for r in records]
-    priors = compute_normalized_diversity_priors(configs, g_fitz, g_mod, g_conf)
+    priors = compute_normalized_diversity_priors(configs, g_fitz, g_mod)
     clients = {
         i: Client(client_id=i, n_samples=hc.n_samples, D=priors[i], tier=hc.tier,
                   latency_mu=hc.latency_mu, latency_sigma=hc.latency_sigma)

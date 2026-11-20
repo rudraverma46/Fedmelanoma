@@ -46,7 +46,7 @@ def main() -> None:
                     for h in hospital_names]
         loader = build_loader(ConcatDataset(datasets), batch_size, False, cfg["runtime"]["dataloader_workers"],
                               cfg["runtime"]["pin_memory"])
-        columns = ["fitzpatrick_skin_type", "image_type", "diagnosis_confirm_type"]
+        columns = ["fitzpatrick_skin_type", "image_type"]
         metadata_df = pd.concat([ds.df[columns] for ds in datasets], ignore_index=True)
         labels = np.concatenate([np.full(len(ds), h, dtype=object) for h, ds in zip(hospital_names, datasets)])
         captured["ids"] = [row["isic_id"] for ds in datasets for row in ds.rows]

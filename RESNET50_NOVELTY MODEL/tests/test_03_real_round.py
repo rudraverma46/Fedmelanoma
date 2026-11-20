@@ -72,7 +72,7 @@ def test_17_checkpoint_reload_and_resume(planned):
     other = FedMelanomaModel()
     other.load_state_dict(OrderedDict(zip(other.state_dict().keys(), [torch.tensor(a) for a in arrays])), strict=True)
     model.eval(), other.eval()
-    image, meta = torch.randn(2, 3, 224, 224), torch.zeros(2, 13)
+    image, meta = torch.randn(2, 3, 224, 224), torch.zeros(2, 9)
     with torch.no_grad():
         assert torch.equal(model(image, meta), other(image, meta))
 
@@ -92,7 +92,7 @@ def test_18_evaluation_outputs_exist_and_agree():
                  "final_test_results.txt", "threshold_analysis_requested.csv", "threshold_confusion_requested.csv",
                  "test_predictions.csv", "metrics.json", "results/metrics/overall_metrics.csv",
                  "results/metrics/skin_type_metrics.csv", "results/metrics/image_type_metrics.csv",
-                 "results/metrics/confirm_type_metrics.csv", "results/metrics/hospital_metrics.csv",
+                 "results/metrics/hospital_metrics.csv",
                  "results/metrics/fairness_summary.txt"):
         assert os.path.getsize(os.path.join(out, name)) > 0, name
     predictions = pd.read_csv(f"{out}/test_predictions.csv")
