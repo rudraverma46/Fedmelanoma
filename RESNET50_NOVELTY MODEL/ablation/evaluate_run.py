@@ -25,7 +25,11 @@ def main() -> None:
 
     import matplotlib
     matplotlib.use("Agg")
+    import evaluate
     from evaluation import evaluate_checkpoint
+    from hospital_registry import discover_hospitals
+    # evaluate.py hard-codes the 10 softmax hospital names; other partitionings name their hospitals differently.
+    evaluate.HOSPITAL_NAMES = discover_hospitals(cfg["data"]["partitions_root"])
     evaluate_checkpoint.load_config = lambda: cfg
     sys.argv = ["evaluate_checkpoint", args.checkpoint, args.out_dir]
     evaluate_checkpoint.main()
