@@ -37,8 +37,8 @@ def holm(p: pd.Series) -> pd.Series:
 
 
 def summary(combined: pd.DataFrame) -> pd.DataFrame:
-    cols = [f"final_round_{m}" for m in METRICS] + ["final_best_roc_auc", "train_hours", "gb_transmitted",
-                                                    "gb_aggregated_uplink", "clients_aggregated_mean"]
+    cols = [f"final_round_{m}" for m in METRICS + ["precision", "accuracy", "mcc"]] + [
+        "final_best_roc_auc", "train_hours", "gb_transmitted", "gb_aggregated_uplink", "clients_aggregated_mean"]
     g = combined.groupby("experiment")[cols]
     out = g.mean().add_suffix("_mean").join(g.std(ddof=1).add_suffix("_sd"))
     out["n_seeds"] = combined.groupby("experiment").seed.nunique()

@@ -59,3 +59,37 @@ def test_run_metrics(tmp_path):
     assert sel["min_selections"] == 0 and sel["never_selected"] == 7
     assert sel["sim_hours_window"] * 3600 == pytest.approx(3.0 + 10.0 + 10.0)
     assert sel["sim_hours_sync"] * 3600 == pytest.approx(3.0 + 50.0 + bm.SYNC_TIMEOUT_S)
+
+
+def test_repeated_round_keeps_last_attempt(tmp_path):
+    run = tmp_path / "E00_full" / "seed_44"
+    (run / "logs").mkdir(parents=True)
+
+    def outcome(rnd, cid, lat):
+        return {"event": "client_round_outcome", "round": rnd, "client_id": cid, "selected": True,
+                "response_classification": "on_time", "latency_seconds": lat}
+
+    def summary(rnd, ids):
+        return {"event": "round_summary", "round": rnd, "adaptive_window_w_t": 10.0, "selected_set": ids,
+                "straggler_set": [], "failed_set": []}
+
+    recs = [outcome(1, 0, 2.0), outcome(1, 1, 3.0), summary(1, [0, 1]),
+            outcome(2, 0, 90.0), outcome(2, 2, 90.0), summary(2, [0, 2]),     # attempt killed after logging
+            outcome(2, 0, 4.0), outcome(2, 3, 5.0), summary(2, [0, 3])]       # re-run after resume
+    with open(run / "logs" / "stragglers.jsonl", "w", encoding="utf-8") as fh:
+        fh.write("\n".join(json.dumps(r) for r in recs))
+    sel = bm.selection_and_time(str(run))
+    assert sel["sim_hours_sync"] * 3600 == pytest.approx(3.0 + 5.0)
+    assert sel["never_selected"] == 7 and sel["min_selections"] == 0
+
+
+def test_selection_from_op_log_without_straggler_log(tmp_path):
+    run = tmp_path / "E00_full" / "seed_42"
+    (run / "logs").mkdir(parents=True)
+    recs = [{"event": "round_configure_fit", "round": r, "selected_clients": list(range(10))} for r in (1, 2)]
+    recs.append({"event": "round_configure_fit", "round": 2, "selected_clients": list(range(10))})
+    with open(run / "logs" / "op.jsonl", "w", encoding="utf-8") as fh:
+        fh.write("\n".join(json.dumps(r) for r in recs))
+    sel = bm.selection_and_time(str(run))
+    assert sel["min_selections"] == 2 and sel["never_selected"] == 0
+    assert np.isnan(sel["sim_hours_sync"])

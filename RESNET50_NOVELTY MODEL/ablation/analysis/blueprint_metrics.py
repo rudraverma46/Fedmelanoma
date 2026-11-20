@@ -95,23 +95,44 @@ def gini(counts: np.ndarray) -> float:
     return float((2 * np.arange(1, n + 1) - n - 1).dot(c) / (n * c.sum())) if c.sum() else np.nan
 
 
+def _selection_counts(selected_sets) -> dict:
+    counts = np.zeros(N_CLIENTS)
+    for ids in selected_sets:
+        for cid in ids or []:
+            counts[int(cid)] += 1
+    return {"min_selections": float(counts.min()), "never_selected": int((counts == 0).sum()),
+            "selection_gini": gini(counts)}
+
+
+def _op_selected_sets(run: str) -> list:
+    """Selected clients per round from logs/op.jsonl, for runs finished before stragglers.jsonl was kept."""
+    path = os.path.join(run, "logs", "op.jsonl")
+    if not os.path.isfile(path):
+        return []
+    with open(path, encoding="utf-8") as fh:
+        recs = [json.loads(line) for line in fh if line.strip()]
+    last = {r["round"]: r["selected_clients"] for r in recs if r.get("event") == "round_configure_fit"}
+    return list(last.values())
+
+
 def selection_and_time(run: str) -> dict:
     path = os.path.join(run, "logs", "stragglers.jsonl")
     out = {"min_selections": np.nan, "never_selected": np.nan, "selection_gini": np.nan,
            "sim_hours_window": np.nan, "sim_hours_sync": np.nan}
     if not os.path.isfile(path):
+        op_sets = _op_selected_sets(run)
+        if op_sets:
+            out.update(_selection_counts(op_sets))
         return out
     with open(path, encoding="utf-8") as fh:
         recs = [json.loads(line) for line in fh if line.strip()]
+    # A round re-run after a resume is logged twice; keep the last attempt (last summary, last outcome per client).
     summaries = {r["round"]: r for r in recs if r.get("event") == "round_summary"}
-    outcomes = [r for r in recs if r.get("event") == "client_round_outcome" and r.get("selected")]
-    counts = np.zeros(N_CLIENTS)
-    for s in summaries.values():
-        for cid in s.get("selected_set") or []:
-            counts[int(cid)] += 1
+    last_outcome = {(r["round"], int(r["client_id"])): r for r in recs
+                    if r.get("event") == "client_round_outcome" and r.get("selected")}
     window = sync = 0.0
     for rnd, s in summaries.items():
-        rows = [o for o in outcomes if o["round"] == rnd]
+        rows = [last_outcome[(rnd, int(c))] for c in s.get("selected_set") or [] if (rnd, int(c)) in last_outcome]
         arrived = [o["latency_seconds"] for o in rows if o["response_classification"] != "failed"
                    and o.get("latency_seconds") is not None]
         on_time = [o["latency_seconds"] for o in rows if o["response_classification"] == "on_time"
@@ -119,8 +140,8 @@ def selection_and_time(run: str) -> dict:
         waited = s.get("straggler_set") or s.get("failed_set")
         window += float(s["adaptive_window_w_t"]) if waited else max(on_time, default=0.0)
         sync += SYNC_TIMEOUT_S if s.get("failed_set") else max(arrived, default=0.0)
-    out.update(min_selections=float(counts.min()), never_selected=int((counts == 0).sum()),
-               selection_gini=gini(counts), sim_hours_window=window / 3600, sim_hours_sync=sync / 3600)
+    out.update(_selection_counts(s.get("selected_set") for s in summaries.values()),
+               sim_hours_window=window / 3600, sim_hours_sync=sync / 3600)
     return out
 
 

@@ -91,6 +91,9 @@ def md_table(df: pd.DataFrame) -> str:
 
 def finding_sentence(row) -> str:
     direction = "lowered" if row.delta_mean < 0 else "raised"
+    if row.n_paired_seeds < 2:
+        return (f"- **{row.experiment}**: {direction} final-round ROC-AUC by {abs(row.delta_mean):.4f} "
+                f"(single paired seed: no interval or test; descriptive only).")
     strength = ("statistically significant after Holm correction" if row.finding == "significant"
                 else "not significant; descriptive only")
     return (f"- **{row.experiment}**: {direction} final-round ROC-AUC by {abs(row.delta_mean):.4f} "
@@ -118,18 +121,42 @@ def main() -> None:
     cfg = yaml.safe_load(open(os.path.join(ROOT, "configs", "experiment_config.yaml"), encoding="utf-8"))
     first = combined.iloc[0]
 
-    comparison = pd.DataFrame({
+    blueprint_ids = list(BLUEPRINT_ARMS.values())
+    arm_of = {exp: arm for arm, exp in BLUEPRINT_ARMS.items()}
+    summary["order"] = [blueprint_ids.index(e) if e in blueprint_ids else len(blueprint_ids) for e in summary.experiment]
+    summary = summary.sort_values(["order", "experiment"]).drop(columns="order")
+    is_bp = summary.experiment.isin(blueprint_ids)
+    metric_cols = [("ROC-AUC", "roc_auc"), ("PR-AUC", "pr_auc"), ("Recall (sens.)", "sensitivity"),
+                   ("Specificity", "specificity"), ("Precision", "precision"), ("F1 @0.5", "f1"),
+                   ("Balanced acc.", "balanced_accuracy"), ("Accuracy", "accuracy"), ("MCC", "mcc")]
+
+    def metric_table(rows: pd.DataFrame) -> pd.DataFrame:
+        out = pd.DataFrame({"Arm": [arm_of.get(e, "-") for e in rows.experiment], "Experiment": rows.experiment})
+        for label, key in metric_cols:
+            out[label] = [pm(getattr(r, f"final_round_{key}_mean"), getattr(r, f"final_round_{key}_sd"))
+                          for r in rows.itertuples()]
+        out["Seeds"] = rows.n_seeds.to_numpy()
+        return out
+
+    cost = pd.DataFrame({
         "Experiment": summary.experiment,
-        "ROC-AUC": [pm(r.final_round_roc_auc_mean, r.final_round_roc_auc_sd) for r in summary.itertuples()],
-        "PR-AUC": [pm(r.final_round_pr_auc_mean, r.final_round_pr_auc_sd) for r in summary.itertuples()],
-        "F1 @0.5": [pm(r.final_round_f1_mean, r.final_round_f1_sd) for r in summary.itertuples()],
-        "Balanced acc.": [pm(r.final_round_balanced_accuracy_mean, r.final_round_balanced_accuracy_sd) for r in summary.itertuples()],
         "Updates aggregated (GB)": [pm(r.gb_aggregated_uplink_mean, r.gb_aggregated_uplink_sd, 1) for r in summary.itertuples()],
+        "Clients aggregated / round": [pm(r.clients_aggregated_mean_mean, r.clients_aggregated_mean_sd, 2) for r in summary.itertuples()],
         "Runtime (h)": [pm(r.train_hours_mean, r.train_hours_sd, 2) for r in summary.itertuples()],
         "Seeds": summary.n_seeds,
     })
+    comparison = metric_table(summary)
     os.makedirs(REPORTS, exist_ok=True)
     comparison.to_csv(os.path.join(REPORTS, "ablation_comparison.csv"), index=False)
+    combined["host"] = combined.gpu.str.contains("T4").map({True: "Kaggle T4", False: "DGX H100 MIG"})
+    hosts = combined.pivot_table(index="experiment", columns="seed", values="host", aggfunc="first")
+    hosts = hosts.reindex([e for e in summary.experiment if e in hosts.index]).fillna("-")
+    hosts.columns = [f"seed {c}" for c in hosts.columns]
+    host_tbl = hosts.reset_index().rename(columns={"experiment": "Experiment"})
+    code_tbl = (combined.groupby("code_hash").agg(runs=("run_id", "size"),
+                                                  torch=("torch", lambda s: ", ".join(sorted(set(s)))),
+                                                  hosts=("host", lambda s: ", ".join(sorted(set(s)))))
+                .reset_index())
 
     roc = stats_df[stats_df.metric == "roc_auc"].sort_values("delta_mean")
     other = stats_df[stats_df.metric != "roc_auc"].copy()
@@ -142,7 +169,11 @@ def main() -> None:
         ["experiment", "seed", "interval", "excludes_zero", "patients"]] if len(boot) else pd.DataFrame()
     best_tbl = summary[["experiment", "final_best_roc_auc_mean", "final_best_roc_auc_sd"]].round(4)
     incomplete = checks.get("incomplete_runs", {})
-    best_arm = summary.sort_values("final_round_roc_auc_mean").iloc[-1]
+    best_arm = summary[is_bp].sort_values("final_round_roc_auc_mean").iloc[-1]
+    no_sim = bp[bp.sim_hours_window.isna() & bp.experiment.isin(blueprint_ids)]
+    sim_note = ("Simulated hours need the per-client latencies of `logs/stragglers.jsonl`, which runs finished before "
+                "that log was kept do not have: " + ", ".join(f"{r.experiment} seed {r.seed}" for r in no_sim.itertuples())
+                + ". Their selection counts come from `logs/op.jsonl` instead." if len(no_sim) else "")
 
     parts = [
         "# FedMelanoma ResNet-50 ablation report", "",
@@ -168,13 +199,31 @@ def main() -> None:
         "absolute scores are optimistic; Section 7 adds unseen-patient and unseen-lesion scores. Relative "
         "comparisons are unaffected in kind because every arm uses the same split.", "",
         "## 5. Hardware and execution",
-        f"GPU(s): {', '.join(checks.get('gpus', []))}; torch {first.torch}, Flower {first.flwr}; code hash "
-        f"`{first.code_hash}`. Runs executed as Kaggle background jobs, one run per GPU, resumed from per-round "
-        "state across jobs. Validation: " + ", ".join(f"{k} = {v}" for k, v in checks.items()
-                                                     if k in ("one_config_hash_per_experiment", "single_split_id",
-                                                              "single_code_hash", "single_software",
-                                                              "all_runs_full_rounds", "duplicate_runs")) + ".", "",
-        "## 6. Results (mean ± SD over seeds, final-round model)", md_table(comparison), "",
+        f"Runs were executed on two hosts: Kaggle background jobs (Tesla T4 x2, one run per GPU, resumed from "
+        f"per-round state across chained jobs) and a self-hosted DGX node (one NVIDIA H100 MIG 3g.40gb slice, "
+        f"up to 5 runs in parallel). Flower {first.flwr} everywhere. Which host ran each run:", "",
+        md_table(host_tbl), "",
+        "Code versions. The code hash covers every `.py` file in the experiment folder, including the launcher, "
+        "analysis and tests, so it changes with edits that do not touch training:", "",
+        md_table(code_tbl), "",
+        "Between these versions the training path changed only by adding the optional A1-A8 switches, which are off "
+        "unless an experiment sets them; E00 and the E-series take the same code path in every version, and every "
+        "experiment has a single config hash across its seeds. The software stacks differ (Kaggle torch 2.11 vs the "
+        "DGX NGC build of torch 2.14), which changes floating-point details but not the simulated environment: "
+        "straggler latencies and failures are drawn from per-(seed, round, client) generators (harness H1), so both "
+        "hosts produce the same straggler events for the same selections.", "",
+        "Validation: " + ", ".join(f"{k} = {v}" for k, v in checks.items()
+                                   if k in ("one_config_hash_per_experiment", "single_split_id",
+                                            "all_runs_full_rounds", "duplicate_runs")) + ".", "",
+        "## 6. Results (mean ± SD over seeds, final-round model, pooled test set of all 10 hospitals)",
+        "Recall is sensitivity (true-positive rate on melanoma); precision is positive predictive value. Threshold "
+        "metrics use 0.5.", "",
+        "### 6a. Blueprint arms A0-A8 (3 seeds each)", md_table(metric_table(summary[is_bp])), "",
+        "### 6b. Supplementary arms from the earlier design (1-2 seeds, not part of the blueprint)",
+        md_table(metric_table(summary[~is_bp])), "",
+        "### 6c. Cost", md_table(cost), "",
+        "Runtime is wall-clock training time and depends on the host (T4 rounds take about 2-3x longer than "
+        "H100 MIG rounds, which also ran concurrently), so it is not a property of the arm.", "",
         "Test-selected best checkpoint (optimistic: chosen on the evaluation clients' test splits), for reference only:",
         md_table(best_tbl), "",
         "![Final ROC-AUC](../plots/accuracy_comparison.png)", "",
@@ -190,7 +239,7 @@ def main() -> None:
         "Arms A0-A8 of `docs/FedMelanoma_Blueprint_v4.md` Section 7, at 30 rounds instead of the blueprint's 50 and "
         "with the ResNet-50 backbone instead of EfficientNet-B3. Arms run before the switch to the blueprint "
         "(E01, E03-E06) have fewer seeds and are supplementary.", "",
-        *blueprint_section(bp), "",
+        *blueprint_section(bp), "", sim_note, "",
         "## 8. Visualisations",
         "![Convergence](../plots/convergence.png)", "",
         "Per-round curves use the reference evaluation, which scores only the clients selected that round, so "
@@ -207,7 +256,7 @@ def main() -> None:
                                 "reason": v.get("reason")} for k, v in incomplete.items()]))
         if incomplete else "None.", "",
         "## 10. Interpretation",
-        f"Highest mean final-round ROC-AUC: **{best_arm.experiment}** "
+        f"Highest mean final-round ROC-AUC among the blueprint arms: **{best_arm.experiment}** "
         f"({pm(best_arm.final_round_roc_auc_mean, best_arm.final_round_roc_auc_sd)}). "
         + ("At least one component change is statistically significant (see Section 7)."
            if (roc.finding == "significant").any() else
@@ -218,8 +267,14 @@ def main() -> None:
         "- Image-level split with patient and lesion overlap inflates absolute scores (Section 4).",
         "- Stragglers, failures and latency are simulated; all clients actually train synchronously on one GPU.",
         "- Hospital reliability tiers are assigned round-robin by name, not measured.",
-        "- Software differs from the original lock file (Python 3.13, torch 2.11 on Kaggle vs 3.11 / 2.2.1); "
-        "all arms share it, so comparisons are internal to this environment.", "",
+        "- Host and seed overlap: every seed-42 run ran on Kaggle and every seed-44 run on the DGX, while seed 43 "
+        "is mixed (E00 and A1 on Kaggle, the other arms on the DGX). Pairs within seeds 42 and 44 share a host; "
+        "seed-43 pairs against E00 cross hosts, which adds floating-point variation to those differences.",
+        "- Some DGX runs were stopped and resumed mid-round, so their operational logs contain a repeated attempt "
+        "of a few rounds. Each model continues from its last saved checkpoint, and the blueprint metrics keep the "
+        "last attempt of each round.",
+        "- Software differs from the original lock file (torch 2.11 on Kaggle, the NGC build of 2.14 on the DGX, "
+        "vs 2.2.1 in the lock file); comparisons are internal to these environments.", "",
         "## 12. Conclusions",
         "Conclusions are limited to Section 7: changes labelled significant are supported; all others are "
         "descriptive and need more seeds before a claim is made.", "",

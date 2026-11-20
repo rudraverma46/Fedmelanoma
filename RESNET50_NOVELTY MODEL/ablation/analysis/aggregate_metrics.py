@@ -67,7 +67,8 @@ def load_run(run: str) -> Dict:
            "best_round": None}
     for tag in ("final_round", "final_best"):
         metrics = _json(os.path.join(run, tag, "metrics.json"))
-        for key in ("roc_auc", "pr_auc", "f1", "sensitivity", "specificity", "balanced_accuracy", "accuracy", "mcc"):
+        for key in ("roc_auc", "pr_auc", "f1", "sensitivity", "specificity", "precision", "balanced_accuracy",
+                    "accuracy", "mcc"):
             row[f"{tag}_{key}"] = metrics.get(key)
     best = [r for r in _jsonl(os.path.join(run, "logs", "audit.jsonl")) if r.get("became_best_checkpoint")]
     row["best_round"] = best[-1]["round"] if best else None
