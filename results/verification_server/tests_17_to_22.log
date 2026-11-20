@@ -1,0 +1,15 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.2.0, pluggy-1.7.0 -- /usr/bin/python
+rootdir: /workspace/work/resnet_50_fedstrag_final
+plugins: typeguard-4.6.0, anyio-4.15.1
+collecting ... collected 6 items
+
+tests/test_03_smoke_run.py::test_17_same_starting_model_and_gpu PASSED   [ 16%]
+tests/test_03_smoke_run.py::test_18_iterations_tags_polls_and_weights PASSED [ 33%]
+tests/test_03_smoke_run.py::test_19_fifo_order_per_client PASSED         [ 50%]
+tests/test_03_smoke_run.py::test_20_failures_and_accounting PASSED       [ 66%]
+tests/test_03_smoke_run.py::test_21_checkpoints_and_resume_state PASSED  [ 83%]
+tests/test_03_smoke_run.py::test_22_final_evaluation_outputs PASSED      [100%]
+
+- generated xml file: /workspace/work/resnet_50_fedstrag_final/results/verification/tests_17_to_22.xml -
+============================== 6 passed in 6.36s ===============================

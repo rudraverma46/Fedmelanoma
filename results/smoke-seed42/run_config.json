@@ -1,0 +1,96 @@
+{
+  "run_id": "smoke-seed42",
+  "config": {
+    "experiment": {
+      "run_id": "resnet50-fedstrag-final-seed42",
+      "seed": 42
+    },
+    "data": {
+      "partitions_root": "D:\\MAIN BACKUP\\backup 3\\Fedmelanoma\\without_federated\\client\\hospital_partitions",
+      "cache_dir": "D:\\MAIN BACKUP\\backup 3\\Fedmelanoma\\resnet 50_novelty_fedavg\\cache"
+    },
+    "federation": {
+      "num_clients": 10,
+      "local_epochs": 5
+    },
+    "fedstrag": {
+      "global_iterations": 50,
+      "broadcast_to": "all",
+      "client_queue": "fifo",
+      "wait_time_seconds": 4,
+      "minimum_clients": 1,
+      "staleness_weight": "inverse_staleness_plus_one",
+      "sample_weighting": "paper_eq7_W_times_D",
+      "empty_iteration": "keep_global_unchanged",
+      "termination": "exclude_pending",
+      "arrival_time": "novelty_lognormal",
+      "eval_every_iterations": 1
+    },
+    "environment": {
+      "kind": "novelty_simulate_response",
+      "failure": "novelty_beta_bernoulli",
+      "failure_timing": "after_local_training",
+      "failed_job_duration": "tier_lognormal_child_stream",
+      "trace_seed": 42
+    },
+    "local_training": {
+      "batch_size": 20,
+      "learning_rate": 0.0001,
+      "weight_decay": 0.0001,
+      "focal_gamma": 2.0
+    },
+    "model": {
+      "backbone": "resnet50",
+      "feature_dim": 2048,
+      "metadata_dim": 32,
+      "fusion_dim": 2080,
+      "dropout": 0.3,
+      "num_classes": 2
+    },
+    "runtime": {
+      "dataloader_workers": 0,
+      "pin_memory": true,
+      "commit_floor_gb": 0.2,
+      "monitor_interval_seconds": 10,
+      "checkpoint_root": "checkpoints"
+    },
+    "reference_constants": {
+      "evaluation_thresholds": [
+        0.3,
+        0.4,
+        0.5,
+        0.6,
+        0.7
+      ]
+    }
+  },
+  "global_iterations": 6,
+  "local_epochs": 1,
+  "smoke_fraction": 0.1,
+  "hospitals": [
+    "CityGeneral_Multispecialty_Hospital",
+    "GoldenSun_Public_Health_Screening_Camp",
+    "Greenfield_Rural_Community_Health_Center",
+    "Lakeside_Regional_Mixed_Hospital",
+    "MetroSkin_Dermatology_Research_Clinic",
+    "NorthCare_Tertiary_Melanoma_Institute",
+    "Pinewood_Oncology_Biopsy_Center",
+    "SunRay_Community_Outreach_Clinic",
+    "TeleDerm_National_Screening_Network",
+    "Westbridge_Academic_Dermoscopy_Unit"
+  ],
+  "tiers": [
+    "reliable",
+    "moderate",
+    "high_straggler",
+    "reliable",
+    "moderate",
+    "high_straggler",
+    "reliable",
+    "moderate",
+    "high_straggler",
+    "reliable"
+  ],
+  "official_repo": "https://github.com/cloud-and-smart-labs/FedStrag",
+  "official_commit": "9d645c216e491789213e3c2e8c6b95d8dce566fb"
+}

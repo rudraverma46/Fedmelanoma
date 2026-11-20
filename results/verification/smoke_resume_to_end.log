@@ -1,0 +1,37 @@
+[run] resumed after iteration 2
+Epoch Progress: 33.3% | ETA Epoch: 0.07 min
+Epoch Progress: 16.7% | ETA Epoch: 0.03 min
+Epoch Progress: 100.0% | ETA Epoch: 0.00 min
+Epoch Progress: 50.0% | ETA Epoch: 0.01 min
+Epoch Progress: 33.3% | ETA Epoch: 0.01 min
+Epoch Progress: 11.1% | ETA Epoch: 0.04 min
+D:\MAIN BACKUP\backup 3\Fedmelanoma\FedAvg_RESNET 50\.venv\Lib\site-packages\matplotlib\_fontconfig_pattern.py:64: PyparsingDeprecationWarning: 'oneOf' deprecated - use 'one_of'
+  prop = Group((name + Suppress("=") + comma_separated(value)) | oneOf(_CONSTANTS))
+D:\MAIN BACKUP\backup 3\Fedmelanoma\FedAvg_RESNET 50\.venv\Lib\site-packages\matplotlib\_fontconfig_pattern.py:85: PyparsingDeprecationWarning: 'parseString' deprecated - use 'parse_string'
+  parse = parser.parseString(pattern)
+D:\MAIN BACKUP\backup 3\Fedmelanoma\FedAvg_RESNET 50\.venv\Lib\site-packages\matplotlib\_fontconfig_pattern.py:89: PyparsingDeprecationWarning: 'resetCache' deprecated - use 'reset_cache'
+  parser.resetCache()
+D:\MAIN BACKUP\backup 3\Fedmelanoma\FedAvg_RESNET 50\.venv\Lib\site-packages\matplotlib\_mathtext.py:45: PyparsingDeprecationWarning: 'enablePackrat' deprecated - use 'enable_packrat'
+  ParserElement.enablePackrat()
+In D:\MAIN BACKUP\backup 3\Fedmelanoma\FedAvg_RESNET 50\.venv\Lib\site-packages\matplotlib\mpl-data\stylelib\classic.mplstyle: 'parseString' deprecated - use 'parse_string'
+In D:\MAIN BACKUP\backup 3\Fedmelanoma\FedAvg_RESNET 50\.venv\Lib\site-packages\matplotlib\mpl-data\stylelib\classic.mplstyle: 'resetCache' deprecated - use 'reset_cache'
+[run] iteration 3/6: applied 5 (total 11), failed 5, in flight 4, queued 10, virtual 12 s, wall 27 s, snapshots 2 (-0), roc_auc=0.44564290012353625
+Epoch Progress: 33.3% | ETA Epoch: 0.01 min
+Epoch Progress: 100.0% | ETA Epoch: 0.00 min
+Epoch Progress: 16.7% | ETA Epoch: 0.03 min
+Epoch Progress: 33.3% | ETA Epoch: 0.01 min
+Epoch Progress: 11.1% | ETA Epoch: 0.04 min
+[run] iteration 4/6: applied 3 (total 14), failed 7, in flight 4, queued 15, virtual 16 s, wall 21 s, snapshots 3 (-0), roc_auc=0.6072704231109236
+Epoch Progress: 33.3% | ETA Epoch: 0.01 min
+Epoch Progress: 12.5% | ETA Epoch: 0.04 min
+Epoch Progress: 50.0% | ETA Epoch: 0.01 min
+Epoch Progress: 16.7% | ETA Epoch: 0.03 min
+Epoch Progress: 33.3% | ETA Epoch: 0.01 min
+[run] iteration 5/6: applied 3 (total 17), failed 7, in flight 6, queued 20, virtual 20 s, wall 17 s, snapshots 4 (-0), roc_auc=0.5998939647087895
+Epoch Progress: 33.3% | ETA Epoch: 0.01 min
+Epoch Progress: 11.1% | ETA Epoch: 0.04 min
+Epoch Progress: 16.7% | ETA Epoch: 0.03 min
+Epoch Progress: 33.3% | ETA Epoch: 0.01 min
+Epoch Progress: 11.1% | ETA Epoch: 0.04 min
+[run] iteration 6/6: applied 5 (total 22), failed 7, in flight 6, queued 25, virtual 24 s, wall 26 s, snapshots 5 (-0), roc_auc=0.7235283469756546
+[run] finished: {'dispatched': 35, 'completed_trainings': 35, 'failed_attempts': 7, 'updates_generated': 28, 'updates_received': 22, 'applied': 22, 'in_flight_updates': 6, 'failing_jobs_in_progress': 3, 'arrived_not_aggregated': 0, 'pending_updates': 6, 'queued_broadcasts_not_started': 25, 'updates_lost_to_failures': 7, 'model_version': 6, 'empty_iterations': 0, 'unaccounted_updates': 0}

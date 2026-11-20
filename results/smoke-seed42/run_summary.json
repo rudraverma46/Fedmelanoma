@@ -1,0 +1,224 @@
+{
+  "run_id": "smoke-seed42",
+  "global_iterations": 6,
+  "model_version": 6,
+  "empty_iterations": 0,
+  "virtual_time_seconds": 24.0,
+  "training_wall_seconds": 140.49134922027588,
+  "peak_gpu_mb_local_training": 2067.54345703125,
+  "totals": {
+    "dispatched": 35,
+    "completed_trainings": 35,
+    "failed_attempts": 7,
+    "updates_generated": 28,
+    "updates_received": 22,
+    "applied": 22,
+    "in_flight_updates": 6,
+    "failing_jobs_in_progress": 3,
+    "arrived_not_aggregated": 0,
+    "pending_updates": 6,
+    "queued_broadcasts_not_started": 25,
+    "updates_lost_to_failures": 7,
+    "model_version": 6,
+    "empty_iterations": 0,
+    "unaccounted_updates": 0
+  },
+  "per_client": {
+    "dispatched": {
+      "CityGeneral_Multispecialty_Hospital": 6,
+      "GoldenSun_Public_Health_Screening_Camp": 2,
+      "Greenfield_Rural_Community_Health_Center": 2,
+      "Lakeside_Regional_Mixed_Hospital": 6,
+      "MetroSkin_Dermatology_Research_Clinic": 2,
+      "NorthCare_Tertiary_Melanoma_Institute": 1,
+      "Pinewood_Oncology_Biopsy_Center": 6,
+      "SunRay_Community_Outreach_Clinic": 3,
+      "TeleDerm_National_Screening_Network": 1,
+      "Westbridge_Academic_Dermoscopy_Unit": 6
+    },
+    "completed_trainings": {
+      "CityGeneral_Multispecialty_Hospital": 6,
+      "GoldenSun_Public_Health_Screening_Camp": 2,
+      "Greenfield_Rural_Community_Health_Center": 2,
+      "Lakeside_Regional_Mixed_Hospital": 6,
+      "MetroSkin_Dermatology_Research_Clinic": 2,
+      "NorthCare_Tertiary_Melanoma_Institute": 1,
+      "Pinewood_Oncology_Biopsy_Center": 6,
+      "SunRay_Community_Outreach_Clinic": 3,
+      "TeleDerm_National_Screening_Network": 1,
+      "Westbridge_Academic_Dermoscopy_Unit": 6
+    },
+    "failed_attempts": {
+      "CityGeneral_Multispecialty_Hospital": 1,
+      "GoldenSun_Public_Health_Screening_Camp": 0,
+      "Greenfield_Rural_Community_Health_Center": 2,
+      "Lakeside_Regional_Mixed_Hospital": 0,
+      "MetroSkin_Dermatology_Research_Clinic": 1,
+      "NorthCare_Tertiary_Melanoma_Institute": 1,
+      "Pinewood_Oncology_Biopsy_Center": 0,
+      "SunRay_Community_Outreach_Clinic": 1,
+      "TeleDerm_National_Screening_Network": 1,
+      "Westbridge_Academic_Dermoscopy_Unit": 0
+    },
+    "updates_generated": {
+      "CityGeneral_Multispecialty_Hospital": 5,
+      "GoldenSun_Public_Health_Screening_Camp": 2,
+      "Greenfield_Rural_Community_Health_Center": 0,
+      "Lakeside_Regional_Mixed_Hospital": 6,
+      "MetroSkin_Dermatology_Research_Clinic": 1,
+      "NorthCare_Tertiary_Melanoma_Institute": 0,
+      "Pinewood_Oncology_Biopsy_Center": 6,
+      "SunRay_Community_Outreach_Clinic": 2,
+      "TeleDerm_National_Screening_Network": 0,
+      "Westbridge_Academic_Dermoscopy_Unit": 6
+    },
+    "updates_received": {
+      "CityGeneral_Multispecialty_Hospital": 5,
+      "GoldenSun_Public_Health_Screening_Camp": 1,
+      "Greenfield_Rural_Community_Health_Center": 0,
+      "Lakeside_Regional_Mixed_Hospital": 5,
+      "MetroSkin_Dermatology_Research_Clinic": 0,
+      "NorthCare_Tertiary_Melanoma_Institute": 0,
+      "Pinewood_Oncology_Biopsy_Center": 5,
+      "SunRay_Community_Outreach_Clinic": 1,
+      "TeleDerm_National_Screening_Network": 0,
+      "Westbridge_Academic_Dermoscopy_Unit": 5
+    },
+    "applied": {
+      "CityGeneral_Multispecialty_Hospital": 5,
+      "GoldenSun_Public_Health_Screening_Camp": 1,
+      "Greenfield_Rural_Community_Health_Center": 0,
+      "Lakeside_Regional_Mixed_Hospital": 5,
+      "MetroSkin_Dermatology_Research_Clinic": 0,
+      "NorthCare_Tertiary_Melanoma_Institute": 0,
+      "Pinewood_Oncology_Biopsy_Center": 5,
+      "SunRay_Community_Outreach_Clinic": 1,
+      "TeleDerm_National_Screening_Network": 0,
+      "Westbridge_Academic_Dermoscopy_Unit": 5
+    }
+  },
+  "tiers": {
+    "CityGeneral_Multispecialty_Hospital": "reliable",
+    "GoldenSun_Public_Health_Screening_Camp": "moderate",
+    "Greenfield_Rural_Community_Health_Center": "high_straggler",
+    "Lakeside_Regional_Mixed_Hospital": "reliable",
+    "MetroSkin_Dermatology_Research_Clinic": "moderate",
+    "NorthCare_Tertiary_Melanoma_Institute": "high_straggler",
+    "Pinewood_Oncology_Biopsy_Center": "reliable",
+    "SunRay_Community_Outreach_Clinic": "moderate",
+    "TeleDerm_National_Screening_Network": "high_straggler",
+    "Westbridge_Academic_Dermoscopy_Unit": "reliable"
+  },
+  "termination_policy": "after the last iteration nothing more is broadcast or aggregated; pending updates are excluded",
+  "excluded_in_flight_updates": [
+    {
+      "client_id": 1,
+      "hospital": "GoldenSun_Public_Health_Screening_Camp",
+      "tag": 1,
+      "job_index": 1,
+      "would_arrive_at": 29.420835838419116
+    },
+    {
+      "client_id": 3,
+      "hospital": "Lakeside_Regional_Mixed_Hospital",
+      "tag": 5,
+      "job_index": 5,
+      "would_arrive_at": 27.465245290156474
+    },
+    {
+      "client_id": 4,
+      "hospital": "MetroSkin_Dermatology_Research_Clinic",
+      "tag": 1,
+      "job_index": 1,
+      "would_arrive_at": 58.757886478661526
+    },
+    {
+      "client_id": 6,
+      "hospital": "Pinewood_Oncology_Biopsy_Center",
+      "tag": 5,
+      "job_index": 5,
+      "would_arrive_at": 28.367467961124426
+    },
+    {
+      "client_id": 7,
+      "hospital": "SunRay_Community_Outreach_Clinic",
+      "tag": 2,
+      "job_index": 2,
+      "would_arrive_at": 28.686595428073872
+    },
+    {
+      "client_id": 9,
+      "hospital": "Westbridge_Academic_Dermoscopy_Unit",
+      "tag": 5,
+      "job_index": 5,
+      "would_arrive_at": 29.055423342223005
+    }
+  ],
+  "failing_jobs_in_progress_at_end": [
+    {
+      "client_id": 2,
+      "hospital": "Greenfield_Rural_Community_Health_Center",
+      "tag": 1,
+      "job_index": 1,
+      "would_fail_at": 77.91828072423156
+    },
+    {
+      "client_id": 5,
+      "hospital": "NorthCare_Tertiary_Melanoma_Institute",
+      "tag": 0,
+      "job_index": 0,
+      "would_fail_at": 32.745181973208425
+    },
+    {
+      "client_id": 8,
+      "hospital": "TeleDerm_National_Screening_Network",
+      "tag": 0,
+      "job_index": 0,
+      "would_fail_at": 61.24050990374452
+    }
+  ],
+  "primary_checkpoint": "final_global_model.pth (= global_round_0006.pth, iteration 6)",
+  "checkpoint_note": "best_global_model.pth is chosen by ROC-AUC on local TEST partitions; it is kept only as a secondary, test-selected diagnostic and is never the reported result",
+  "excluded_queued_broadcasts_not_started": {
+    "GoldenSun_Public_Health_Screening_Camp": [
+      2,
+      3,
+      4,
+      5
+    ],
+    "Greenfield_Rural_Community_Health_Center": [
+      2,
+      3,
+      4,
+      5
+    ],
+    "MetroSkin_Dermatology_Research_Clinic": [
+      2,
+      3,
+      4,
+      5
+    ],
+    "NorthCare_Tertiary_Melanoma_Institute": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "SunRay_Community_Outreach_Clinic": [
+      3,
+      4,
+      5
+    ],
+    "TeleDerm_National_Screening_Network": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ]
+  },
+  "best": {
+    "best_value": 0.7235283469756546
+  }
+}

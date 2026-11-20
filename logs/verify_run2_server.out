@@ -1,0 +1,21 @@
+name, memory.total [MiB], memory.used [MiB]
+NVIDIA H100 80GB HBM3, [Insufficient Permissions], [Insufficient Permissions]
+python 3.12.3 | torch 2.14.0a0+b2c75dd062.nv26.09 | cuda 13.4 | gpu ok True
+pinned versions (requirements-lock.txt):
+flwr==1.13.1
+numpy==1.26.4
+torchvision==0.17.1+cu121
+172.16.225.216:/vibhuti  101G   20G   81G  20% /workspace
+................................................................         [100%]
+64 passed in 12.18s
+== tests_00_to_16
+   exit 0 in 35 s
+== smoke_until_iteration_2
+   exit 0 in 39 s
+== smoke_resume_to_end
+   exit 0 in 72 s
+== smoke_evaluate_final
+   exit 0 in 23 s
+== tests_17_to_22
+   exit 0 in 7 s
+== verification passed

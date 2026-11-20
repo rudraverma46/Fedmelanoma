@@ -1,0 +1,184 @@
+{
+ "note": "Same rows and predictions as the reported evaluation; nothing here was used to select a model.",
+ "seen_patient_rows": 1822,
+ "seen_lesion_rows": 1332,
+ "missing_patient_id": 0,
+ "missing_lesion_id": 0,
+ "confirm_type_counts": {
+  "single contributor clinical assessment": 993,
+  "single image expert consensus": 347,
+  "serial imaging showing no change": 317,
+  "histopathology": 295
+ },
+ "models": {
+  "final": {
+   "all_rows": {
+    "rows": 1952,
+    "malignant": 109,
+    "roc_auc": 0.951186487926048,
+    "pr_auc": 0.6929507056162,
+    "recall_at_0.5": 0.7431192660550459,
+    "patient_clustered_bootstrap": {
+     "resamples": 2000,
+     "patients": 637,
+     "roc_auc_95": [
+      0.9180009534779889,
+      0.976588090405566
+     ],
+     "pr_auc_95": [
+      0.6005300551698977,
+      0.7713670006870375
+     ]
+    }
+   },
+   "lesion_seen_in_training": {
+    "rows": 1332,
+    "malignant": 30,
+    "roc_auc": 0.9967485919098822,
+    "pr_auc": 0.8818634067689897,
+    "recall_at_0.5": 0.8333333333333334
+   },
+   "lesion_not_seen_in_training": {
+    "rows": 620,
+    "malignant": 79,
+    "roc_auc": 0.8937621376260557,
+    "pr_auc": 0.6215262592580902,
+    "recall_at_0.5": 0.7088607594936709
+   },
+   "patient_seen_in_training": {
+    "rows": 1822,
+    "malignant": 67,
+    "roc_auc": 0.9840710975039333,
+    "pr_auc": 0.7160375524341102,
+    "recall_at_0.5": 0.7313432835820896
+   },
+   "patient_not_seen_in_training": {
+    "rows": 130,
+    "malignant": 42,
+    "roc_auc": 0.7755681818181819,
+    "pr_auc": 0.6827770081510811,
+    "recall_at_0.5": 0.7619047619047619
+   },
+   "neither_patient_nor_lesion_seen": {
+    "rows": 130,
+    "malignant": 42,
+    "roc_auc": 0.7755681818181819,
+    "pr_auc": 0.6827770081510811,
+    "recall_at_0.5": 0.7619047619047619
+   },
+   "histopathology_confirmed_only": {
+    "rows": 295,
+    "malignant": 109,
+    "roc_auc": 0.7712587550557364,
+    "pr_auc": 0.7077211749837397,
+    "recall_at_0.5": 0.7431192660550459,
+    "patient_clustered_bootstrap": {
+     "resamples": 2000,
+     "patients": 259,
+     "roc_auc_95": [
+      0.7148650590786501,
+      0.8275047868996137
+     ],
+     "pr_auc_95": [
+      0.6256161948991139,
+      0.7859603573808097
+     ]
+    }
+   },
+   "histopathology_and_lesion_not_seen": {
+    "rows": 244,
+    "malignant": 79,
+    "roc_auc": 0.7416570771001152,
+    "pr_auc": 0.6303250144137243,
+    "recall_at_0.5": 0.7088607594936709
+   }
+  },
+  "secondary_best_test_selected": {
+   "all_rows": {
+    "rows": 1952,
+    "malignant": 109,
+    "roc_auc": 0.9704809171325172,
+    "pr_auc": 0.739644490933106,
+    "recall_at_0.5": 0.8807339449541285,
+    "patient_clustered_bootstrap": {
+     "resamples": 2000,
+     "patients": 637,
+     "roc_auc_95": [
+      0.9503238184937685,
+      0.9845024583926457
+     ],
+     "pr_auc_95": [
+      0.65617673629697,
+      0.8171188102655266
+     ]
+    }
+   },
+   "lesion_seen_in_training": {
+    "rows": 1332,
+    "malignant": 30,
+    "roc_auc": 0.9683563748079878,
+    "pr_auc": 0.8534916603519145,
+    "recall_at_0.5": 0.9333333333333333
+   },
+   "lesion_not_seen_in_training": {
+    "rows": 620,
+    "malignant": 79,
+    "roc_auc": 0.9343690774234306,
+    "pr_auc": 0.6927476432618223,
+    "recall_at_0.5": 0.8607594936708861
+   },
+   "patient_seen_in_training": {
+    "rows": 1822,
+    "malignant": 67,
+    "roc_auc": 0.9719947272186078,
+    "pr_auc": 0.7107499420639252,
+    "recall_at_0.5": 0.8656716417910447
+   },
+   "patient_not_seen_in_training": {
+    "rows": 130,
+    "malignant": 42,
+    "roc_auc": 0.850378787878788,
+    "pr_auc": 0.7917318522308681,
+    "recall_at_0.5": 0.9047619047619048
+   },
+   "neither_patient_nor_lesion_seen": {
+    "rows": 130,
+    "malignant": 42,
+    "roc_auc": 0.850378787878788,
+    "pr_auc": 0.7917318522308681,
+    "recall_at_0.5": 0.9047619047619048
+   },
+   "histopathology_confirmed_only": {
+    "rows": 295,
+    "malignant": 109,
+    "roc_auc": 0.8037881029890499,
+    "pr_auc": 0.7460381347936911,
+    "recall_at_0.5": 0.8807339449541285,
+    "patient_clustered_bootstrap": {
+     "resamples": 2000,
+     "patients": 259,
+     "roc_auc_95": [
+      0.7474611109739042,
+      0.8571751499669695
+     ],
+     "pr_auc_95": [
+      0.6638561655362538,
+      0.8183316258322668
+     ]
+    }
+   },
+   "histopathology_and_lesion_not_seen": {
+    "rows": 244,
+    "malignant": 79,
+    "roc_auc": 0.788722669735328,
+    "pr_auc": 0.6935263927342284,
+    "recall_at_0.5": 0.8607594936708861
+   }
+  }
+ },
+ "confirm_type_alone": {
+  "roc_auc": 0.9495387954422138,
+  "pr_auc": 0.3694915254237288,
+  "note": "Scored by each confirmation type's malignant rate in this test set. No image used."
+ }
+}

@@ -1,0 +1,14 @@
+============================= test session starts =============================
+platform win32 -- Python 3.11.9, pytest-8.3.3, pluggy-1.7.0 -- D:\MAIN BACKUP\backup 3\Fedmelanoma\FedAvg_RESNET 50\.venv\Scripts\python.exe
+rootdir: D:\MAIN BACKUP\backup 3\Fedmelanoma\resnet_50_fedstrag_final
+collecting ... collected 6 items
+
+tests/test_03_smoke_run.py::test_17_same_starting_model_and_gpu PASSED   [ 16%]
+tests/test_03_smoke_run.py::test_18_iterations_tags_polls_and_weights PASSED [ 33%]
+tests/test_03_smoke_run.py::test_19_fifo_order_per_client PASSED         [ 50%]
+tests/test_03_smoke_run.py::test_20_failures_and_accounting PASSED       [ 66%]
+tests/test_03_smoke_run.py::test_21_checkpoints_and_resume_state PASSED  [ 83%]
+tests/test_03_smoke_run.py::test_22_final_evaluation_outputs PASSED      [100%]
+
+- generated xml file: D:\MAIN BACKUP\backup 3\Fedmelanoma\resnet_50_fedstrag_final\results\verification\tests_17_to_22.xml -
+============================== 6 passed in 5.32s ==============================

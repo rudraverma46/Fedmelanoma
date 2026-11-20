@@ -1,0 +1,81 @@
+# resnet_50_fedstrag_final -- standard FedStrag baseline (brief of 2026-11-20).
+# Paper: Kumar & Srirama, "FedStrag: Straggler-aware federated learning for low resource devices",
+#        Digital Communications and Networks 11(4):1214-1224, 2025, DOI 10.1016/j.dcan.2024.12.004.
+# Official code: github.com/cloud-and-smart-labs/FedStrag @ 9d645c216e491789213e3c2e8c6b95d8dce566fb.
+#
+# Sections data, local_training, model and runtime (except checkpoint_root) have the values of the
+# ResNet-50 NOVELTY run (RESNET 50_ fed novelty/RESNET50_NOVELTY MODEL/configs/experiment_config.yaml);
+# tests/test_00 asserts it. Only the federation algorithm differs (section fedstrag).
+
+experiment:
+  run_id: resnet50-fedstrag-final-seed42
+  seed: 42                      # same seed as the novelty run
+
+data:
+  # read-only; the same hospital_partitions the novelty run used (its config: ../../without_federated/...)
+  partitions_root: ../without_federated/client/hospital_partitions
+  # opened read-only (numpy mmap_mode="r"). All 40 files are byte-identical to the novelty run's own cache
+  # (SHA-256 checked 2026-11-20; configs/reference_manifest.json, tests/test_00). This path is the one the
+  # FedLesScan bundle used, so the same layout works on the remote GPU server.
+  cache_dir: "../resnet 50_novelty_fedavg/cache"
+
+federation:
+  num_clients: 10
+  local_epochs: 5               # novelty value (paper 16, official code 32)
+
+fedstrag:
+  global_iterations: 50         # brief: 50 global iterations (one broadcast + one server decision each); paper runs 200
+  broadcast_to: all             # Algorithm 1 lines 3-5; server.py publishes to every client
+  client_queue: fifo            # client.py: broadcasts are trained one at a time, oldest first; none skipped or overwritten
+  wait_time_seconds: 4          # server.py waitFunction: time.sleep(4), repeat until >= 1 update (brief: fixed, 4 s)
+  minimum_clients: 1            # server.py minimimum_clients = 1
+  staleness_weight: inverse_staleness_plus_one   # paper Eq. 6: W = 1/(t_g - t_l + 1), t_g = latest broadcast tag
+  sample_weighting: paper_eq7_W_times_D          # paper Eq. 7 / Algorithm 1 lines 12-16 (the official code omits D)
+  empty_iteration: keep_global_unchanged         # only when no update arrived and none can arrive (all in flight failed)
+  termination: exclude_pending  # after iteration 50: in-flight updates and unstarted queued broadcasts are reported, not applied
+  arrival_time: novelty_lognormal                # virtual clock; delay = the tier LogNormal draw (real GPU time only logged)
+  eval_every_iterations: 1      # evaluate + checkpoint after every global iteration (novelty: every round)
+  # PRIMARY reported checkpoint = the iteration-50 model (checkpoints/<run>/final_global_model.pth). The per-iteration
+  # "best" checkpoint is selected on local TEST partitions and is kept only as a secondary diagnostic.
+
+environment:                    # the novelty straggler AND failure environment (sim/environment.py)
+  kind: novelty_simulate_response
+  failure: novelty_beta_bernoulli  # Beta completion probability per tier, then Bernoulli failure; failed update is lost
+  failure_timing: after_local_training   # as in the novelty code: the client trains, then the outcome is drawn
+  # correction 2026-11-20: a failed job occupies its client for one LogNormal job duration of its tier (the training
+  # already happened); drawn from child stream [seed, 7921, client, 1] so stream 7921 itself is unchanged
+  failed_job_duration: tier_lognormal_child_stream
+  trace_seed: 42
+
+initialisation:                 # user decision 2026-11-20: start from the NOVELTY run's exact initial model
+  # Built with seed 42 + FedMelanomaModel() under torch 2.2.1 (= novelty's logged initial hash and its round-1
+  # checkpoint). Newer PyTorch (e.g. the remote server's 2.14) builds 06b67e7e... with the same seed, so the weights
+  # are loaded from this file; the runner refuses to start if keys, shapes or hash differ.
+  file: initial/novelty_initial_model.pkl
+  param_hash: 330768fe201714e3f26b9973f70fd32cbec63e2bce8b8569194ef65641876f4a
+
+local_training:                 # novelty values (reference client/client.py defaults)
+  batch_size: 20
+  learning_rate: 1.0e-4
+  weight_decay: 1.0e-4
+  focal_gamma: 2.0
+
+model:                          # novelty values
+  backbone: resnet50
+  feature_dim: 2048
+  metadata_dim: 32
+  fusion_dim: 2080
+  dropout: 0.3
+  num_classes: 2
+
+runtime:                        # execution only; no effect on the algorithm
+  dataloader_workers: 0
+  pin_memory: true
+  commit_floor_gb: 0.2
+  monitor_interval_seconds: 10
+  # where checkpoints, broadcast snapshots and the resume state go (relative to this folder, or absolute).
+  # D: had 4.9 GB free on 2026-11-20; 50 per-iteration checkpoints + snapshots need roughly 5-10 GB.
+  checkpoint_root: checkpoints
+
+reference_constants:
+  evaluation_thresholds: [0.30, 0.40, 0.50, 0.60, 0.70]

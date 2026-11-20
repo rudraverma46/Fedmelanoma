@@ -1,0 +1,27 @@
+Epoch Progress: 33.3% | ETA Epoch: 0.19 min
+Epoch Progress: 100.0% | ETA Epoch: 0.00 min
+Epoch Progress: 100.0% | ETA Epoch: 0.00 min
+Epoch Progress: 33.3% | ETA Epoch: 0.01 min
+Epoch Progress: 12.5% | ETA Epoch: 0.04 min
+Epoch Progress: 12.5% | ETA Epoch: 0.04 min
+Epoch Progress: 11.1% | ETA Epoch: 0.06 min
+Epoch Progress: 50.0% | ETA Epoch: 0.01 min
+Epoch Progress: 100.0% | ETA Epoch: 0.00 min
+Epoch Progress: 16.7% | ETA Epoch: 0.03 min
+D:\MAIN BACKUP\backup 3\Fedmelanoma\FedAvg_RESNET 50\.venv\Lib\site-packages\matplotlib\_fontconfig_pattern.py:64: PyparsingDeprecationWarning: 'oneOf' deprecated - use 'one_of'
+  prop = Group((name + Suppress("=") + comma_separated(value)) | oneOf(_CONSTANTS))
+D:\MAIN BACKUP\backup 3\Fedmelanoma\FedAvg_RESNET 50\.venv\Lib\site-packages\matplotlib\_fontconfig_pattern.py:85: PyparsingDeprecationWarning: 'parseString' deprecated - use 'parse_string'
+  parse = parser.parseString(pattern)
+D:\MAIN BACKUP\backup 3\Fedmelanoma\FedAvg_RESNET 50\.venv\Lib\site-packages\matplotlib\_fontconfig_pattern.py:89: PyparsingDeprecationWarning: 'resetCache' deprecated - use 'reset_cache'
+  parser.resetCache()
+D:\MAIN BACKUP\backup 3\Fedmelanoma\FedAvg_RESNET 50\.venv\Lib\site-packages\matplotlib\_mathtext.py:45: PyparsingDeprecationWarning: 'enablePackrat' deprecated - use 'enable_packrat'
+  ParserElement.enablePackrat()
+In D:\MAIN BACKUP\backup 3\Fedmelanoma\FedAvg_RESNET 50\.venv\Lib\site-packages\matplotlib\mpl-data\stylelib\classic.mplstyle: 'parseString' deprecated - use 'parse_string'
+In D:\MAIN BACKUP\backup 3\Fedmelanoma\FedAvg_RESNET 50\.venv\Lib\site-packages\matplotlib\mpl-data\stylelib\classic.mplstyle: 'resetCache' deprecated - use 'reset_cache'
+[run] iteration 1/6: applied 1 (total 1), failed 4, in flight 5, queued 0, virtual 4 s, wall 54 s, snapshots 0 (-1), roc_auc=0.24520255863539442
+Epoch Progress: 33.3% | ETA Epoch: 0.02 min
+Epoch Progress: 16.7% | ETA Epoch: 0.03 min
+Epoch Progress: 11.1% | ETA Epoch: 0.04 min
+Epoch Progress: 33.3% | ETA Epoch: 0.01 min
+[run] iteration 2/6: applied 5 (total 6), failed 4, in flight 4, queued 6, virtual 8 s, wall 23 s, snapshots 1 (-0), roc_auc=0.40079589769444507
+[run] stopping after iteration 2 as requested

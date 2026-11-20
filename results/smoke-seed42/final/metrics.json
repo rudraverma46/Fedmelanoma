@@ -1,0 +1,19 @@
+{
+  "checkpoint": "D:\\MAIN BACKUP\\backup 3\\Fedmelanoma\\resnet_50_fedstrag_final\\checkpoints\\smoke-seed42\\final_global_model.pth",
+  "accuracy": 0.944672131147541,
+  "precision": 0.5384615384615384,
+  "recall": 0.06422018348623854,
+  "f1": 0.11475409836065574,
+  "roc_auc": 0.6948035462722825,
+  "sensitivity": 0.06422018348623854,
+  "specificity": 0.9967444384156267,
+  "ppv": 0.5384615384615384,
+  "npv": 0.9473955647240846,
+  "balanced_accuracy": 0.5304823109509326,
+  "mcc": 0.17210489416064562,
+  "pr_auc": 0.1825585280866358,
+  "tn": 1837.0,
+  "fp": 6.0,
+  "fn": 102.0,
+  "tp": 7.0
+}

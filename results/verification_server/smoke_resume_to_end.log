@@ -1,0 +1,30 @@
+/workspace/work/resnet_50_fedstrag_final/runtime/run_fedstrag.py:137: DeprecationWarning: numpy.core.numeric is deprecated and has been renamed to numpy._core.numeric. The numpy._core namespace contains private NumPy internals and its use is discouraged, as NumPy internals can change without warning in any release. In practice, most real-world usage of numpy.core is to access functionality in the public NumPy API. If that is the case, use the public NumPy API. If not, you are using NumPy internals. If you would still like to access an internal attribute, use numpy._core.numeric._frombuffer.
+  saved = pickle.load(fh)
+[run] this PyTorch builds initial hash 06b67e7eaa7a; using the novelty initial model 330768fe2017 from initial/novelty_initial_model.pkl
+[run] resumed after iteration 2
+Epoch Progress: 33.3% | ETA Epoch: 0.03 min
+Epoch Progress: 16.7% | ETA Epoch: 0.01 min
+Epoch Progress: 100.0% | ETA Epoch: 0.00 min
+Epoch Progress: 50.0% | ETA Epoch: 0.00 min
+Epoch Progress: 33.3% | ETA Epoch: 0.01 min
+Epoch Progress: 11.1% | ETA Epoch: 0.01 min
+[run] iteration 3/6: applied 5 (total 11), failed 5, in flight 4, queued 10, virtual 12 s, wall 17 s, snapshots 2 (-0), roc_auc=0.45306841567956657
+Epoch Progress: 33.3% | ETA Epoch: 0.00 min
+Epoch Progress: 100.0% | ETA Epoch: 0.00 min
+Epoch Progress: 16.7% | ETA Epoch: 0.00 min
+Epoch Progress: 33.3% | ETA Epoch: 0.00 min
+Epoch Progress: 11.1% | ETA Epoch: 0.01 min
+[run] iteration 4/6: applied 3 (total 14), failed 7, in flight 4, queued 15, virtual 16 s, wall 14 s, snapshots 3 (-0), roc_auc=0.5867239882775334
+Epoch Progress: 33.3% | ETA Epoch: 0.00 min
+Epoch Progress: 12.5% | ETA Epoch: 0.02 min
+Epoch Progress: 50.0% | ETA Epoch: 0.00 min
+Epoch Progress: 16.7% | ETA Epoch: 0.01 min
+Epoch Progress: 33.3% | ETA Epoch: 0.00 min
+[run] iteration 5/6: applied 3 (total 17), failed 7, in flight 6, queued 20, virtual 20 s, wall 12 s, snapshots 4 (-0), roc_auc=0.6069821617011427
+Epoch Progress: 33.3% | ETA Epoch: 0.00 min
+Epoch Progress: 11.1% | ETA Epoch: 0.02 min
+Epoch Progress: 16.7% | ETA Epoch: 0.01 min
+Epoch Progress: 33.3% | ETA Epoch: 0.00 min
+Epoch Progress: 11.1% | ETA Epoch: 0.01 min
+[run] iteration 6/6: applied 5 (total 22), failed 7, in flight 6, queued 25, virtual 24 s, wall 17 s, snapshots 5 (-0), roc_auc=0.717627534638386
+[run] finished: {'dispatched': 35, 'completed_trainings': 35, 'failed_attempts': 7, 'updates_generated': 28, 'updates_received': 22, 'applied': 22, 'in_flight_updates': 6, 'failing_jobs_in_progress': 3, 'arrived_not_aggregated': 0, 'pending_updates': 6, 'queued_broadcasts_not_started': 25, 'updates_lost_to_failures': 7, 'model_version': 6, 'empty_iterations': 0, 'unaccounted_updates': 0}

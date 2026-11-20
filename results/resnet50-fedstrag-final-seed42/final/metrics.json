@@ -1,0 +1,19 @@
+{
+  "checkpoint": "/workspace/work/resnet_50_fedstrag_final/checkpoints/resnet50-fedstrag-final-seed42/final_global_model.pth",
+  "accuracy": 0.9482581967213115,
+  "precision": 0.525974025974026,
+  "recall": 0.7431192660550459,
+  "f1": 0.6159695817490495,
+  "roc_auc": 0.951186487926048,
+  "sensitivity": 0.7431192660550459,
+  "specificity": 0.9603906673901248,
+  "ppv": 0.525974025974026,
+  "npv": 0.9844271412680756,
+  "balanced_accuracy": 0.8517549667225853,
+  "mcc": 0.5992264106302628,
+  "pr_auc": 0.691484340446833,
+  "tn": 1770.0,
+  "fp": 73.0,
+  "fn": 28.0,
+  "tp": 81.0
+}
