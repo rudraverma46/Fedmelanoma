@@ -1,7 +1,24 @@
 # Novelty model: hyperparameter tuning on the Dirichlet-GMM partitioning
 
 Code and scripts for tuning the Novelty federated ResNet-50 model on the Dirichlet-GMM hospital partitioning
-(10 hospitals, no `diagnosis_confirm_type`), run on the DGX in November 2026. Results are not stored in this branch.
+(10 hospitals, no `diagnosis_confirm_type`), run on the DGX in November 2026, with the result tables and PDF reports.
+
+## Outcome in short
+Tuning did not change ROC-AUC: every paired 95% CI against the default includes 0. The best configuration, H09, gave a small
+improvement at the 0.5 threshold at all 3 seeds (recall 0.823 → 0.845, balanced accuracy 0.895 → 0.905, 3-group skin-type
+fairness gap 0.195 → 0.171, specificity 0.968 → 0.966). The follow-ups could not tie that gain to specific settings:
+selection γ 2.0 lowered AUC by 0.005 (significant), and aggregation γ 0.5 + MAD k 2.0 gave no gain over a default run
+trained at the same time. Runs that share the GPU with a different number of other runs can differ in recall by about 0.02,
+so compare configurations only within one batch. The default settings are kept.
+
+## Results and reports
+- `results/stage1/`: validation ranking of the 12 configurations (`stage1_table.csv`, per seed in `stage1_per_seed.csv`, choice in `selection.json`).
+- `results/stage2/`: test-set results for H09, H10 and the default H00 (seeds 42-44).
+- `results/followup/`: F01-F04 against H00.
+- `results/combo/`: C01 against C00 (in `summary.md`, labels that say H00 mean C00).
+- Each results folder has `metrics_per_run.csv`, `summary_by_config.csv`, `paired_vs_default.csv` (differences, bootstrap CI, DeLong, McNemar), `fairness_by_skin.csv`, `summary.md` and a figure. `final_round` is the main checkpoint; `final_best` is chosen on the test set and is optimistic.
+- `reports/`: `Novelty_HPO_report.pdf` (search and stage 2), `Novelty_followup_report.pdf`, `Novelty_combo_report.pdf`, `Novelty_best_round_report.pdf` and `Novelty_best_round_results.xlsx` (all configurations at the best round).
+- `reports/builders/`: the scripts that made the PDFs and the spreadsheet. They expect the local folder layout they were run in (`python build_*.py "<folder>"`).
 
 ## Layout
 - `code/`: the Novelty model with its ablation harness, copied from branch `resnet50-no-confirm-type` at commit `c474a6b`
