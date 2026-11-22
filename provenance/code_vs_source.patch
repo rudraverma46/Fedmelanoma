@@ -1,0 +1,521 @@
+﻿diff --git a/hpo_src_c474a6b/RESNET50_NOVELTY MODEL/ablation/common.py b/hpo_branch/code/ablation/common.py
+index ef911c4..d2c6581 100644
+--- a/hpo_src_c474a6b/RESNET50_NOVELTY MODEL/ablation/common.py	
++++ b/hpo_branch/code/ablation/common.py
+@@ -89,6 +89,16 @@ def build_run_config(exp_id: str, seed: int, registry: Dict[str, Any] | None = N
+     cfg["experiment"]["seed"] = int(seed)
+     cfg["federation"]["num_server_rounds"] = int(os.environ.get("FEDMEL_ROUNDS", common["num_server_rounds"]))
+     cfg["local_training"]["focal_gamma"] = float(variant["focal_gamma"])
++    _hpo_path = os.path.join(ROOT, "ablation", "hpo_trials.json")
++    _hpo = json.load(open(_hpo_path)).get(exp_id) if os.path.exists(_hpo_path) else None
++    if _hpo:   # hyperparameter tuning v2 (2026-11-21); server-side constants are set in run_one.py
++        cfg["local_training"]["learning_rate"] = float(_hpo["learning_rate"])
++        cfg["local_training"]["weight_decay"] = float(_hpo["weight_decay"])
++        cfg["local_training"]["batch_size"] = int(_hpo["batch_size"])
++        cfg["federation"]["local_epochs"] = int(_hpo["local_epochs"])
++        cfg["federation"]["clients_per_round"] = int(_hpo["clients_per_round"])
++        assert float(_hpo["focal_gamma"]) == cfg["local_training"]["focal_gamma"]
++        cfg["hpo"] = dict(_hpo)
+     cfg["data"] = {"partitions_root": partitions_root, "cache_dir": cache_dir}
+     cfg["runtime"]["dataloader_workers"] = int(os.environ.get("FEDMEL_WORKERS", 4))
+     cfg["ablation"] = {"experiment": exp_id, "variant": variant, "harness": common["harness"]}
+diff --git a/hpo_src_c474a6b/RESNET50_NOVELTY MODEL/ablation/experiments.yaml b/hpo_branch/code/ablation/experiments.yaml
+index c25888b..449986e 100644
+--- a/hpo_src_c474a6b/RESNET50_NOVELTY MODEL/ablation/experiments.yaml	
++++ b/hpo_branch/code/ablation/experiments.yaml
+@@ -20,6 +20,24 @@ common:
+ #   diversity_metric: ot (default) | tv (total variation instead of optimal transport)
+ #   synchronous:      false (default) | true (wait for every client that completes; no buffer)
+ experiments:
++  C00: {focal_gamma: 2.0}
++  C01: {focal_gamma: 2.0}
++  F01: {focal_gamma: 2.0}
++  F02: {focal_gamma: 2.0}
++  F03: {focal_gamma: 2.0}
++  F04: {focal_gamma: 2.0}
++  H00: {focal_gamma: 2.0}
++  H01: {focal_gamma: 2.0}
++  H02: {focal_gamma: 1.0}
++  H03: {focal_gamma: 2.0}
++  H04: {focal_gamma: 3.0}
++  H05: {focal_gamma: 3.0}
++  H06: {focal_gamma: 2.0}
++  H07: {focal_gamma: 3.0}
++  H08: {focal_gamma: 3.0}
++  H09: {focal_gamma: 1.0}
++  H10: {focal_gamma: 2.0}
++  H11: {focal_gamma: 3.0}
+   E00_full: {}
+   E01_random_selection: {selection: uniform}
+   E02_selection_no_diversity: {selection: no_diversity}
+diff --git a/hpo_branch/code/ablation/hpo_trials.json b/hpo_branch/code/ablation/hpo_trials.json
+new file mode 100644
+index 0000000..1be25d9
+--- /dev/null
++++ b/hpo_branch/code/ablation/hpo_trials.json
+@@ -0,0 +1,398 @@
++{
++ "H00": {
++  "learning_rate": 0.0001,
++  "weight_decay": 0.0001,
++  "batch_size": 20,
++  "local_epochs": 5,
++  "dropout": 0.3,
++  "focal_gamma": 2.0,
++  "clients_per_round": 6,
++  "tau": 0.2,
++  "gamma": 1.0,
++  "lambda": 0.05,
++  "rho": 0.85,
++  "delta": 0.9,
++  "agg_gamma": 1.0,
++  "s_max": 3,
++  "quorum_frac": 0.7,
++  "mad_k": 2.5,
++  "w_min": 2.0,
++  "history_len": 10,
++  "fitz_weight": 0.4,
++  "modality_weight": 0.35
++ },
++ "H01": {
++  "learning_rate": 0.0003,
++  "weight_decay": 1e-05,
++  "batch_size": 16,
++  "local_epochs": 4,
++  "dropout": 0.3,
++  "focal_gamma": 2.0,
++  "clients_per_round": 5,
++  "tau": 0.2,
++  "gamma": 1.5,
++  "lambda": 0.02,
++  "rho": 0.95,
++  "delta": 0.95,
++  "agg_gamma": 1.5,
++  "s_max": 5,
++  "quorum_frac": 0.8,
++  "mad_k": 2.0,
++  "w_min": 4.0,
++  "history_len": 10,
++  "fitz_weight": 0.25,
++  "modality_weight": 0.5
++ },
++ "H02": {
++  "learning_rate": 0.0001,
++  "weight_decay": 1e-05,
++  "batch_size": 24,
++  "local_epochs": 5,
++  "dropout": 0.5,
++  "focal_gamma": 1.0,
++  "clients_per_round": 6,
++  "tau": 0.35,
++  "gamma": 2.0,
++  "lambda": 0.0,
++  "rho": 0.85,
++  "delta": 0.9,
++  "agg_gamma": 2.0,
++  "s_max": 3,
++  "quorum_frac": 0.7,
++  "mad_k": 2.5,
++  "w_min": 2.0,
++  "history_len": 5,
++  "fitz_weight": 0.25,
++  "modality_weight": 0.5
++ },
++ "H03": {
++  "learning_rate": 5e-05,
++  "weight_decay": 1e-05,
++  "batch_size": 24,
++  "local_epochs": 4,
++  "dropout": 0.2,
++  "focal_gamma": 2.0,
++  "clients_per_round": 5,
++  "tau": 0.35,
++  "gamma": 2.0,
++  "lambda": 0.0,
++  "rho": 0.85,
++  "delta": 0.9,
++  "agg_gamma": 2.0,
++  "s_max": 3,
++  "quorum_frac": 0.6,
++  "mad_k": 2.0,
++  "w_min": 2.0,
++  "history_len": 10,
++  "fitz_weight": 0.25,
++  "modality_weight": 0.5
++ },
++ "H04": {
++  "learning_rate": 0.0001,
++  "weight_decay": 0.0001,
++  "batch_size": 16,
++  "local_epochs": 5,
++  "dropout": 0.2,
++  "focal_gamma": 3.0,
++  "clients_per_round": 7,
++  "tau": 0.5,
++  "gamma": 2.0,
++  "lambda": 0.05,
++  "rho": 0.85,
++  "delta": 0.8,
++  "agg_gamma": 1.0,
++  "s_max": 3,
++  "quorum_frac": 0.8,
++  "mad_k": 3.0,
++  "w_min": 2.0,
++  "history_len": 10,
++  "fitz_weight": 0.4,
++  "modality_weight": 0.35
++ },
++ "H05": {
++  "learning_rate": 0.0001,
++  "weight_decay": 0.001,
++  "batch_size": 16,
++  "local_epochs": 3,
++  "dropout": 0.3,
++  "focal_gamma": 3.0,
++  "clients_per_round": 6,
++  "tau": 0.2,
++  "gamma": 0.5,
++  "lambda": 0.02,
++  "rho": 0.7,
++  "delta": 0.95,
++  "agg_gamma": 1.0,
++  "s_max": 2,
++  "quorum_frac": 0.7,
++  "mad_k": 2.5,
++  "w_min": 2.0,
++  "history_len": 10,
++  "fitz_weight": 0.4,
++  "modality_weight": 0.35
++ },
++ "H06": {
++  "learning_rate": 5e-05,
++  "weight_decay": 1e-05,
++  "batch_size": 24,
++  "local_epochs": 5,
++  "dropout": 0.3,
++  "focal_gamma": 2.0,
++  "clients_per_round": 6,
++  "tau": 0.1,
++  "gamma": 1.0,
++  "lambda": 0.02,
++  "rho": 0.85,
++  "delta": 0.95,
++  "agg_gamma": 1.0,
++  "s_max": 5,
++  "quorum_frac": 0.7,
++  "mad_k": 2.0,
++  "w_min": 4.0,
++  "history_len": 20,
++  "fitz_weight": 0.4,
++  "modality_weight": 0.35
++ },
++ "H07": {
++  "learning_rate": 0.0003,
++  "weight_decay": 0.0001,
++  "batch_size": 24,
++  "local_epochs": 3,
++  "dropout": 0.2,
++  "focal_gamma": 3.0,
++  "clients_per_round": 7,
++  "tau": 0.35,
++  "gamma": 2.0,
++  "lambda": 0.02,
++  "rho": 0.95,
++  "delta": 0.9,
++  "agg_gamma": 1.0,
++  "s_max": 2,
++  "quorum_frac": 0.6,
++  "mad_k": 3.0,
++  "w_min": 2.0,
++  "history_len": 20,
++  "fitz_weight": 0.4,
++  "modality_weight": 0.35
++ },
++ "H08": {
++  "learning_rate": 5e-05,
++  "weight_decay": 1e-05,
++  "batch_size": 20,
++  "local_epochs": 5,
++  "dropout": 0.5,
++  "focal_gamma": 3.0,
++  "clients_per_round": 5,
++  "tau": 0.2,
++  "gamma": 1.5,
++  "lambda": 0.05,
++  "rho": 0.85,
++  "delta": 0.8,
++  "agg_gamma": 2.0,
++  "s_max": 3,
++  "quorum_frac": 0.8,
++  "mad_k": 3.0,
++  "w_min": 4.0,
++  "history_len": 20,
++  "fitz_weight": 0.4,
++  "modality_weight": 0.35
++ },
++ "H09": {
++  "learning_rate": 0.0001,
++  "weight_decay": 1e-05,
++  "batch_size": 16,
++  "local_epochs": 5,
++  "dropout": 0.2,
++  "focal_gamma": 1.0,
++  "clients_per_round": 5,
++  "tau": 0.2,
++  "gamma": 2.0,
++  "lambda": 0.02,
++  "rho": 0.7,
++  "delta": 0.95,
++  "agg_gamma": 0.5,
++  "s_max": 3,
++  "quorum_frac": 0.6,
++  "mad_k": 2.0,
++  "w_min": 2.0,
++  "history_len": 5,
++  "fitz_weight": 0.55,
++  "modality_weight": 0.2
++ },
++ "H10": {
++  "learning_rate": 0.0002,
++  "weight_decay": 0.001,
++  "batch_size": 20,
++  "local_epochs": 4,
++  "dropout": 0.3,
++  "focal_gamma": 2.0,
++  "clients_per_round": 6,
++  "tau": 0.35,
++  "gamma": 2.0,
++  "lambda": 0.02,
++  "rho": 0.95,
++  "delta": 0.8,
++  "agg_gamma": 0.5,
++  "s_max": 2,
++  "quorum_frac": 0.8,
++  "mad_k": 2.0,
++  "w_min": 4.0,
++  "history_len": 10,
++  "fitz_weight": 0.4,
++  "modality_weight": 0.35
++ },
++ "H11": {
++  "learning_rate": 5e-05,
++  "weight_decay": 0.0001,
++  "batch_size": 16,
++  "local_epochs": 4,
++  "dropout": 0.5,
++  "focal_gamma": 3.0,
++  "clients_per_round": 7,
++  "tau": 0.1,
++  "gamma": 2.0,
++  "lambda": 0.05,
++  "rho": 0.95,
++  "delta": 0.95,
++  "agg_gamma": 1.0,
++  "s_max": 2,
++  "quorum_frac": 0.8,
++  "mad_k": 2.5,
++  "w_min": 1.0,
++  "history_len": 10,
++  "fitz_weight": 0.25,
++  "modality_weight": 0.5
++ },
++ "F01": {
++  "learning_rate": 0.0001,
++  "weight_decay": 0.0001,
++  "batch_size": 20,
++  "local_epochs": 5,
++  "dropout": 0.3,
++  "focal_gamma": 2.0,
++  "clients_per_round": 6,
++  "tau": 0.2,
++  "gamma": 2.0,
++  "lambda": 0.05,
++  "rho": 0.85,
++  "delta": 0.9,
++  "agg_gamma": 1.0,
++  "s_max": 3,
++  "quorum_frac": 0.7,
++  "mad_k": 2.5,
++  "w_min": 2.0,
++  "history_len": 10,
++  "fitz_weight": 0.4,
++  "modality_weight": 0.35
++ },
++ "F02": {
++  "learning_rate": 0.0001,
++  "weight_decay": 0.0001,
++  "batch_size": 20,
++  "local_epochs": 5,
++  "dropout": 0.3,
++  "focal_gamma": 2.0,
++  "clients_per_round": 6,
++  "tau": 0.2,
++  "gamma": 1.0,
++  "lambda": 0.05,
++  "rho": 0.85,
++  "delta": 0.9,
++  "agg_gamma": 0.5,
++  "s_max": 3,
++  "quorum_frac": 0.7,
++  "mad_k": 2.5,
++  "w_min": 2.0,
++  "history_len": 10,
++  "fitz_weight": 0.4,
++  "modality_weight": 0.35
++ },
++ "F03": {
++  "learning_rate": 0.0001,
++  "weight_decay": 0.0001,
++  "batch_size": 20,
++  "local_epochs": 5,
++  "dropout": 0.3,
++  "focal_gamma": 2.0,
++  "clients_per_round": 6,
++  "tau": 0.2,
++  "gamma": 1.0,
++  "lambda": 0.02,
++  "rho": 0.85,
++  "delta": 0.9,
++  "agg_gamma": 1.0,
++  "s_max": 3,
++  "quorum_frac": 0.7,
++  "mad_k": 2.5,
++  "w_min": 2.0,
++  "history_len": 10,
++  "fitz_weight": 0.4,
++  "modality_weight": 0.35
++ },
++ "F04": {
++  "learning_rate": 0.0001,
++  "weight_decay": 0.0001,
++  "batch_size": 20,
++  "local_epochs": 5,
++  "dropout": 0.3,
++  "focal_gamma": 2.0,
++  "clients_per_round": 6,
++  "tau": 0.2,
++  "gamma": 1.0,
++  "lambda": 0.05,
++  "rho": 0.85,
++  "delta": 0.9,
++  "agg_gamma": 1.0,
++  "s_max": 3,
++  "quorum_frac": 0.7,
++  "mad_k": 2.0,
++  "w_min": 2.0,
++  "history_len": 10,
++  "fitz_weight": 0.4,
++  "modality_weight": 0.35
++ },
++ "C00": {
++  "learning_rate": 0.0001,
++  "weight_decay": 0.0001,
++  "batch_size": 20,
++  "local_epochs": 5,
++  "dropout": 0.3,
++  "focal_gamma": 2.0,
++  "clients_per_round": 6,
++  "tau": 0.2,
++  "gamma": 1.0,
++  "lambda": 0.05,
++  "rho": 0.85,
++  "delta": 0.9,
++  "agg_gamma": 1.0,
++  "s_max": 3,
++  "quorum_frac": 0.7,
++  "mad_k": 2.5,
++  "w_min": 2.0,
++  "history_len": 10,
++  "fitz_weight": 0.4,
++  "modality_weight": 0.35
++ },
++ "C01": {
++  "learning_rate": 0.0001,
++  "weight_decay": 0.0001,
++  "batch_size": 20,
++  "local_epochs": 5,
++  "dropout": 0.3,
++  "focal_gamma": 2.0,
++  "clients_per_round": 6,
++  "tau": 0.2,
++  "gamma": 1.0,
++  "lambda": 0.05,
++  "rho": 0.85,
++  "delta": 0.9,
++  "agg_gamma": 0.5,
++  "s_max": 3,
++  "quorum_frac": 0.7,
++  "mad_k": 2.0,
++  "w_min": 2.0,
++  "history_len": 10,
++  "fitz_weight": 0.4,
++  "modality_weight": 0.35
++ }
++}
+\ No newline at end of file
+diff --git a/hpo_src_c474a6b/RESNET50_NOVELTY MODEL/ablation/run_one.py b/hpo_branch/code/ablation/run_one.py
+index 30ac8f2..73d458c 100644
+--- a/hpo_src_c474a6b/RESNET50_NOVELTY MODEL/ablation/run_one.py	
++++ b/hpo_branch/code/ablation/run_one.py
+@@ -70,6 +70,9 @@ def main() -> int:
+ 
+     cfg = build_run_config(args.exp, args.seed)
+     rid = cfg["experiment"]["run_id"]
++    hpo = cfg.get("hpo")
++    if hpo:
++        os.environ["FEDMEL_DROPOUT"] = str(float(hpo["dropout"]))   # read by models/model.py
+     ablation = cfg["ablation"]
+ 
+     import torch
+@@ -81,8 +84,38 @@ def main() -> int:
+ 
+     def server_fn(context):
+         prepare_variant(ablation["variant"])
++        if hpo:
++            import server.strategy as _sm
++            if not getattr(_sm, "_hpo_wrapped", False):
++                _orig = _sm.compute_normalized_diversity_priors
++                def _div(*a, **k):
++                    k.setdefault("fitz_weight", float(hpo["fitz_weight"]))
++                    k.setdefault("modality_weight", float(hpo["modality_weight"]))
++                    return _orig(*a, **k)
++                _sm.compute_normalized_diversity_priors = _div
++                _sm._hpo_wrapped = True
++            _sm.AGGREGATION_DELTA = float(hpo["delta"])
++            _sm.AGGREGATION_GAMMA = float(hpo["agg_gamma"])
+         components = reference_server_fn(context)
+         apply_variant(components.strategy, ablation["variant"], ablation["harness"], args.seed)
++        if hpo:
++            from collections import deque
++            import server.strategy as _sm
++            s = components.strategy._selector
++            s.tau, s.gamma, s.lambda_, s.rho, s.delta = (float(hpo["tau"]), float(hpo["gamma"]),
++                float(hpo["lambda"]), float(hpo["rho"]), float(hpo["delta"]))
++            m = components.strategy._straggler_manager
++            m.delta, m.s_max, m.quorum_frac, m.mad_k, m.w_min = (float(hpo["delta"]), int(hpo["s_max"]),
++                float(hpo["quorum_frac"]), float(hpo["mad_k"]), float(hpo["w_min"]))
++            m._latency_history = deque(maxlen=int(hpo["history_len"]))
++            import torch.nn as _nn
++            components.strategy._logger.log_audit({"event": "hpo_override", "requested": hpo,
++                "applied_selector": [s.tau, s.gamma, s.lambda_, s.rho, s.delta],
++                "applied_straggler": [m.delta, m.s_max, m.quorum_frac, m.mad_k, m.w_min, m._latency_history.maxlen],
++                "applied_aggregation": [_sm.AGGREGATION_DELTA, _sm.AGGREGATION_GAMMA],
++                "applied_n_select": components.strategy._n_select, "dropout_env": os.environ.get("FEDMEL_DROPOUT"),
++                "diversity_priors_D": {c.client_id: c.D for c in components.strategy._clients.values()},
++                "selector_class": type(s).__name__, "straggler_class": type(m).__name__})
+         return components
+ 
+     rx.load_config = lambda: cfg
+diff --git a/hpo_src_c474a6b/RESNET50_NOVELTY MODEL/models/model.py b/hpo_branch/code/models/model.py
+index e566ba0..3575989 100644
+--- a/hpo_src_c474a6b/RESNET50_NOVELTY MODEL/models/model.py	
++++ b/hpo_branch/code/models/model.py
+@@ -53,7 +53,7 @@ class FedMelanomaModel(nn.Module):
+ 
+         self.metadata_mlp = MetadataMLP()
+ 
+-        self.dropout = nn.Dropout(0.3)
++        self.dropout = nn.Dropout(float(__import__("os").environ.get("FEDMEL_DROPOUT", "0.3")))
+ 
+         self.classifier = nn.Linear(
+             2048 + 32,

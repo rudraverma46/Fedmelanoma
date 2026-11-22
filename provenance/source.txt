@@ -1,0 +1,1 @@
+﻿source: branch resnet50-no-confirm-type, commit c474a6bcb67e6e24bf20315a7e19d1ff37bc5537, folder 'RESNET50_NOVELTY MODEL'
