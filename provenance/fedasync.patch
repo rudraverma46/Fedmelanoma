@@ -1,0 +1,1012 @@
+diff --git a/resnet50_fedasync/client/client.py b/resnet50_fedasync/client/client.py
+index bc64167..33e513b 100644
+--- a/resnet50_fedasync/client/client.py
++++ b/resnet50_fedasync/client/client.py
+@@ -152,7 +152,7 @@ def _iter_underlying_datasets(dataset) -> Iterator[MelanomaDataset]:
+         yield dataset
+ 
+ 
+-_METADATA_COLUMNS = ["fitzpatrick_skin_type", "image_type", "diagnosis_confirm_type"]
++_METADATA_COLUMNS = ["fitzpatrick_skin_type", "image_type"]
+ 
+ 
+ def _extract_metadata_df(loader: DataLoader) -> pd.DataFrame:
+@@ -376,8 +376,8 @@ class FedMelanomaClient(fl.client.NumPyClient):
+             y_prob already computed locally by evaluate_model() above.
+           - `subgroup_confusion_counts_json`: this client's LOCAL
+             per-category confusion-matrix counts (tn/fp/fn/tp -- small
+-            integers) for the blueprint's three metadata axes (skin
+-            type, imaging modality, confirmation type), via
++            integers) for the metadata axes (skin type, imaging
++            modality), via
+             monitoring.subgroup_metrics.local_all_axes_confusion_counts.
+             Privacy constraint: raw metadata/images/labels never leave
+             this method; only these aggregate counts are serialised.
+diff --git a/resnet50_fedasync/client/dataset.py b/resnet50_fedasync/client/dataset.py
+index a793bd5..a5a2194 100644
+--- a/resnet50_fedasync/client/dataset.py
++++ b/resnet50_fedasync/client/dataset.py
+@@ -15,7 +15,7 @@ class MelanomaDataset(Dataset):
+       1. Row caching           – df.to_dict("records") eliminates per-sample iloc overhead.
+       2. Label tensor          – diagnosis_1 decoded into a single contiguous torch.long
+                                  tensor at init; __getitem__ indexes it with zero allocation.
+-      3. Metadata tensor       – encode_metadata() results stacked into one (N, 13)
++      3. Metadata tensor       – encode_metadata() results stacked into one (N, METADATA_DIM)
+                                  float32 tensor; __getitem__ returns a view, not a copy.
+       4. PIL removal           – cv2.resize() replaces ToPILImage + Resize, cutting one
+                                  redundant format conversion per sample.
+@@ -33,12 +33,9 @@ class MelanomaDataset(Dataset):
+         "clinical: close-up",
+         "clinical: overview",
+     ]
+-    _CONFIRM_TYPES: List[str] = [
+-        "histopathology",
+-        "serial imaging showing no change",
+-        "single image expert consensus",
+-        "single contributor clinical assessment",
+-    ]
++    # diagnosis_confirm_type is deliberately not used: every malignant image is
++    # histopathology-confirmed, so the column gives the label away.
++    METADATA_DIM: int = len(_SKIN_TYPES) + len(_IMAGE_TYPES)
+ 
+     def __init__(self, csv_file: str, image_dir: str) -> None:
+         self.image_dir = image_dir
+@@ -88,12 +85,12 @@ class MelanomaDataset(Dataset):
+         #                                                                    #
+         # Previously a List[torch.Tensor] – N separate heap objects, each  #
+         # with its own storage pointer, reference count, and metadata       #
+-        # header.  torch.stack() merges them into one contiguous (N, 13)   #
++        # header.  torch.stack() merges them into one contiguous (N, 9)    #
+         # float32 tensor allocated in a single memory block.                #
+         #                                                                    #
+         # Benefits vs. List[torch.Tensor]:                                  #
+         #   • One allocation instead of N allocations → less GC pressure.  #
+-        #   • All 13-element rows are stored adjacently in memory; when the #
++        #   • All 9-element rows are stored adjacently in memory; when the  #
+         #     DataLoader fetches indices that are close together (e.g.      #
+         #     sequential or within the same batch), the CPU cache already   #
+         #     holds nearby rows, reducing cache misses.                     #
+@@ -101,8 +98,8 @@ class MelanomaDataset(Dataset):
+         #     tensor, returning a view (not a copy) – zero allocation on    #
+         #     the hot path.                                                 #
+         #                                                                    #
+-        # Shape:  (N, 13)   dtype: torch.float32  – identical per-row      #
+-        # values to the original list of 1-D (13,) tensors.                #
++        # Shape:  (N, 9)    dtype: torch.float32  – identical per-row      #
++        # values to the original list of 1-D (9,) tensors.                 #
+         #                                                                    #
+         # DataLoader compatibility: same fork/spawn read-only sharing as   #
+         # before; contiguous layout also makes shared-memory transfer       #
+@@ -110,7 +107,7 @@ class MelanomaDataset(Dataset):
+         # ---------------------------------------------------------------- #
+         self.metadata_cache: torch.Tensor = torch.stack(
+             [self.encode_metadata(row) for row in self.rows]
+-        )  # shape: (N, 13), dtype: torch.float32
++        )  # shape: (N, METADATA_DIM), dtype: torch.float32
+ 
+         # ---------------------------------------------------------------- #
+         # Optimization 4 – Remove PIL conversion                            #
+@@ -135,14 +132,11 @@ class MelanomaDataset(Dataset):
+     # ------------------------------------------------------------------ #
+     def encode_metadata(self, row: Dict[str, Any]) -> torch.Tensor:
+         """
+-        One-hot encode fitzpatrick_skin_type, image_type, and
+-        diagnosis_confirm_type into a single 13-dim float32 tensor.
+-
+-        Logic is identical to the original implementation.
++        One-hot encode fitzpatrick_skin_type and image_type into a single
++        METADATA_DIM-dim float32 tensor.
+         """
+         skin    = [0] * len(self._SKIN_TYPES)
+         image   = [0] * len(self._IMAGE_TYPES)
+-        confirm = [0] * len(self._CONFIRM_TYPES)
+ 
+         try:
+             skin[self._SKIN_TYPES.index(str(row["fitzpatrick_skin_type"]).strip())] = 1
+@@ -154,12 +148,7 @@ class MelanomaDataset(Dataset):
+         except (ValueError, KeyError):
+             pass
+ 
+-        try:
+-            confirm[self._CONFIRM_TYPES.index(str(row["diagnosis_confirm_type"]).strip())] = 1
+-        except (ValueError, KeyError):
+-            pass
+-
+-        return torch.tensor(skin + image + confirm, dtype=torch.float32)
++        return torch.tensor(skin + image, dtype=torch.float32)
+ 
+     # ------------------------------------------------------------------ #
+     #  Dataset protocol                                                    #
+@@ -197,8 +186,8 @@ class MelanomaDataset(Dataset):
+         image = self.transform(image)            # ToTensor + Normalize
+ 
+         # ---------------------------------------------------------------- #
+-        # Opt 3 – View into the (N, 13) stacked tensor; zero allocation.   #
+-        #         Returns a 1-D (13,) float32 tensor – same shape & dtype  #
++        # Opt 3 – View into the (N, 9) stacked tensor; zero allocation.    #
++        #         Returns a 1-D (9,) float32 tensor – same shape & dtype   #
+         #         as the original per-row tensors.                         #
+         # ---------------------------------------------------------------- #
+         metadata = self.metadata_cache[idx]   # view, not a copy
+diff --git a/resnet50_fedasync/configs/experiment_config.yaml b/resnet50_fedasync/configs/experiment_config.yaml
+index 9123cd6..eb7f74b 100644
+--- a/resnet50_fedasync/configs/experiment_config.yaml
++++ b/resnet50_fedasync/configs/experiment_config.yaml
+@@ -6,12 +6,12 @@
+ # Difference to the textbook run: arrival times and failures come from the novelty simulator (`environment`).
+ 
+ experiment:
+-  run_id: resnet50-fedasync-seed42
++  run_id: fedasync-dgmm-seed42
+   seed: 42                      # same seed policy as textbook FedAvg
+ 
+ data:
+-  partitions_root: ../without_federated/client/hospital_partitions
+-  cache_dir: ../resnet 50_novelty_fedavg/cache   # opened read-only (numpy mmap_mode="r")
++  partitions_root: /workspace/hospital_two_feature/fed_ready/3_Dirichlet_GMM   # Dirichlet-GMM, diagnosis_confirm_type removed (friend's fed_ready, read-only)
++  cache_dir: /workspace/six_models_dgmm/cache_dgmm   # shared image cache built 2026-11-21 (read-only during training)
+ 
+ federation:
+   num_clients: 10
+@@ -27,13 +27,19 @@ fedasync:                       # user decisions 2026-11-13
+   staleness_b: 4
+   rho: 0.005                    # worker proximal weight, paper's CIFAR-10 value
+   reject_stale: false           # the paper accepts every update
+-  eval_every_updates: 6         # one evaluation + checkpoint per 6 applied updates
++  eval_every_updates: 6         # one evaluation + checkpoint per 6 applied updates (lost updates do not count)
+   arrival_time: novelty_lognormal      # virtual clock; duration = LogNormal draw of the client's tier (real GPU time only logged)
+   drain_in_flight_at_budget: true      # after the 300th dispatch, in-flight updates still arrive and are applied (completed work is never thrown away)
+ 
+-environment:                    # the novelty straggler environment (sim/environment.py), user decision 2026-11-14
+-  kind: novelty_tiers
+-  failure: none                 # user decision 2026-11-14: FedAsync as published has no failure mechanism; only the tier LogNormal delay is used
++environment:                    # the novelty straggler AND failure environment (sim/environment.py FailureEnvironment)
++  kind: novelty_simulate_response
++  # user decision 2026-11-21 (was `failure: none`): simulate failures as in every other folder. FedAsync's paper has
++  # no failure rule, so the rule of the other paper-silent baseline (resnet_50_fedstrag, approved 2026-11-20) is used.
++  failure: novelty_beta_bernoulli  # Beta completion probability per tier, then Bernoulli failure; failed update is lost
++  failure_timing: after_local_training   # as in the novelty code: the client trains, then the outcome is drawn
++  failed_job_duration: tier_lognormal_child_stream   # a failed job keeps its client busy for one tier LogNormal draw
++  failure_handling: drop_no_retry_no_penalty   # never applied; slot frees and a random idle client is triggered; counts as a dispatch
++  trace_stream: 7921            # = FedStrag: client c's k-th job has the same outcome in FedAsync and FedStrag
+   trace_seed: 42
+ 
+ local_training:
+diff --git a/resnet50_fedasync/evaluate.py b/resnet50_fedasync/evaluate.py
+index 95d06f6..a7db416 100644
+--- a/resnet50_fedasync/evaluate.py
++++ b/resnet50_fedasync/evaluate.py
+@@ -106,8 +106,8 @@ def build_test_loader(
+     Returns:
+       loader          : the combined DataLoader (unchanged behavior)
+       loaded          : flat list of hospital names actually loaded
+-      metadata_df     : DataFrame with columns fitzpatrick_skin_type,
+-                         image_type, diagnosis_confirm_type, in the exact
++      metadata_df     : DataFrame with columns fitzpatrick_skin_type and
++                         image_type, in the exact
+                          same row order run_inference()/evaluate_model()
+                          will produce y_true/y_pred/y_prob in (loader uses
+                          shuffle=False, so ConcatDataset order == this
+@@ -154,7 +154,7 @@ def build_test_loader(
+         pin_memory=True,
+     )
+ 
+-    metadata_columns = ["fitzpatrick_skin_type", "image_type", "diagnosis_confirm_type"]
++    metadata_columns = ["fitzpatrick_skin_type", "image_type"]
+     metadata_df = pd.concat(
+         [ds.df[metadata_columns] for ds in test_datasets], ignore_index=True
+     )
+@@ -672,7 +672,7 @@ def main() -> None:
+         compute_subgroup_metrics,
+     )
+ 
+-    print("\nComputing subgroup metrics (skin type / imaging modality / confirmation type) …")
++    print("\nComputing subgroup metrics (skin type / imaging modality) …")
+     subgroup_tables = compute_all_subgroup_axes(
+         y_true, y_pred, y_prob, metadata_df, positive_class_idx=POSITIVE_CLASS_IDX
+     )
+@@ -682,7 +682,6 @@ def main() -> None:
+     axis_to_filename = {
+         "skin_type": "skin_type_metrics.csv",
+         "image_type": "image_type_metrics.csv",
+-        "confirm_type": "confirm_type_metrics.csv",
+     }
+     for axis, filename in axis_to_filename.items():
+         path = os.path.join("results/metrics", filename)
+diff --git a/resnet50_fedasync/evaluation/evaluate_checkpoint.py b/resnet50_fedasync/evaluation/evaluate_checkpoint.py
+index 64d8a52..781eaec 100644
+--- a/resnet50_fedasync/evaluation/evaluate_checkpoint.py
++++ b/resnet50_fedasync/evaluation/evaluate_checkpoint.py
+@@ -36,6 +36,9 @@ REQUESTED_THRESHOLDS = [0.1, 0.3, 0.5, 0.7, 0.9]
+ def main() -> None:
+     checkpoint, out_dir = os.path.abspath(sys.argv[1]), os.path.abspath(sys.argv[2])
+     cfg = load_config()
++    from hospital_registry import discover_hospitals
++    # evaluate.py hard-codes the old hospital names; use this partitioning's own (as the friend's evaluate_run)
++    evaluate.HOSPITAL_NAMES = discover_hospitals(cfg["data"]["partitions_root"])
+     os.makedirs(out_dir, exist_ok=True)
+     os.chdir(out_dir)
+     captured = {}
+@@ -46,7 +49,7 @@ def main() -> None:
+                     for h in hospital_names]
+         loader = build_loader(ConcatDataset(datasets), batch_size, False, cfg["runtime"]["dataloader_workers"],
+                               cfg["runtime"]["pin_memory"])
+-        columns = ["fitzpatrick_skin_type", "image_type", "diagnosis_confirm_type"]
++        columns = ["fitzpatrick_skin_type", "image_type"]
+         metadata_df = pd.concat([ds.df[columns] for ds in datasets], ignore_index=True)
+         labels = np.concatenate([np.full(len(ds), h, dtype=object) for h, ds in zip(hospital_names, datasets)])
+         captured["ids"] = [row["isic_id"] for ds in datasets for row in ds.rows]
+diff --git a/resnet50_fedasync/hospital_registry.py b/resnet50_fedasync/hospital_registry.py
+index 74c8260..60a6396 100644
+--- a/resnet50_fedasync/hospital_registry.py
++++ b/resnet50_fedasync/hospital_registry.py
+@@ -13,9 +13,11 @@ derives exactly the inputs server/strategy.py's HospitalConfig needs:
+     n_samples          -- row count of the hospital's local training CSV
+     fitzpatrick_dist   -- P(skin_type)   over client.dataset's 6 categories
+     modality_dist      -- P(image_type)  over client.dataset's 3 categories
+-    confirmation_dist  -- P(confirm_type) over client.dataset's 4 categories
+     tier / latency_*   -- straggler-simulation parameters (see note below)
+ 
++diagnosis_confirm_type is not read: it leaks the label (every malignant image is
++histopathology-confirmed), so it is excluded from the diversity score as well as the model input.
++
+ WHY distributions are computed from metadata_train.csv directly, not from
+ the documented *_distribution.csv files:
+   The expected per-hospital file set (see task spec / blueprint) includes
+@@ -133,14 +135,12 @@ def build_hospital_record(
+     cheap to import, from client/client.py as well).
+ 
+     Returns a dict with keys: n_samples, tier, latency_mu, latency_sigma,
+-    fitzpatrick_dist, modality_dist, confirmation_dist (the last three are
+-    plain Python lists of float, summing to 1.0).
++    fitzpatrick_dist, modality_dist (both plain Python lists of float, summing to 1.0).
+     """
+     df = pd.read_csv(_hospital_metadata_path(hospital, partitions_root))
+ 
+     fitz = _category_distribution(df["fitzpatrick_skin_type"], MelanomaDataset._SKIN_TYPES)
+     modality = _category_distribution(df["image_type"], MelanomaDataset._IMAGE_TYPES)
+-    confirm = _category_distribution(df["diagnosis_confirm_type"], MelanomaDataset._CONFIRM_TYPES)
+ 
+     tier = _TIER_CYCLE[index % len(_TIER_CYCLE)]
+     latency_mu, latency_sigma = _TIER_LATENCY[tier]
+@@ -152,7 +152,6 @@ def build_hospital_record(
+         "latency_sigma": latency_sigma,
+         "fitzpatrick_dist": fitz.tolist(),
+         "modality_dist": modality.tolist(),
+-        "confirmation_dist": confirm.tolist(),
+     }
+ 
+ 
+@@ -162,14 +161,14 @@ def build_hospital_record(
+ 
+ def build_hospital_registry(
+     partitions_root: str = DEFAULT_PARTITIONS_ROOT,
+-) -> Tuple[List[str], List[Dict[str, object]], List[float], List[float], List[float]]:
++) -> Tuple[List[str], List[Dict[str, object]], List[float], List[float]]:
+     """
+     Discover hospitals and build every input server.strategy.FedMelanomaStrategy
+     needs at construction time.
+ 
+     Returns
+     -------
+-    (hospital_names, hospital_records, global_fitzpatrick, global_modality, global_confirmation)
++    (hospital_names, hospital_records, global_fitzpatrick, global_modality)
+ 
+     hospital_records[i] corresponds to hospital_names[i]; that same index
+     is the selector.py client_id FedMelanomaStrategy assigns it (see
+@@ -182,17 +181,16 @@ def build_hospital_registry(
+     distribution -- the reference centroid emd.py's EarthMoverDistance
+     compares each hospital against (blueprint Phase 6: "global centroid").
+ 
+-    Returns ([], [], [], [], []) when hospital_partitions/ is absent or
++    Returns ([], [], [], []) when hospital_partitions/ is absent or
+     empty -- callers decide whether that is fatal for their purpose.
+     """
+     hospitals = discover_hospitals(partitions_root)
+     if not hospitals:
+-        return [], [], [], [], []
++        return [], [], [], []
+ 
+     records: List[Dict[str, object]] = []
+     fitz_rows: List[np.ndarray] = []
+     mod_rows: List[np.ndarray] = []
+-    conf_rows: List[np.ndarray] = []
+     weights: List[float] = []
+ 
+     for idx, hospital in enumerate(hospitals):
+@@ -200,7 +198,6 @@ def build_hospital_registry(
+         records.append(record)
+         fitz_rows.append(np.array(record["fitzpatrick_dist"], dtype=float))
+         mod_rows.append(np.array(record["modality_dist"], dtype=float))
+-        conf_rows.append(np.array(record["confirmation_dist"], dtype=float))
+         weights.append(float(record["n_samples"]))
+ 
+     weights_arr = np.array(weights, dtype=float)
+@@ -213,6 +210,5 @@ def build_hospital_registry(
+ 
+     global_fitz = np.average(np.stack(fitz_rows), axis=0, weights=weights_arr)
+     global_mod = np.average(np.stack(mod_rows), axis=0, weights=weights_arr)
+-    global_conf = np.average(np.stack(conf_rows), axis=0, weights=weights_arr)
+ 
+-    return hospitals, records, global_fitz.tolist(), global_mod.tolist(), global_conf.tolist()
++    return hospitals, records, global_fitz.tolist(), global_mod.tolist()
+diff --git a/resnet50_fedasync/models/model.py b/resnet50_fedasync/models/model.py
+index c610091..e566ba0 100644
+--- a/resnet50_fedasync/models/model.py
++++ b/resnet50_fedasync/models/model.py
+@@ -4,13 +4,17 @@ This is the only reference file whose content changes. Against the reference:
+   - imports: `timm` -> `torchvision.models`
+   - self.backbone: efficientnet_b3 (num_classes=0) -> resnet50 with fc = Identity
+   - classifier input: 1536 + 32 -> 2048 + 32
+-MetadataMLP, the dropout, forward() and the class names are unchanged, so every vendored
+-module that imports FedMelanomaModel works without edits.
++  - MetadataMLP input: 13 -> 9 (diagnosis_confirm_type removed; it leaks the label)
++The dropout, forward() and the class names are unchanged, so every vendored module that imports
++FedMelanomaModel works without edits.
+ """
+ import torch
+ import torch.nn as nn
+ from torchvision.models import ResNet50_Weights, resnet50
+ 
++# Must equal client.dataset.MelanomaDataset.METADATA_DIM (6 skin types + 3 image types).
++METADATA_DIM = 9
++
+ 
+ class MetadataMLP(nn.Module):
+ 
+@@ -20,7 +24,7 @@ class MetadataMLP(nn.Module):
+ 
+         self.network = nn.Sequential(
+ 
+-            nn.Linear(13, 64),
++            nn.Linear(METADATA_DIM, 64),
+             nn.BatchNorm1d(64),
+             nn.ReLU(),
+ 
+diff --git a/resnet50_fedasync/monitoring/subgroup_metrics.py b/resnet50_fedasync/monitoring/subgroup_metrics.py
+index dba8774..3d81834 100644
+--- a/resnet50_fedasync/monitoring/subgroup_metrics.py
++++ b/resnet50_fedasync/monitoring/subgroup_metrics.py
+@@ -13,9 +13,9 @@ metadata_train.csv/metadata_test.csv schema:
+     fitzpatrick_skin_type  -> I, II, III, IV, V, VI
+     image_type             -> dermoscopic, clinical: close-up,
+                                clinical: overview
+-    diagnosis_confirm_type -> histopathology, serial imaging showing no
+-                               change, single image expert consensus,
+-                               single contributor clinical assessment
++
++diagnosis_confirm_type is not used as a subgroup axis: it leaks the label (every malignant
++image is histopathology-confirmed).
+ 
+ Metric reuse: per-subgroup metrics are computed by calling
+ evaluate.compute_metrics() (unmodified) on the boolean-masked subset,
+@@ -44,7 +44,6 @@ from client.dataset import MelanomaDataset
+ SUBGROUP_AXES: Dict[str, Sequence[str]] = {
+     "skin_type": list(MelanomaDataset._SKIN_TYPES),
+     "image_type": list(MelanomaDataset._IMAGE_TYPES),
+-    "confirm_type": list(MelanomaDataset._CONFIRM_TYPES),
+ }
+ 
+ # Metrics that are mathematically undefined when the subgroup has zero
+@@ -158,7 +157,6 @@ def compute_all_subgroup_axes(
+     column_by_axis = {
+         "skin_type": "fitzpatrick_skin_type",
+         "image_type": "image_type",
+-        "confirm_type": "diagnosis_confirm_type",
+     }
+     results: Dict[str, pd.DataFrame] = {}
+     for axis, categories in SUBGROUP_AXES.items():
+@@ -278,11 +276,10 @@ def local_all_axes_confusion_counts(
+     metadata_df: pd.DataFrame,
+     positive_class_idx: int = 1,
+ ) -> Dict[str, Dict[str, Dict[str, int]]]:
+-    """CLIENT-SIDE convenience: confusion counts for all three metadata axes at once."""
++    """CLIENT-SIDE convenience: confusion counts for every metadata axis at once."""
+     column_by_axis = {
+         "skin_type": "fitzpatrick_skin_type",
+         "image_type": "image_type",
+-        "confirm_type": "diagnosis_confirm_type",
+     }
+     out: Dict[str, Dict[str, Dict[str, int]]] = {}
+     for axis, categories in SUBGROUP_AXES.items():
+@@ -379,7 +376,7 @@ def compute_worst_group(
+     """
+     Worst-group value of *metric_col* among subgroups where it is defined
+     -- the blueprint's WGA = min_g metric(g) (Section 5.3), applied here
+-    per metadata axis (skin_type / image_type / confirm_type) rather than
++    per metadata axis (skin_type / image_type) rather than
+     per-hospital "client type" grouping, since the centralized evaluation
+     pipeline's held-out set is not currently tagged by originating
+     hospital. This is a documented scope choice, not a redefinition of
+diff --git a/resnet50_fedasync/runtime/image_cache.py b/resnet50_fedasync/runtime/image_cache.py
+index 777453e..3747b72 100644
+--- a/resnet50_fedasync/runtime/image_cache.py
++++ b/resnet50_fedasync/runtime/image_cache.py
+@@ -99,5 +99,11 @@ def build_cached_dataset(partitions_root: str, cache_dir: str, hospital: str, sp
+ 
+ 
+ def build_loader(dataset, batch_size: int, shuffle: bool, workers: int, pin_memory: bool) -> DataLoader:
+-    """Same batch size and shuffle flags as client/client.py build_hospital_dataloaders."""
+-    return DataLoader(dataset, batch_size=batch_size, shuffle=shuffle, num_workers=workers, pin_memory=pin_memory)
++    """Same batch size and shuffle flags as client/client.py build_hospital_dataloaders.
++
++    A training split whose size leaves a final batch of one row drops that row each epoch: BatchNorm1d in the
++    metadata MLP cannot train on a single sample. Splits of every other size are unaffected.
++    """
++    drop_last = shuffle and len(dataset) % batch_size == 1
++    return DataLoader(dataset, batch_size=batch_size, shuffle=shuffle, num_workers=workers, pin_memory=pin_memory,
++                      drop_last=drop_last)
+diff --git a/resnet50_fedasync/runtime/resources.py b/resnet50_fedasync/runtime/resources.py
+index b85acf1..38f24a9 100644
+--- a/resnet50_fedasync/runtime/resources.py
++++ b/resnet50_fedasync/runtime/resources.py
+@@ -1,4 +1,7 @@
+-"""GPU, RAM and Windows commit sampling, the low-commit safe stop, and keeping the PC awake."""
++"""GPU, RAM and commit sampling, the low-commit safe stop, and keeping the PC awake.
++
++Cross-platform (2026-11-19, for running on a remote Linux GPU server): on Windows the values are the original Windows
++commit figures; elsewhere commit = RAM + swap from psutil. No effect on the algorithm."""
+ from __future__ import annotations
+ 
+ import csv
+@@ -24,6 +27,10 @@ class _MemoryStatus(ctypes.Structure):
+ 
+ 
+ def memory_snapshot() -> Dict[str, float]:
++    if os.name != "nt":
++        vm, sw, gb = psutil.virtual_memory(), psutil.swap_memory(), 2**30
++        return {"ram_free_gb": vm.available / gb, "commit_limit_gb": (vm.total + sw.total) / gb,
++                "commit_free_gb": (vm.available + sw.free) / gb}
+     status = _MemoryStatus()
+     status.dwLength = ctypes.sizeof(_MemoryStatus)
+     ctypes.windll.kernel32.GlobalMemoryStatusEx(ctypes.byref(status))
+@@ -41,7 +48,9 @@ def gpu_snapshot() -> Dict[str, float]:
+ 
+ 
+ def keep_awake(enable: bool) -> None:
+-    """Stop Windows from sleeping during the run; released when the process ends."""
++    """Stop Windows from sleeping during the run; released when the process ends. No-op elsewhere."""
++    if os.name != "nt":
++        return
+     flags = ES_CONTINUOUS | (ES_SYSTEM_REQUIRED if enable else 0)
+     ctypes.windll.kernel32.SetThreadExecutionState(flags)
+ 
+diff --git a/resnet50_fedasync/runtime/run_fedasync.py b/resnet50_fedasync/runtime/run_fedasync.py
+index fb36d31..bd6f230 100644
+--- a/resnet50_fedasync/runtime/run_fedasync.py
++++ b/resnet50_fedasync/runtime/run_fedasync.py
+@@ -1,5 +1,5 @@
+ """Runs FedAsync on the ten hospitals with the textbook FedAvg model, data and local training, inside the
+-FedMelanoma-Novelty tier delays (sim/environment.py: per-tier LogNormal latency; FedAsync as published has no failure).
++FedMelanoma-Novelty environment (sim/environment.py FailureEnvironment: tier Beta/Bernoulli failure + LogNormal delay).
+ 
+ Run from the experiment folder:
+     python -m runtime.run_fedasync [--run-id ID] [--resume] [--stop-after-update S]
+@@ -11,9 +11,11 @@ Order of operations for every update (server/fedasync.py, server/scheduler.py):
+     1. the earliest in-flight update arrives (virtual clock moves to its arrival time)
+     2. the updater applies it at once: x_v+1 = (1 - alpha s(v - tau)) x_v + alpha s(v - tau) x_new
+     3. the freed slot triggers a random idle client with (x_v+1, v+1). Its job-th simulator draw decides:
+-         the client trains (completed local training) and its update arrives `latency` virtual seconds later
+-         (LogNormal draw of its tier). There is NO failure: FedAsync as published (arXiv:1903.03934) has no
+-         failure or lost-update mechanism, so none is simulated (user decision 2026-11-14).
++         the client trains (completed local training); then the novelty failure draw decides whether the update
++         is lost. Delivered: it arrives `latency` virtual seconds later (LogNormal draw of its tier). Lost: the
++         client is busy for one LogNormal draw of its tier, nothing is applied, no retry, no penalty.
++         FedAsync (arXiv:1903.03934) has no failure rule, so the rule of the other paper-silent baseline,
++         FedStrag, is used (user decision 2026-11-21; was failure-free before that date).
+        The run ends when the dispatch budget is spent and every in-flight update has arrived.
+        Counters kept apart: dispatched, pre_training_failures, completed_trainings, post_training_failures,
+        rejected_or_expired, applied.
+@@ -54,7 +56,7 @@ from runtime.resources import ResourceMonitor, keep_awake  # noqa: E402
+ from runtime.state import load_state, restore_rngs, rng_states, save_state, state_path, truncate_jsonl_after_step  # noqa: E402
+ from server.fedasync import PAPER, FedAsyncServer, make_staleness_function  # noqa: E402
+ from hospital_registry import build_hospital_registry  # noqa: E402
+-from sim.environment import TraceEnvironment  # noqa: E402
++from sim.environment import FailureEnvironment  # noqa: E402
+ from server.scheduler import VirtualClockScheduler  # noqa: E402
+ 
+ EXIT_SAFE_STOP = 10
+@@ -125,7 +127,7 @@ def main() -> int:
+     server = FedAsyncServer(initial, fa["alpha"], staleness_fn)
+     scheduler = VirtualClockScheduler(range(len(hospitals)), fa["concurrency"], rng)
+     _, records, *_ = build_hospital_registry(cfg["data"]["partitions_root"])
+-    env = TraceEnvironment(cfg["environment"]["trace_seed"], records)
++    env = FailureEnvironment(cfg["environment"]["trace_seed"], records)
+     applied, window, best_state = 0, [], {"best_value": float("-inf")}
+     names = ("dispatched", "pre_training_failures", "completed_trainings", "post_training_failures",
+              "rejected_or_expired", "applied")
+@@ -145,10 +147,19 @@ def main() -> int:
+         arrays, n, metrics, seconds, peak = timed_fit(clients[client_id], x_tau, local_epochs)   # always trains first
+         del x_tau
+         counts["completed_trainings"][client_id] += 1
+-        latency = env.latency(client_id, k)   # paper-literal: no failure draw, only the tier's LogNormal delay
++        # failure rule of the other paper-silent baseline (FedStrag, user decision 2026-11-21): the client has trained;
++        # the novelty draw now decides whether the update is lost. A lost update carries no weights, keeps the client
++        # busy for its failed-job duration, and is never applied.
++        outcome = env.outcome(client_id, k)
++        latency = outcome.busy_seconds
++        if outcome.failed:
++            arrays = None
++            metrics = {**metrics, "failed": True}
++            counts["post_training_failures"][client_id] += 1
+         base = {"step": applied, "client_id": client_id, "hospital": hospitals[client_id],
+                 "tier": env.stubs[client_id].tier, "job_index": k, "tau": tau, "measured_fit_seconds": seconds,
+-                "num_examples": n, "train_loss": metrics.get("train_loss"), "gpu_peak_mb": peak}
++                "num_examples": n, "train_loss": metrics.get("train_loss"), "gpu_peak_mb": peak,
++                "failed": outcome.failed}
+         job = scheduler.submit(client_id, tau, latency, arrays, n, metrics)
+         write["clients"]({
+             "event": "client_fit", **base,
+@@ -196,23 +207,37 @@ def main() -> int:
+     try:
+         while scheduler.in_flight:
+             job = scheduler.next_arrival()
+-            before = hash_ndarrays(server.x)
+-            record = server.apply(job.client_id, job.arrays, job.tau, job.arrival_time, job.dispatch_time)
+-            after = hash_ndarrays(server.x)
+-            del job.arrays
+-            applied += 1
+-            counts["applied" if record.accepted else "rejected_or_expired"][job.client_id] += 1
+-            window.append(job.client_id)
+-            write["updates"]({
+-                "event": "update_applied", "step": applied, **record.__dict__, "duration_seconds": job.duration,
+-                "num_examples": job.num_examples, "train_loss": job.metrics.get("train_loss"),
+-                "global_hash_before": before, "global_hash_after": after, "global_changed": before != after,
+-                "still_in_flight": scheduler.busy(), **totals(),
+-            })
+-            monitor.current_round = applied
++            lost = bool(job.metrics.get("failed"))
++            if lost:
++                # lost update (failure drawn after training): nothing reaches the updater, x and v are unchanged;
++                # the freed slot triggers the next idle client exactly as after an applied update
++                write["updates"]({"event": "update_lost", "step": applied, "client_id": job.client_id, "tau": job.tau,
++                                  "dispatch_time": job.dispatch_time, "arrival_time": job.arrival_time,
++                                  "duration_seconds": job.duration, "still_in_flight": scheduler.busy(), **totals()})
++            else:
++                before = hash_ndarrays(server.x)
++                record = server.apply(job.client_id, job.arrays, job.tau, job.arrival_time, job.dispatch_time)
++                after = hash_ndarrays(server.x)
++                del job.arrays
++                applied += 1
++                counts["applied" if record.accepted else "rejected_or_expired"][job.client_id] += 1
++                window.append(job.client_id)
++                write["updates"]({
++                    "event": "update_applied", "step": applied, **record.__dict__, "duration_seconds": job.duration,
++                    "num_examples": job.num_examples, "train_loss": job.metrics.get("train_loss"),
++                    "global_hash_before": before, "global_hash_after": after, "global_changed": before != after,
++                    "still_in_flight": scheduler.busy(), **totals(),
++                })
++                monitor.current_round = applied
+             refill()
+             finished = not scheduler.in_flight
+-            if applied % eval_every == 0 or finished:
++            due = (not lost and applied % eval_every == 0) or (finished and bool(window))
++            if finished and not due and applied:
++                # the run ended on a lost update and the last evaluation already covers every applied update
++                k = (applied + eval_every - 1) // eval_every
++                shutil.copyfile(os.path.join("checkpoints", run_id, f"global_round_{k:04d}.pth"),
++                                os.path.join("checkpoints", run_id, "final_global_model.pth"))
++            if due:
+                 k = (applied + eval_every - 1) // eval_every
+                 evaluated = sorted(set(window))
+                 results = [clients[c].evaluate(server.x, {}) for c in evaluated]
+diff --git a/resnet50_fedasync/sim/environment.py b/resnet50_fedasync/sim/environment.py
+index b291b94..072d062 100644
+--- a/resnet50_fedasync/sim/environment.py
++++ b/resnet50_fedasync/sim/environment.py
+@@ -1,65 +1,132 @@
+-"""The FedMelanoma-Novelty straggler environment, as a per-client paired trace for asynchronous algorithms.
++"""The FedMelanoma-Novelty straggler environment, as a per-client paired trace for asynchronous algorithms.
++
++sim/straggler.py is a byte-identical copy of the novelty server/straggler.py (tests/test_00 checks the
++hash). Every draw goes through its StragglerManager.simulate_response, so the distributions, parameters
++and draw order (Beta completion probability, Bernoulli failure, LogNormal latency) are the novelty ones:
++    tier reliable       Beta(19,1)  LogNormal(1.39, 0.30)   median ~4 s
++    tier moderate       Beta(7,3)   LogNormal(2.77, 0.50)   median ~16 s
++    tier high_straggler Beta(2,3)   LogNormal(4.09, 0.80)   median ~60 s
++Tiers: hospital index (sorted names) mod 3 over (reliable, moderate, high_straggler) -- hospital_registry.
++
++What is NOT carried over: the adaptive window W_t, quorum, buffer and S_max. Those are the novelty's
++reaction to stragglers; each algorithm here reacts by its own rules.
++
++Pairing: client c's k-th job (k counts every dispatch of that client, failed or not) always gets the same
++(failed, latency) pair, because client c has its own seeded generator. FedAsync and FedStrag therefore see the
++same draws per client; only the order in which they consume them differs. The novelty run itself used ONE
++shared generator consumed in selection order, so its exact draws cannot be replayed: same distributions and
++parameters, not the same numbers.
++
++FedAsync as published has no failure mechanism (arXiv:1903.03934, checked 2026-11-14). Until 2026-11-21 this copy
++therefore used latency(c, k) only (TraceEnvironment.latency, kept for the tests and for reference).
++
++User decision 2026-11-21: simulate failures here as in every other folder. The paper gives no rule for handling a
++failure, so the rule of the other paper-silent baseline (resnet_50_fedstrag, sim/environment.py, correction
++approved 2026-11-20) is used unchanged, through FailureEnvironment below, a verbatim copy of FedStrag's
++NoveltyEnvironment:
++    1. completion probability  p ~ Beta(a, b) of the client's tier, then failed = U(0, 1) > p (novelty simulate_response)
++    2. timing: the client trains FIRST (novelty code); a failed update is then lost, never applied, never retried
++    3. a failed job keeps its client busy for one LogNormal draw of its tier (child stream [seed, 7921, c, 1]);
++       then the slot frees and the scheduler triggers a uniformly random idle client, as after any arrival
++    4. no penalty: the client stays eligible; the failed job still counts as one of the 300 dispatches
++Same TRACE_STREAM (7921) as FedStrag, so client c's k-th job has the SAME outcome (failed or not, delay) in FedAsync
++and FedStrag: paired environments.
++"""
++from __future__ import annotations
++
++from types import SimpleNamespace
++from typing import Dict, List, Sequence, Tuple
++
++import numpy as np
++
++from sim.straggler import StragglerManager
++
++TRACE_STREAM = 7919   # fixed salt so the trace stream is independent of every other generator
++
++
++class TraceEnvironment:
++    def __init__(self, seed: int, records: Sequence[Dict]) -> None:
++        self.stubs = [SimpleNamespace(client_id=i, tier=r["tier"], latency_mu=r["latency_mu"],
++                                      latency_sigma=r["latency_sigma"]) for i, r in enumerate(records)]
++        self.managers = [StragglerManager(rng=np.random.default_rng([int(seed), TRACE_STREAM, i]))
++                         for i in range(len(records))]
++        self.trace: List[List[Tuple[bool, float]]] = [[] for _ in records]
++        # latency-only stream (FedAsync as published has no failure): LogNormal(mu, sigma) of the client's tier,
++        # one seeded generator per client, independent of the failure trace above.
++        self.lat_rngs = [np.random.default_rng([int(seed), TRACE_STREAM + 1, i]) for i in range(len(records))]
++        self.lat_trace: List[List[float]] = [[] for _ in records]
++
++    def draw(self, client_id: int, k: int) -> Tuple[bool, float]:
++        """(failed, latency_seconds) for client `client_id`'s k-th job; deterministic in (seed, client, k)."""
++        t = self.trace[client_id]
++        while len(t) <= k:
++            r = self.managers[client_id].simulate_response(self.stubs[client_id], len(t))
++            t.append((bool(r.is_failed), float(r.response_time)))
++        return t[k]
++
++    def latency(self, client_id: int, k: int) -> float:
++        """LogNormal latency of client `client_id`'s k-th job with NO failure draw: same distribution and
++        parameters as draw(), but its own seeded stream, because draw() returns no latency for failed jobs."""
++        t = self.lat_trace[client_id]
++        stub = self.stubs[client_id]
++        while len(t) <= k:
++            t.append(float(self.lat_rngs[client_id].lognormal(mean=stub.latency_mu, sigma=stub.latency_sigma)))
++        return t[k]
++
++    def tiers(self) -> List[str]:
++        return [s.tier for s in self.stubs]
+ 
+-sim/straggler.py is a byte-identical copy of the novelty server/straggler.py (tests/test_00 checks the
+-hash). Every draw goes through its StragglerManager.simulate_response, so the distributions, parameters
+-and draw order (Beta completion probability, Bernoulli failure, LogNormal latency) are the novelty ones:
+-    tier reliable       Beta(19,1)  LogNormal(1.39, 0.30)   median ~4 s
+-    tier moderate       Beta(7,3)   LogNormal(2.77, 0.50)   median ~16 s
+-    tier high_straggler Beta(2,3)   LogNormal(4.09, 0.80)   median ~60 s
+-Tiers: hospital index (sorted names) mod 3 over (reliable, moderate, high_straggler) -- hospital_registry.
+ 
+-What is NOT carried over: the adaptive window W_t, quorum, buffer and S_max. Those are the novelty's
+-reaction to stragglers; each algorithm here reacts by its own rules.
++# ---------------------------------------------------------------------------------------------------------------
++# Failure environment (user decision 2026-11-21). Verbatim copy of resnet_50_fedstrag sim/environment.py
++# (NoveltyEnvironment, renamed FailureEnvironment; constants renamed FAILURE_TRACE_STREAM so TraceEnvironment keeps 7919).
++# ---------------------------------------------------------------------------------------------------------------
++from dataclasses import dataclass  # noqa: E402
+ 
+-Pairing: client c's k-th job (k counts every dispatch of that client, failed or not) always gets the same
+-(failed, latency) pair, because client c has its own seeded generator. FedAsync and FedStrag therefore see the
+-same draws per client; only the order in which they consume them differs. The novelty run itself used ONE
+-shared generator consumed in selection order, so its exact draws cannot be replayed: same distributions and
+-parameters, not the same numbers.
++FAILURE_TRACE_STREAM = 7921   # = FedStrag TRACE_STREAM: paired failure/delay outcomes per (client, job index)
++FAILED_DURATION_SUBSTREAM = 1   # child stream [seed, TRACE_STREAM, client, 1]: durations of failed jobs only
+ 
+-FedAsync as published has no failure mechanism (arXiv:1903.03934, checked 2026-11-14): every triggered worker
+-trains and pushes. This copy therefore uses latency(c, k) only: the tier's LogNormal delay, no Beta/Bernoulli
+-failure. draw() is kept for reference and for the equality test with the novelty simulator.
+-"""
+-from __future__ import annotations
+ 
+-from types import SimpleNamespace
+-from typing import Dict, List, Sequence, Tuple
++@dataclass(frozen=True)
++class JobOutcome:
++    failed: bool
++    latency: float          # seconds until the update reaches the server; inf when failed (novelty response_time)
++    busy_seconds: float     # seconds the client is occupied by this job: = latency if delivered, the failed-job
++                            # duration (tier LogNormal, child stream) if failed
+ 
+-import numpy as np
+ 
+-from sim.straggler import StragglerManager
+-
+-TRACE_STREAM = 7919   # fixed salt so the trace stream is independent of every other generator
+-
+-
+-class TraceEnvironment:
++class FailureEnvironment:
+     def __init__(self, seed: int, records: Sequence[Dict]) -> None:
++        self.seed = int(seed)
+         self.stubs = [SimpleNamespace(client_id=i, tier=r["tier"], latency_mu=r["latency_mu"],
+                                       latency_sigma=r["latency_sigma"]) for i, r in enumerate(records)]
+-        self.managers = [StragglerManager(rng=np.random.default_rng([int(seed), TRACE_STREAM, i]))
++        self.managers = [StragglerManager(rng=np.random.default_rng([self.seed, FAILURE_TRACE_STREAM, i]))
+                          for i in range(len(records))]
+-        self.trace: List[List[Tuple[bool, float]]] = [[] for _ in records]
+-        # latency-only stream (FedAsync as published has no failure): LogNormal(mu, sigma) of the client's tier,
+-        # one seeded generator per client, independent of the failure trace above.
+-        self.lat_rngs = [np.random.default_rng([int(seed), TRACE_STREAM + 1, i]) for i in range(len(records))]
+-        self.lat_trace: List[List[float]] = [[] for _ in records]
++        self.failed_rngs = [np.random.default_rng([self.seed, FAILURE_TRACE_STREAM, i, FAILED_DURATION_SUBSTREAM])
++                            for i in range(len(records))]
++        self.trace: List[List[JobOutcome]] = [[] for _ in records]
++        self.failed_durations: List[List[float]] = [[] for _ in records]
+ 
+-    def draw(self, client_id: int, k: int) -> Tuple[bool, float]:
+-        """(failed, latency_seconds) for client `client_id`'s k-th job; deterministic in (seed, client, k)."""
+-        t = self.trace[client_id]
++    def failed_duration(self, client_id: int, k: int) -> float:
++        """Busy time of client `client_id`'s k-th job IF it fails: LogNormal(mu, sigma) of the client's tier.
++
++        Drawn for every job index k (used only when job k fails), so the value depends on (seed, client, k) only.
++        """
++        t = self.failed_durations[client_id]
++        stub = self.stubs[client_id]
+         while len(t) <= k:
+-            r = self.managers[client_id].simulate_response(self.stubs[client_id], len(t))
+-            t.append((bool(r.is_failed), float(r.response_time)))
++            t.append(float(self.failed_rngs[client_id].lognormal(mean=stub.latency_mu, sigma=stub.latency_sigma)))
+         return t[k]
+ 
+-    def latency(self, client_id: int, k: int) -> float:
+-        """LogNormal latency of client `client_id`'s k-th job with NO failure draw: same distribution and
+-        parameters as draw(), but its own seeded stream, because draw() returns no latency for failed jobs."""
+-        t = self.lat_trace[client_id]
+-        stub = self.stubs[client_id]
++    def outcome(self, client_id: int, k: int) -> JobOutcome:
++        """Outcome of client `client_id`'s k-th job (k counts every dispatch of that client, from 0)."""
++        t = self.trace[client_id]
+         while len(t) <= k:
+-            t.append(float(self.lat_rngs[client_id].lognormal(mean=stub.latency_mu, sigma=stub.latency_sigma)))
++            j = len(t)
++            response = self.managers[client_id].simulate_response(client=self.stubs[client_id], current_round=j)
++            failed, latency = bool(response.is_failed), float(response.response_time)
++            t.append(JobOutcome(failed=failed, latency=latency,
++                                busy_seconds=self.failed_duration(client_id, j) if failed else latency))
+         return t[k]
+ 
+     def tiers(self) -> List[str]:
+diff --git a/resnet50_fedasync/tests/test_00_reference_integrity.py b/resnet50_fedasync/tests/test_00_reference_integrity.py
+index 7503372..b93a133 100644
+--- a/resnet50_fedasync/tests/test_00_reference_integrity.py
++++ b/resnet50_fedasync/tests/test_00_reference_integrity.py
+@@ -1,97 +1,102 @@
+-"""Test 0: identical experimental conditions and no Novelty / diversity code.
+-
+-* Model, data, cache, loss, evaluation and monitoring files are byte-identical to resnet50_fedavg_textbook.
+-* The client files are byte-identical to resnet50_fedprox_textbook (textbook FedAvg's client plus the
+-  optional proximal term, which is FedAsync's worker regulariser).
+-* The config sections shared with textbook FedAvg have identical values.
+-* No selector, straggler window, diversity (EMD) or aggregation module from the Novelty code is present,
+-  and importing the runner imports none of them.
+-"""
+-import hashlib
+-import os
+-import re
+-import subprocess
+-import sys
+-
+-import pytest
+-import yaml
+-
+-ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+-FEDAVG = os.path.abspath(os.path.join(ROOT, "..", "resnet50_fedavg_textbook"))
+-FEDPROX = os.path.abspath(os.path.join(ROOT, "..", "resnet50_fedprox_textbook"))
+-SAME_AS_FEDAVG = ["models/model.py", "client/dataset.py", "client/focal_loss.py", "runtime/image_cache.py",
+-                  "runtime/config.py", "runtime/resources.py", "evaluate.py", "evaluation/evaluate_checkpoint.py",
+-                  "hospital_registry.py", "monitoring/checkpointing.py", "monitoring/experiment_logging.py",
+-                  "monitoring/param_hash.py", "monitoring/subgroup_metrics.py", "tests/conftest.py"]
+-SAME_AS_FEDPROX = ["client/client.py", "client/local_trainer.py", "client/proximal.py"]
+-FORBIDDEN_FILES = ["emd.py", "server/selector.py", "server/straggler.py", "server/aggregation.py", "server/strategy.py"]
+-FORBIDDEN_MODULES = ["emd", "server.selector", "server.straggler", "server.aggregation", "server.strategy"]
+-
+-
+-def sha(path):
+-    with open(path, "rb") as fh:
+-        return hashlib.sha256(fh.read()).hexdigest()
+-
+-
+-@pytest.mark.parametrize("rel", SAME_AS_FEDAVG)
+-def test_identical_to_textbook_fedavg(rel):
+-    assert sha(os.path.join(ROOT, rel)) == sha(os.path.join(FEDAVG, rel))
+-
+-
+-@pytest.mark.parametrize("rel", SAME_AS_FEDPROX)
+-def test_client_identical_to_textbook_fedprox(rel):
+-    assert sha(os.path.join(ROOT, rel)) == sha(os.path.join(FEDPROX, rel))
+-
+-
+-def test_fedprox_client_differs_from_fedavg_client_only_by_the_proximal_term():
+-    """local_trainer.py: with global_reference None the step is textbook FedAvg's (FedProx folder test)."""
+-    with open(os.path.join(ROOT, "client", "local_trainer.py"), encoding="utf-8") as fh:
+-        text = fh.read()
+-    assert "if global_reference is None:\n            objective = loss" in text
+-    assert "objective = loss + penalty" in text
+-
+-
+-def test_shared_config_values(cfg):
+-    with open(os.path.join(ROOT, "configs", "experiment_config.yaml"), encoding="utf-8") as fh:
+-        here = yaml.safe_load(fh)
+-    with open(os.path.join(FEDAVG, "configs", "experiment_config.yaml"), encoding="utf-8") as fh:
+-        base = yaml.safe_load(fh)
+-    for section in ("data", "local_training", "model", "runtime", "reference_constants"):
+-        assert here[section] == base[section], section
+-    assert here["experiment"]["seed"] == base["experiment"]["seed"] == 42
+-    assert here["federation"]["local_epochs"] == base["federation"]["local_epochs"] == 5
+-    assert here["federation"]["num_clients"] == base["federation"]["num_clients"] == 10
+-    assert here["fedasync"]["total_dispatches"] == base["federation"]["num_server_rounds"] * base["federation"]["clients_per_round"]
+-    assert here["fedasync"]["concurrency"] == base["federation"]["clients_per_round"]
+-    assert here["fedasync"] == {"total_dispatches": 300, "concurrency": 6, "scheduler": "uniform_idle", "alpha": 0.6,
+-                                "staleness_function": "hinge", "staleness_a": 10, "staleness_b": 4, "rho": 0.005,
+-                                "reject_stale": False, "eval_every_updates": 6, "arrival_time": "novelty_lognormal",
+-                                "drain_in_flight_at_budget": True}
+-    assert here["environment"] == {"kind": "novelty_tiers", "failure": "none", "trace_seed": 42}
+-    assert os.path.isdir(cfg["data"]["cache_dir"])
+-
+-
+-@pytest.mark.parametrize("rel", FORBIDDEN_FILES)
+-def test_no_novelty_or_diversity_files(rel):
+-    assert not os.path.exists(os.path.join(ROOT, rel))
+-
+-
+-def test_runner_imports_no_novelty_or_diversity_module():
+-    code = ("import sys, runtime.run_fedasync; bad = [m for m in %r if m in sys.modules]; "
+-            "print('BAD', bad); sys.exit(1 if bad else 0)") % (FORBIDDEN_MODULES,)
+-    out = subprocess.run([sys.executable, "-c", code], cwd=ROOT, capture_output=True, text=True)
+-    assert out.returncode == 0, out.stdout + out.stderr
+-
+-
+-def test_server_code_has_no_diversity_terms():
+-    """Every identifier in the algorithm code (names, attributes, functions, arguments, imports)."""
+-    import ast
+-    pattern = re.compile(r"boltzmann|diversity|emd|wasserstein|novelty|reliab", re.IGNORECASE)
+-    for rel in ("server/fedasync.py", "server/scheduler.py", "runtime/run_fedasync.py", "runtime/clients.py"):
+-        with open(os.path.join(ROOT, rel), encoding="utf-8") as fh:
+-            tree = ast.parse(fh.read())
+-        names = set()
+-        for node in ast.walk(tree):
+-            names.update(v for v in (getattr(node, "id", None), getattr(node, "attr", None), getattr(node, "name", None),
+-                                     getattr(node, "arg", None), getattr(node, "module", None)) if isinstance(v, str))
+-        assert not [n for n in names if pattern.search(n)], rel
++"""Test 0: identical experimental conditions and no Novelty / diversity code.
++
++* Model, data, cache, loss, evaluation and monitoring files are byte-identical to resnet50_fedavg_textbook.
++* The client files are byte-identical to resnet50_fedprox_textbook (textbook FedAvg's client plus the
++  optional proximal term, which is FedAsync's worker regulariser).
++* The config sections shared with textbook FedAvg have identical values.
++* No selector, straggler window, diversity (EMD) or aggregation module from the Novelty code is present,
++  and importing the runner imports none of them.
++"""
++import hashlib
++import os
++import re
++import subprocess
++import sys
++
++import pytest
++import yaml
++
++ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
++FEDAVG = os.path.abspath(os.path.join(ROOT, "..", "resnet50_fedavg_textbook"))
++FEDPROX = os.path.abspath(os.path.join(ROOT, "..", "resnet50_fedprox_textbook"))
++SAME_AS_FEDAVG = ["models/model.py", "client/dataset.py", "client/focal_loss.py", "runtime/image_cache.py",
++                  "runtime/config.py", "runtime/resources.py", "evaluate.py", "evaluation/evaluate_checkpoint.py",
++                  "hospital_registry.py", "monitoring/checkpointing.py", "monitoring/experiment_logging.py",
++                  "monitoring/param_hash.py", "monitoring/subgroup_metrics.py", "tests/conftest.py"]
++SAME_AS_FEDPROX = ["client/client.py", "client/local_trainer.py", "client/proximal.py"]
++FORBIDDEN_FILES = ["emd.py", "server/selector.py", "server/straggler.py", "server/aggregation.py", "server/strategy.py"]
++FORBIDDEN_MODULES = ["emd", "server.selector", "server.straggler", "server.aggregation", "server.strategy"]
++
++
++def sha(path):
++    with open(path, "rb") as fh:
++        return hashlib.sha256(fh.read()).hexdigest()
++
++
++@pytest.mark.parametrize("rel", SAME_AS_FEDAVG)
++def test_identical_to_textbook_fedavg(rel):
++    assert sha(os.path.join(ROOT, rel)) == sha(os.path.join(FEDAVG, rel))
++
++
++@pytest.mark.parametrize("rel", SAME_AS_FEDPROX)
++def test_client_identical_to_textbook_fedprox(rel):
++    assert sha(os.path.join(ROOT, rel)) == sha(os.path.join(FEDPROX, rel))
++
++
++def test_fedprox_client_differs_from_fedavg_client_only_by_the_proximal_term():
++    """local_trainer.py: with global_reference None the step is textbook FedAvg's (FedProx folder test)."""
++    with open(os.path.join(ROOT, "client", "local_trainer.py"), encoding="utf-8") as fh:
++        text = fh.read()
++    assert "if global_reference is None:\n            objective = loss" in text
++    assert "objective = loss + penalty" in text
++
++
++def test_shared_config_values(cfg):
++    with open(os.path.join(ROOT, "configs", "experiment_config.yaml"), encoding="utf-8") as fh:
++        here = yaml.safe_load(fh)
++    with open(os.path.join(FEDAVG, "configs", "experiment_config.yaml"), encoding="utf-8") as fh:
++        base = yaml.safe_load(fh)
++    for section in ("data", "local_training", "model", "runtime", "reference_constants"):
++        assert here[section] == base[section], section
++    assert here["experiment"]["seed"] == base["experiment"]["seed"] == 42
++    assert here["federation"]["local_epochs"] == base["federation"]["local_epochs"] == 5
++    assert here["federation"]["num_clients"] == base["federation"]["num_clients"] == 10
++    assert here["fedasync"]["total_dispatches"] == base["federation"]["num_server_rounds"] * base["federation"]["clients_per_round"]
++    assert here["fedasync"]["concurrency"] == base["federation"]["clients_per_round"]
++    assert here["fedasync"] == {"total_dispatches": 300, "concurrency": 6, "scheduler": "uniform_idle", "alpha": 0.6,
++                                "staleness_function": "hinge", "staleness_a": 10, "staleness_b": 4, "rho": 0.005,
++                                "reject_stale": False, "eval_every_updates": 6, "arrival_time": "novelty_lognormal",
++                                "drain_in_flight_at_budget": True}
++    # user decision 2026-11-21: failures as in every other folder, FedStrag's handling rule (paper is silent)
++    assert here["environment"] == {"kind": "novelty_simulate_response", "failure": "novelty_beta_bernoulli",
++                                   "failure_timing": "after_local_training",
++                                   "failed_job_duration": "tier_lognormal_child_stream",
++                                   "failure_handling": "drop_no_retry_no_penalty", "trace_stream": 7921,
++                                   "trace_seed": 42}
++    assert os.path.isdir(cfg["data"]["cache_dir"])
++
++
++@pytest.mark.parametrize("rel", FORBIDDEN_FILES)
++def test_no_novelty_or_diversity_files(rel):
++    assert not os.path.exists(os.path.join(ROOT, rel))
++
++
++def test_runner_imports_no_novelty_or_diversity_module():
++    code = ("import sys, runtime.run_fedasync; bad = [m for m in %r if m in sys.modules]; "
++            "print('BAD', bad); sys.exit(1 if bad else 0)") % (FORBIDDEN_MODULES,)
++    out = subprocess.run([sys.executable, "-c", code], cwd=ROOT, capture_output=True, text=True)
++    assert out.returncode == 0, out.stdout + out.stderr
++
++
++def test_server_code_has_no_diversity_terms():
++    """Every identifier in the algorithm code (names, attributes, functions, arguments, imports)."""
++    import ast
++    pattern = re.compile(r"boltzmann|diversity|emd|wasserstein|novelty|reliab", re.IGNORECASE)
++    for rel in ("server/fedasync.py", "server/scheduler.py", "runtime/run_fedasync.py", "runtime/clients.py"):
++        with open(os.path.join(ROOT, rel), encoding="utf-8") as fh:
++            tree = ast.parse(fh.read())
++        names = set()
++        for node in ast.walk(tree):
++            names.update(v for v in (getattr(node, "id", None), getattr(node, "attr", None), getattr(node, "name", None),
++                                     getattr(node, "arg", None), getattr(node, "module", None)) if isinstance(v, str))
++        assert not [n for n in names if pattern.search(n)], rel
+diff --git a/resnet50_fedasync/tests/test_01_model_and_data.py b/resnet50_fedasync/tests/test_01_model_and_data.py
+index 5dcda96..1a1f7a9 100644
+--- a/resnet50_fedasync/tests/test_01_model_and_data.py
++++ b/resnet50_fedasync/tests/test_01_model_and_data.py
+@@ -28,17 +28,16 @@ def model():
+ def batch(n=4):
+     g = torch.Generator().manual_seed(1)
+     image = torch.randn(n, 3, 224, 224, generator=g)
+-    meta = torch.zeros(n, 13)
++    meta = torch.zeros(n, MelanomaDataset.METADATA_DIM)
+     rows = torch.arange(n)
+     meta[rows, rows % 6] = 1              # varied rows: identical rows have zero BatchNorm variance
+     meta[rows, 6 + rows % 3] = 1
+-    meta[rows, 9 + rows % 4] = 1
+     return image, meta
+ 
+ 
+ def test_01_model_initialisation(model):
+     assert len(model.state_dict()) == 329
+-    assert sum(p.numel() for p in model.parameters()) == 23_515_298
++    assert sum(p.numel() for p in model.parameters()) == 23_515_042   # 9 metadata inputs (no confirm type)
+     assert all(p.requires_grad for p in model.parameters())
+     assert model.classifier.in_features == 2080 and model.classifier.out_features == 2
+     assert model.dropout.p == 0.3
+@@ -65,7 +64,7 @@ def test_03_metadata_mlp(model):
+     assert out.shape == (4, 32) and (out >= 0).all()
+     layers = [type(m).__name__ for m in MetadataMLP().network]
+     assert layers == ["Linear", "BatchNorm1d", "ReLU", "Linear", "ReLU"]
+-    assert model.metadata_mlp.network[0].in_features == 13
++    assert model.metadata_mlp.network[0].in_features == MelanomaDataset.METADATA_DIM == 9
+     assert model.metadata_mlp.network[0].out_features == 64
+     assert model.metadata_mlp.network[3].out_features == 32
+ 

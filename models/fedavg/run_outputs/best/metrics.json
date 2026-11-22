@@ -1,0 +1,19 @@
+{
+  "checkpoint": "/workspace/six_models_dgmm/src_resnet50-fedavg-textbook/resnet50_fedavg_textbook/checkpoints/fedavg-dgmm-seed42/best_global_model.pth",
+  "accuracy": 0.944003343083995,
+  "precision": 0.8283062645011601,
+  "recall": 0.8561151079136691,
+  "f1": 0.8419811320754716,
+  "roc_auc": 0.9720919620578841,
+  "sensitivity": 0.8561151079136691,
+  "specificity": 0.9625506072874493,
+  "ppv": 0.8283062645011601,
+  "npv": 0.9694189602446484,
+  "balanced_accuracy": 0.9093328576005593,
+  "mcc": 0.8081276456417639,
+  "pr_auc": 0.9216688234059529,
+  "tn": 1902.0,
+  "fp": 74.0,
+  "fn": 60.0,
+  "tp": 357.0
+}

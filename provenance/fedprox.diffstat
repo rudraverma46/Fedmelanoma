@@ -1,0 +1,17 @@
+ resnet50_fedprox_textbook/client/client.py         |  6 ++--
+ resnet50_fedprox_textbook/client/dataset.py        | 39 ++++++++--------------
+ .../configs/experiment_config.yaml                 |  6 ++--
+ resnet50_fedprox_textbook/emd.py                   | 27 ++++-----------
+ resnet50_fedprox_textbook/evaluate.py              |  9 +++--
+ .../evaluation/evaluate_checkpoint.py              |  5 ++-
+ resnet50_fedprox_textbook/hospital_registry.py     | 22 +++++-------
+ resnet50_fedprox_textbook/models/model.py          | 10 ++++--
+ resnet50_fedprox_textbook/monitoring/plotting.py   |  4 +--
+ .../monitoring/subgroup_metrics.py                 | 13 +++-----
+ resnet50_fedprox_textbook/runtime/image_cache.py   | 10 ++++--
+ resnet50_fedprox_textbook/runtime/resources.py     | 13 ++++++--
+ resnet50_fedprox_textbook/server/server.py         |  3 +-
+ resnet50_fedprox_textbook/server/strategy.py       |  9 +----
+ .../tests/test_01_model_and_data.py                |  7 ++--
+ .../tests/test_03_real_round.py                    |  4 +--
+ 16 files changed, 82 insertions(+), 105 deletions(-)

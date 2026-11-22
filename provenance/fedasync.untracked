@@ -1,0 +1,2 @@
+tests/test_05_failures.py
+tools/dry_run_schedule.py

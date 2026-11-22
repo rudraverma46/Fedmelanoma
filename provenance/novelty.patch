@@ -1,0 +1,70 @@
+diff --git a/RESNET50_NOVELTY MODEL/configs/experiment_config.yaml b/RESNET50_NOVELTY MODEL/configs/experiment_config.yaml
+index 8a9d0f6..14f2a71 100644
+--- a/RESNET50_NOVELTY MODEL/configs/experiment_config.yaml	
++++ b/RESNET50_NOVELTY MODEL/configs/experiment_config.yaml	
+@@ -5,13 +5,13 @@
+ # defaults and nothing here overrides them.
+ 
+ experiment:
+-  run_id: resnet50-seed42
++  run_id: novelty-dgmm-seed42
+   seed: 42                      # server/server.py default (Blueprint s10 system.seed)
+ 
+ data:
+   # Read-only. The same hospital_partitions the reference expects at ./hospital_partitions.
+-  partitions_root: ../../without_federated/client/hospital_partitions
+-  cache_dir: cache
++  partitions_root: /workspace/hospital_two_feature/fed_ready/3_Dirichlet_GMM   # Dirichlet-GMM, diagnosis_confirm_type removed (friend's fed_ready, read-only)
++  cache_dir: /workspace/six_models_dgmm/cache_dgmm   # shared image cache built 2026-11-21 (read-only during training)
+ 
+ federation:                     # reference pyproject.toml [tool.flwr.app.config]
+   num_server_rounds: 50
+diff --git a/RESNET50_NOVELTY MODEL/evaluation/evaluate_checkpoint.py b/RESNET50_NOVELTY MODEL/evaluation/evaluate_checkpoint.py
+index c526c66..781eaec 100644
+--- a/RESNET50_NOVELTY MODEL/evaluation/evaluate_checkpoint.py	
++++ b/RESNET50_NOVELTY MODEL/evaluation/evaluate_checkpoint.py	
+@@ -36,6 +36,9 @@ REQUESTED_THRESHOLDS = [0.1, 0.3, 0.5, 0.7, 0.9]
+ def main() -> None:
+     checkpoint, out_dir = os.path.abspath(sys.argv[1]), os.path.abspath(sys.argv[2])
+     cfg = load_config()
++    from hospital_registry import discover_hospitals
++    # evaluate.py hard-codes the old hospital names; use this partitioning's own (as the friend's evaluate_run)
++    evaluate.HOSPITAL_NAMES = discover_hospitals(cfg["data"]["partitions_root"])
+     os.makedirs(out_dir, exist_ok=True)
+     os.chdir(out_dir)
+     captured = {}
+diff --git a/RESNET50_NOVELTY MODEL/runtime/resources.py b/RESNET50_NOVELTY MODEL/runtime/resources.py
+index b85acf1..38f24a9 100644
+--- a/RESNET50_NOVELTY MODEL/runtime/resources.py	
++++ b/RESNET50_NOVELTY MODEL/runtime/resources.py	
+@@ -1,4 +1,7 @@
+-"""GPU, RAM and Windows commit sampling, the low-commit safe stop, and keeping the PC awake."""
++"""GPU, RAM and commit sampling, the low-commit safe stop, and keeping the PC awake.
++
++Cross-platform (2026-11-19, for running on a remote Linux GPU server): on Windows the values are the original Windows
++commit figures; elsewhere commit = RAM + swap from psutil. No effect on the algorithm."""
+ from __future__ import annotations
+ 
+ import csv
+@@ -24,6 +27,10 @@ class _MemoryStatus(ctypes.Structure):
+ 
+ 
+ def memory_snapshot() -> Dict[str, float]:
++    if os.name != "nt":
++        vm, sw, gb = psutil.virtual_memory(), psutil.swap_memory(), 2**30
++        return {"ram_free_gb": vm.available / gb, "commit_limit_gb": (vm.total + sw.total) / gb,
++                "commit_free_gb": (vm.available + sw.free) / gb}
+     status = _MemoryStatus()
+     status.dwLength = ctypes.sizeof(_MemoryStatus)
+     ctypes.windll.kernel32.GlobalMemoryStatusEx(ctypes.byref(status))
+@@ -41,7 +48,9 @@ def gpu_snapshot() -> Dict[str, float]:
+ 
+ 
+ def keep_awake(enable: bool) -> None:
+-    """Stop Windows from sleeping during the run; released when the process ends."""
++    """Stop Windows from sleeping during the run; released when the process ends. No-op elsewhere."""
++    if os.name != "nt":
++        return
+     flags = ES_CONTINUOUS | (ES_SYSTEM_REQUIRED if enable else 0)
+     ctypes.windll.kernel32.SetThreadExecutionState(flags)
+ 

@@ -1,0 +1,19 @@
+{
+  "checkpoint": "/workspace/six_models_dgmm/src_resnet50-no-confirm-type/RESNET50_NOVELTY MODEL/checkpoints/novelty-dgmm-seed42/global_round_0050.pth",
+  "accuracy": 0.9486000835770999,
+  "precision": 0.8730964467005076,
+  "recall": 0.8249400479616307,
+  "f1": 0.8483353884093712,
+  "roc_auc": 0.9687229973106536,
+  "sensitivity": 0.8249400479616307,
+  "specificity": 0.9746963562753036,
+  "ppv": 0.8730964467005076,
+  "npv": 0.9634817408704353,
+  "balanced_accuracy": 0.8998182021184671,
+  "mcc": 0.8178987552089075,
+  "pr_auc": 0.9075949929388551,
+  "tn": 1926.0,
+  "fp": 50.0,
+  "fn": 73.0,
+  "tp": 344.0
+}

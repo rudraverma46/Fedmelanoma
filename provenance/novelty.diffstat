@@ -1,0 +1,4 @@
+ RESNET50_NOVELTY MODEL/configs/experiment_config.yaml    |  6 +++---
+ RESNET50_NOVELTY MODEL/evaluation/evaluate_checkpoint.py |  3 +++
+ RESNET50_NOVELTY MODEL/runtime/resources.py              | 13 +++++++++++--
+ 3 files changed, 17 insertions(+), 5 deletions(-)

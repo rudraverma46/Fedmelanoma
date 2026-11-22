@@ -1,0 +1,19 @@
+{
+  "checkpoint": "/workspace/six_models_dgmm/src_resnet50-fedprox-textbook/resnet50_fedprox_textbook/checkpoints/fedprox-dgmm-seed42/global_round_0050.pth",
+  "accuracy": 0.9477643125783536,
+  "precision": 0.8578431372549019,
+  "recall": 0.8393285371702638,
+  "f1": 0.8484848484848485,
+  "roc_auc": 0.9593442654783056,
+  "sensitivity": 0.8393285371702638,
+  "specificity": 0.9706477732793523,
+  "ppv": 0.8578431372549019,
+  "npv": 0.9662468513853905,
+  "balanced_accuracy": 0.904988155224808,
+  "mcc": 0.8170026734823638,
+  "pr_auc": 0.900147336762237,
+  "tn": 1918.0,
+  "fp": 58.0,
+  "fn": 67.0,
+  "tp": 350.0
+}

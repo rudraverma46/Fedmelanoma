@@ -1,0 +1,61 @@
+# resnet50_fedlesscan_novelty_env: copy of resnet50_fedlesscan with the novelty straggler environment (see server/fedlesscan.py).
+# FedLesScan. Copied from resnet50_fedavg_textbook. Differences: run_id, clients_per_round comment, and the
+# fedlesscan section. Model, data, local training and runtime values are unchanged.
+# Textbook FedAvg. Copied from resnet 50_novelty_fedavg. Differences: run_id, cache_dir, and no selector or
+# straggler constants, because neither is used.
+# ResNet-50 Novelty + standard FedAvg. Copied from the Novelty reference. Differences: run_id, the
+# relative partitions_root (same folder on disk), and no aggregation constants, because FedAvg has none.
+# ResNet-50 experiment configuration.
+# Every value below is the value the EfficientNet-B3 reference EXECUTES (commit 1351f63), not
+# what its blueprint says; tests/test_00_reference_integrity.py asserts they match the code.
+# Keys under `reference_constants` are documentation: the vendored modules use their own
+# defaults and nothing here overrides them.
+
+experiment:
+  run_id: fedlesscan-dgmm-seed42
+  seed: 42                      # server/server.py default (Blueprint s10 system.seed)
+
+data:
+  # Read-only. The same hospital_partitions the reference expects at ./hospital_partitions.
+  partitions_root: /workspace/hospital_two_feature/fed_ready/3_Dirichlet_GMM   # Dirichlet-GMM, diagnosis_confirm_type removed (friend's fed_ready, read-only)
+  cache_dir: /workspace/six_models_dgmm/cache_dgmm   # shared image cache built 2026-11-21 (read-only during training)
+
+federation:                     # reference pyproject.toml [tool.flwr.app.config]
+  num_server_rounds: 50
+  clients_per_round: 6          # FedLesScan selects 6 of 10; selected fixed stragglers fail
+  local_epochs: 5
+  num_clients: 10
+
+fedlesscan:                     # official code, commit 039f964; values chosen by the user 2026-11-10
+  round_deadline_seconds: 30    # novelty_env (user, 2026-11-19): fixed deadline on SIMULATED latency; later = late update
+  renormalise_aggregation: false  # official formula kept (user): late updates shrink the aggregated model
+  allowed_stragglers: 6         # a round never aborts
+  staleness_tolerance: 2        # official aggregator.hyperparams.tolerance; results with round_id >= t - 2
+  # Other constants are module constants in server/fedlesscan.py: EMA alpha 0.5 (training time),
+  # missed-round EMA alpha 0.8 x 1.5 x max training time, DBSCAN min_samples 2, eps 0.01..1.91 step 0.1,
+  # Calinski-Harabasz model selection, cooldown 1 then doubled.
+
+local_training:                 # reference client/client.py defaults
+  batch_size: 20
+  learning_rate: 1.0e-4
+  weight_decay: 1.0e-4
+  focal_gamma: 2.0
+
+model:
+  backbone: resnet50            # the only intended change
+  feature_dim: 2048             # EfficientNet-B3: 1536
+  metadata_dim: 32
+  fusion_dim: 2080              # EfficientNet-B3: 1568
+  dropout: 0.3
+  num_classes: 2
+
+runtime:                        # execution only; no effect on the algorithm
+  dataloader_workers: 0         # reference 4; see documentation/IMPLEMENTATION_MAPPING.md
+  pin_memory: true
+  # Safe stop if free commit stays below this for 30 s. 0.2, not 0.4: the verification run dipped to
+  # 0.35 GB while Windows grew the page file (limit 18.73 -> 19.74 GB) and then recovered.
+  commit_floor_gb: 0.2
+  monitor_interval_seconds: 10
+
+reference_constants:
+  evaluation_thresholds: [0.30, 0.40, 0.50, 0.60, 0.70]

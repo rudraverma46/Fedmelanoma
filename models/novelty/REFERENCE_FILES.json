@@ -1,0 +1,29 @@
+{
+  "repository": "https://github.com/rudraverma46/Fedmelanoma",
+  "branch": "federated_efficientnetb3",
+  "commit": "1351f63b37c022a252c18960098eb388bb2f723a",
+  "files": {
+    "client/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "client/client.py": "37c6668ba6a218adb0b41b609573ce14b709772af35de9d3d394c4d6066e9651",
+    "client/dataset.py": "3ed6a61c0865db801718cc4083ccc9c183beae47d7f642418a28b76c12fdacfb",
+    "client/focal_loss.py": "bc3514189883ec2eb874a9551efe6f9ce648cf53b38d2f1c99fe398d4acb4ab3",
+    "client/local_trainer.py": "aaf1d1fe8ca8a65b8ae8136431b71cea0308a7a305e435d4da8768ba2ccb3a2b",
+    "server/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "server/aggregation.py": "056b0be178203d6fc7b1dfe2324709cc13305cb6e7fa29a72734a3846cf28bdf",
+    "server/selector.py": "95c6df32c84cdf8eecc4b4f4a8c1791d0f591e082a529b1d44073ead43d0c35e",
+    "server/server.py": "76134366e2628448a04a2fe8738da5ae6dfd72c1de9ea05b44930a334b068984",
+    "server/straggler.py": "6d7d5f38c7ee793e1ec40932982d58af15d04aa53580d6c385316b9981376f1c",
+    "server/strategy.py": "d4f16c1cab4b661ec182c4035a79fff48deaf384a5c53d8af444c5a0e0228363",
+    "monitoring/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "monitoring/checkpointing.py": "4d6b7c9cfdf259c857ffd30c262941af6f1d6d37809da223cd4c6944936eb9f4",
+    "monitoring/experiment_logging.py": "c21453f71c85e8efefe28345ccfd454b28645cf3a8c6cefb4ed15bf0551837e9",
+    "monitoring/param_hash.py": "075041275b5f10c3337f1f161c4d6fc1d9010a3cd416cc7c86927dda8fc1eb1b",
+    "monitoring/plotting.py": "65865136a123e560c9ee4c46b19cc004bc214ecb1cbfc66c3c679fce31230803",
+    "monitoring/straggler_logging.py": "4a48431686e4ef9ef6eca6b495051fb1e1fedd7b97769049080d967c9c0e6d26",
+    "monitoring/subgroup_metrics.py": "eafb507592649ad21148fcf51098c3e497de10429dd4bbdeb73732fbe49076dd",
+    "models/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "emd.py": "b8cad30971a163aebbd592e22d3a67a13775471eb64aeb5c06f4050428a483b7",
+    "hospital_registry.py": "446fa8fdba99c717bc84c6a5ab00387c5cec07727f2c13897f7d5afbb7dd9db9",
+    "evaluate.py": "6e9f2e450e502fa906837a0bd9c92b7ce695741916191a18ad2c7f350fe35c2e"
+  }
+}

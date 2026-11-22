@@ -1,0 +1,662 @@
+diff --git a/resnet50_fedprox_textbook/client/client.py b/resnet50_fedprox_textbook/client/client.py
+index bc64167..33e513b 100644
+--- a/resnet50_fedprox_textbook/client/client.py
++++ b/resnet50_fedprox_textbook/client/client.py
+@@ -152,7 +152,7 @@ def _iter_underlying_datasets(dataset) -> Iterator[MelanomaDataset]:
+         yield dataset
+ 
+ 
+-_METADATA_COLUMNS = ["fitzpatrick_skin_type", "image_type", "diagnosis_confirm_type"]
++_METADATA_COLUMNS = ["fitzpatrick_skin_type", "image_type"]
+ 
+ 
+ def _extract_metadata_df(loader: DataLoader) -> pd.DataFrame:
+@@ -376,8 +376,8 @@ class FedMelanomaClient(fl.client.NumPyClient):
+             y_prob already computed locally by evaluate_model() above.
+           - `subgroup_confusion_counts_json`: this client's LOCAL
+             per-category confusion-matrix counts (tn/fp/fn/tp -- small
+-            integers) for the blueprint's three metadata axes (skin
+-            type, imaging modality, confirmation type), via
++            integers) for the metadata axes (skin type, imaging
++            modality), via
+             monitoring.subgroup_metrics.local_all_axes_confusion_counts.
+             Privacy constraint: raw metadata/images/labels never leave
+             this method; only these aggregate counts are serialised.
+diff --git a/resnet50_fedprox_textbook/client/dataset.py b/resnet50_fedprox_textbook/client/dataset.py
+index a793bd5..a5a2194 100644
+--- a/resnet50_fedprox_textbook/client/dataset.py
++++ b/resnet50_fedprox_textbook/client/dataset.py
+@@ -15,7 +15,7 @@ class MelanomaDataset(Dataset):
+       1. Row caching           – df.to_dict("records") eliminates per-sample iloc overhead.
+       2. Label tensor          – diagnosis_1 decoded into a single contiguous torch.long
+                                  tensor at init; __getitem__ indexes it with zero allocation.
+-      3. Metadata tensor       – encode_metadata() results stacked into one (N, 13)
++      3. Metadata tensor       – encode_metadata() results stacked into one (N, METADATA_DIM)
+                                  float32 tensor; __getitem__ returns a view, not a copy.
+       4. PIL removal           – cv2.resize() replaces ToPILImage + Resize, cutting one
+                                  redundant format conversion per sample.
+@@ -33,12 +33,9 @@ class MelanomaDataset(Dataset):
+         "clinical: close-up",
+         "clinical: overview",
+     ]
+-    _CONFIRM_TYPES: List[str] = [
+-        "histopathology",
+-        "serial imaging showing no change",
+-        "single image expert consensus",
+-        "single contributor clinical assessment",
+-    ]
++    # diagnosis_confirm_type is deliberately not used: every malignant image is
++    # histopathology-confirmed, so the column gives the label away.
++    METADATA_DIM: int = len(_SKIN_TYPES) + len(_IMAGE_TYPES)
+ 
+     def __init__(self, csv_file: str, image_dir: str) -> None:
+         self.image_dir = image_dir
+@@ -88,12 +85,12 @@ class MelanomaDataset(Dataset):
+         #                                                                    #
+         # Previously a List[torch.Tensor] – N separate heap objects, each  #
+         # with its own storage pointer, reference count, and metadata       #
+-        # header.  torch.stack() merges them into one contiguous (N, 13)   #
++        # header.  torch.stack() merges them into one contiguous (N, 9)    #
+         # float32 tensor allocated in a single memory block.                #
+         #                                                                    #
+         # Benefits vs. List[torch.Tensor]:                                  #
+         #   • One allocation instead of N allocations → less GC pressure.  #
+-        #   • All 13-element rows are stored adjacently in memory; when the #
++        #   • All 9-element rows are stored adjacently in memory; when the  #
+         #     DataLoader fetches indices that are close together (e.g.      #
+         #     sequential or within the same batch), the CPU cache already   #
+         #     holds nearby rows, reducing cache misses.                     #
+@@ -101,8 +98,8 @@ class MelanomaDataset(Dataset):
+         #     tensor, returning a view (not a copy) – zero allocation on    #
+         #     the hot path.                                                 #
+         #                                                                    #
+-        # Shape:  (N, 13)   dtype: torch.float32  – identical per-row      #
+-        # values to the original list of 1-D (13,) tensors.                #
++        # Shape:  (N, 9)    dtype: torch.float32  – identical per-row      #
++        # values to the original list of 1-D (9,) tensors.                 #
+         #                                                                    #
+         # DataLoader compatibility: same fork/spawn read-only sharing as   #
+         # before; contiguous layout also makes shared-memory transfer       #
+@@ -110,7 +107,7 @@ class MelanomaDataset(Dataset):
+         # ---------------------------------------------------------------- #
+         self.metadata_cache: torch.Tensor = torch.stack(
+             [self.encode_metadata(row) for row in self.rows]
+-        )  # shape: (N, 13), dtype: torch.float32
++        )  # shape: (N, METADATA_DIM), dtype: torch.float32
+ 
+         # ---------------------------------------------------------------- #
+         # Optimization 4 – Remove PIL conversion                            #
+@@ -135,14 +132,11 @@ class MelanomaDataset(Dataset):
+     # ------------------------------------------------------------------ #
+     def encode_metadata(self, row: Dict[str, Any]) -> torch.Tensor:
+         """
+-        One-hot encode fitzpatrick_skin_type, image_type, and
+-        diagnosis_confirm_type into a single 13-dim float32 tensor.
+-
+-        Logic is identical to the original implementation.
++        One-hot encode fitzpatrick_skin_type and image_type into a single
++        METADATA_DIM-dim float32 tensor.
+         """
+         skin    = [0] * len(self._SKIN_TYPES)
+         image   = [0] * len(self._IMAGE_TYPES)
+-        confirm = [0] * len(self._CONFIRM_TYPES)
+ 
+         try:
+             skin[self._SKIN_TYPES.index(str(row["fitzpatrick_skin_type"]).strip())] = 1
+@@ -154,12 +148,7 @@ class MelanomaDataset(Dataset):
+         except (ValueError, KeyError):
+             pass
+ 
+-        try:
+-            confirm[self._CONFIRM_TYPES.index(str(row["diagnosis_confirm_type"]).strip())] = 1
+-        except (ValueError, KeyError):
+-            pass
+-
+-        return torch.tensor(skin + image + confirm, dtype=torch.float32)
++        return torch.tensor(skin + image, dtype=torch.float32)
+ 
+     # ------------------------------------------------------------------ #
+     #  Dataset protocol                                                    #
+@@ -197,8 +186,8 @@ class MelanomaDataset(Dataset):
+         image = self.transform(image)            # ToTensor + Normalize
+ 
+         # ---------------------------------------------------------------- #
+-        # Opt 3 – View into the (N, 13) stacked tensor; zero allocation.   #
+-        #         Returns a 1-D (13,) float32 tensor – same shape & dtype  #
++        # Opt 3 – View into the (N, 9) stacked tensor; zero allocation.    #
++        #         Returns a 1-D (9,) float32 tensor – same shape & dtype   #
+         #         as the original per-row tensors.                         #
+         # ---------------------------------------------------------------- #
+         metadata = self.metadata_cache[idx]   # view, not a copy
+diff --git a/resnet50_fedprox_textbook/configs/experiment_config.yaml b/resnet50_fedprox_textbook/configs/experiment_config.yaml
+index b833bbb..d8f3b40 100644
+--- a/resnet50_fedprox_textbook/configs/experiment_config.yaml
++++ b/resnet50_fedprox_textbook/configs/experiment_config.yaml
+@@ -8,13 +8,13 @@
+ # defaults and nothing here overrides them.
+ 
+ experiment:
+-  run_id: resnet50-fedprox-textbook-mu0.01-seed42
++  run_id: fedprox-dgmm-seed42
+   seed: 42                      # server/server.py default (Blueprint s10 system.seed)
+ 
+ data:
+   # Read-only. The same hospital_partitions the reference expects at ./hospital_partitions.
+-  partitions_root: ../without_federated/client/hospital_partitions
+-  cache_dir: ../resnet 50_novelty_fedavg/cache   # opened read-only (numpy mmap_mode="r")
++  partitions_root: /workspace/hospital_two_feature/fed_ready/3_Dirichlet_GMM   # Dirichlet-GMM, diagnosis_confirm_type removed (friend's fed_ready, read-only)
++  cache_dir: /workspace/six_models_dgmm/cache_dgmm   # shared image cache built 2026-11-21 (read-only during training)
+ 
+ federation:                     # reference pyproject.toml [tool.flwr.app.config]
+   num_server_rounds: 50
+diff --git a/resnet50_fedprox_textbook/emd.py b/resnet50_fedprox_textbook/emd.py
+index 29a83dc..f229424 100644
+--- a/resnet50_fedprox_textbook/emd.py
++++ b/resnet50_fedprox_textbook/emd.py
+@@ -13,14 +13,6 @@ class EarthMoverDistance:
+         [0.70, 0.45, 0.00]
+     ])
+ 
+-    # Epistemic Cost Matrix for Confirmation Type
+-    CONFIRMATION_COST_MATRIX = np.array([
+-        [0.0, 1/3, 2/3, 1.0],
+-        [1/3, 0.0, 1/3, 2/3],
+-        [2/3, 1/3, 0.0, 1/3],
+-        [1.0, 2/3, 1/3, 0.0]
+-    ])
+-
+     @staticmethod
+     def wasserstein_1d(global_dist, client_dist):
+         """
+@@ -92,14 +84,15 @@ class EarthMoverDistance:
+         client_fitzpatrick,
+         global_modality,
+         client_modality,
+-        global_confirmation,
+-        client_confirmation,
+         fitz_weight=0.40,
+-        modality_weight=0.35,
+-        confirmation_weight=0.25
++        modality_weight=0.35
+     ):
+         """
+-        Computes raw diversity score for a client.
++        Computes raw diversity score for a client from skin type and imaging modality.
++
++        The confirmation-type axis (weight 0.25) is removed because diagnosis_confirm_type
++        leaks the label; D_i is max-normalised afterwards, so the remaining weights act as
++        0.40 / 0.75 and 0.35 / 0.75.
+         """
+ 
+         fitz_distance = cls.wasserstein_1d(
+@@ -113,21 +106,13 @@ class EarthMoverDistance:
+             cls.MODALITY_COST_MATRIX
+         )
+ 
+-        confirmation_distance = cls.optimal_transport_distance(
+-            global_confirmation,
+-            client_confirmation,
+-            cls.CONFIRMATION_COST_MATRIX
+-        )
+-
+         diversity_raw = (
+             fitz_weight * fitz_distance
+             + modality_weight * modality_distance
+-            + confirmation_weight * confirmation_distance
+         )
+ 
+         return {
+             "fitzpatrick_distance": fitz_distance,
+             "modality_distance": modality_distance,
+-            "confirmation_distance": confirmation_distance,
+             "raw_diversity_score": diversity_raw
+         }
+\ No newline at end of file
+diff --git a/resnet50_fedprox_textbook/evaluate.py b/resnet50_fedprox_textbook/evaluate.py
+index 95d06f6..a7db416 100644
+--- a/resnet50_fedprox_textbook/evaluate.py
++++ b/resnet50_fedprox_textbook/evaluate.py
+@@ -106,8 +106,8 @@ def build_test_loader(
+     Returns:
+       loader          : the combined DataLoader (unchanged behavior)
+       loaded          : flat list of hospital names actually loaded
+-      metadata_df     : DataFrame with columns fitzpatrick_skin_type,
+-                         image_type, diagnosis_confirm_type, in the exact
++      metadata_df     : DataFrame with columns fitzpatrick_skin_type and
++                         image_type, in the exact
+                          same row order run_inference()/evaluate_model()
+                          will produce y_true/y_pred/y_prob in (loader uses
+                          shuffle=False, so ConcatDataset order == this
+@@ -154,7 +154,7 @@ def build_test_loader(
+         pin_memory=True,
+     )
+ 
+-    metadata_columns = ["fitzpatrick_skin_type", "image_type", "diagnosis_confirm_type"]
++    metadata_columns = ["fitzpatrick_skin_type", "image_type"]
+     metadata_df = pd.concat(
+         [ds.df[metadata_columns] for ds in test_datasets], ignore_index=True
+     )
+@@ -672,7 +672,7 @@ def main() -> None:
+         compute_subgroup_metrics,
+     )
+ 
+-    print("\nComputing subgroup metrics (skin type / imaging modality / confirmation type) …")
++    print("\nComputing subgroup metrics (skin type / imaging modality) …")
+     subgroup_tables = compute_all_subgroup_axes(
+         y_true, y_pred, y_prob, metadata_df, positive_class_idx=POSITIVE_CLASS_IDX
+     )
+@@ -682,7 +682,6 @@ def main() -> None:
+     axis_to_filename = {
+         "skin_type": "skin_type_metrics.csv",
+         "image_type": "image_type_metrics.csv",
+-        "confirm_type": "confirm_type_metrics.csv",
+     }
+     for axis, filename in axis_to_filename.items():
+         path = os.path.join("results/metrics", filename)
+diff --git a/resnet50_fedprox_textbook/evaluation/evaluate_checkpoint.py b/resnet50_fedprox_textbook/evaluation/evaluate_checkpoint.py
+index 64d8a52..781eaec 100644
+--- a/resnet50_fedprox_textbook/evaluation/evaluate_checkpoint.py
++++ b/resnet50_fedprox_textbook/evaluation/evaluate_checkpoint.py
+@@ -36,6 +36,9 @@ REQUESTED_THRESHOLDS = [0.1, 0.3, 0.5, 0.7, 0.9]
+ def main() -> None:
+     checkpoint, out_dir = os.path.abspath(sys.argv[1]), os.path.abspath(sys.argv[2])
+     cfg = load_config()
++    from hospital_registry import discover_hospitals
++    # evaluate.py hard-codes the old hospital names; use this partitioning's own (as the friend's evaluate_run)
++    evaluate.HOSPITAL_NAMES = discover_hospitals(cfg["data"]["partitions_root"])
+     os.makedirs(out_dir, exist_ok=True)
+     os.chdir(out_dir)
+     captured = {}
+@@ -46,7 +49,7 @@ def main() -> None:
+                     for h in hospital_names]
+         loader = build_loader(ConcatDataset(datasets), batch_size, False, cfg["runtime"]["dataloader_workers"],
+                               cfg["runtime"]["pin_memory"])
+-        columns = ["fitzpatrick_skin_type", "image_type", "diagnosis_confirm_type"]
++        columns = ["fitzpatrick_skin_type", "image_type"]
+         metadata_df = pd.concat([ds.df[columns] for ds in datasets], ignore_index=True)
+         labels = np.concatenate([np.full(len(ds), h, dtype=object) for h, ds in zip(hospital_names, datasets)])
+         captured["ids"] = [row["isic_id"] for ds in datasets for row in ds.rows]
+diff --git a/resnet50_fedprox_textbook/hospital_registry.py b/resnet50_fedprox_textbook/hospital_registry.py
+index 74c8260..60a6396 100644
+--- a/resnet50_fedprox_textbook/hospital_registry.py
++++ b/resnet50_fedprox_textbook/hospital_registry.py
+@@ -13,9 +13,11 @@ derives exactly the inputs server/strategy.py's HospitalConfig needs:
+     n_samples          -- row count of the hospital's local training CSV
+     fitzpatrick_dist   -- P(skin_type)   over client.dataset's 6 categories
+     modality_dist      -- P(image_type)  over client.dataset's 3 categories
+-    confirmation_dist  -- P(confirm_type) over client.dataset's 4 categories
+     tier / latency_*   -- straggler-simulation parameters (see note below)
+ 
++diagnosis_confirm_type is not read: it leaks the label (every malignant image is
++histopathology-confirmed), so it is excluded from the diversity score as well as the model input.
++
+ WHY distributions are computed from metadata_train.csv directly, not from
+ the documented *_distribution.csv files:
+   The expected per-hospital file set (see task spec / blueprint) includes
+@@ -133,14 +135,12 @@ def build_hospital_record(
+     cheap to import, from client/client.py as well).
+ 
+     Returns a dict with keys: n_samples, tier, latency_mu, latency_sigma,
+-    fitzpatrick_dist, modality_dist, confirmation_dist (the last three are
+-    plain Python lists of float, summing to 1.0).
++    fitzpatrick_dist, modality_dist (both plain Python lists of float, summing to 1.0).
+     """
+     df = pd.read_csv(_hospital_metadata_path(hospital, partitions_root))
+ 
+     fitz = _category_distribution(df["fitzpatrick_skin_type"], MelanomaDataset._SKIN_TYPES)
+     modality = _category_distribution(df["image_type"], MelanomaDataset._IMAGE_TYPES)
+-    confirm = _category_distribution(df["diagnosis_confirm_type"], MelanomaDataset._CONFIRM_TYPES)
+ 
+     tier = _TIER_CYCLE[index % len(_TIER_CYCLE)]
+     latency_mu, latency_sigma = _TIER_LATENCY[tier]
+@@ -152,7 +152,6 @@ def build_hospital_record(
+         "latency_sigma": latency_sigma,
+         "fitzpatrick_dist": fitz.tolist(),
+         "modality_dist": modality.tolist(),
+-        "confirmation_dist": confirm.tolist(),
+     }
+ 
+ 
+@@ -162,14 +161,14 @@ def build_hospital_record(
+ 
+ def build_hospital_registry(
+     partitions_root: str = DEFAULT_PARTITIONS_ROOT,
+-) -> Tuple[List[str], List[Dict[str, object]], List[float], List[float], List[float]]:
++) -> Tuple[List[str], List[Dict[str, object]], List[float], List[float]]:
+     """
+     Discover hospitals and build every input server.strategy.FedMelanomaStrategy
+     needs at construction time.
+ 
+     Returns
+     -------
+-    (hospital_names, hospital_records, global_fitzpatrick, global_modality, global_confirmation)
++    (hospital_names, hospital_records, global_fitzpatrick, global_modality)
+ 
+     hospital_records[i] corresponds to hospital_names[i]; that same index
+     is the selector.py client_id FedMelanomaStrategy assigns it (see
+@@ -182,17 +181,16 @@ def build_hospital_registry(
+     distribution -- the reference centroid emd.py's EarthMoverDistance
+     compares each hospital against (blueprint Phase 6: "global centroid").
+ 
+-    Returns ([], [], [], [], []) when hospital_partitions/ is absent or
++    Returns ([], [], [], []) when hospital_partitions/ is absent or
+     empty -- callers decide whether that is fatal for their purpose.
+     """
+     hospitals = discover_hospitals(partitions_root)
+     if not hospitals:
+-        return [], [], [], [], []
++        return [], [], [], []
+ 
+     records: List[Dict[str, object]] = []
+     fitz_rows: List[np.ndarray] = []
+     mod_rows: List[np.ndarray] = []
+-    conf_rows: List[np.ndarray] = []
+     weights: List[float] = []
+ 
+     for idx, hospital in enumerate(hospitals):
+@@ -200,7 +198,6 @@ def build_hospital_registry(
+         records.append(record)
+         fitz_rows.append(np.array(record["fitzpatrick_dist"], dtype=float))
+         mod_rows.append(np.array(record["modality_dist"], dtype=float))
+-        conf_rows.append(np.array(record["confirmation_dist"], dtype=float))
+         weights.append(float(record["n_samples"]))
+ 
+     weights_arr = np.array(weights, dtype=float)
+@@ -213,6 +210,5 @@ def build_hospital_registry(
+ 
+     global_fitz = np.average(np.stack(fitz_rows), axis=0, weights=weights_arr)
+     global_mod = np.average(np.stack(mod_rows), axis=0, weights=weights_arr)
+-    global_conf = np.average(np.stack(conf_rows), axis=0, weights=weights_arr)
+ 
+-    return hospitals, records, global_fitz.tolist(), global_mod.tolist(), global_conf.tolist()
++    return hospitals, records, global_fitz.tolist(), global_mod.tolist()
+diff --git a/resnet50_fedprox_textbook/models/model.py b/resnet50_fedprox_textbook/models/model.py
+index c610091..e566ba0 100644
+--- a/resnet50_fedprox_textbook/models/model.py
++++ b/resnet50_fedprox_textbook/models/model.py
+@@ -4,13 +4,17 @@ This is the only reference file whose content changes. Against the reference:
+   - imports: `timm` -> `torchvision.models`
+   - self.backbone: efficientnet_b3 (num_classes=0) -> resnet50 with fc = Identity
+   - classifier input: 1536 + 32 -> 2048 + 32
+-MetadataMLP, the dropout, forward() and the class names are unchanged, so every vendored
+-module that imports FedMelanomaModel works without edits.
++  - MetadataMLP input: 13 -> 9 (diagnosis_confirm_type removed; it leaks the label)
++The dropout, forward() and the class names are unchanged, so every vendored module that imports
++FedMelanomaModel works without edits.
+ """
+ import torch
+ import torch.nn as nn
+ from torchvision.models import ResNet50_Weights, resnet50
+ 
++# Must equal client.dataset.MelanomaDataset.METADATA_DIM (6 skin types + 3 image types).
++METADATA_DIM = 9
++
+ 
+ class MetadataMLP(nn.Module):
+ 
+@@ -20,7 +24,7 @@ class MetadataMLP(nn.Module):
+ 
+         self.network = nn.Sequential(
+ 
+-            nn.Linear(13, 64),
++            nn.Linear(METADATA_DIM, 64),
+             nn.BatchNorm1d(64),
+             nn.ReLU(),
+ 
+diff --git a/resnet50_fedprox_textbook/monitoring/plotting.py b/resnet50_fedprox_textbook/monitoring/plotting.py
+index 767229d..8fab520 100644
+--- a/resnet50_fedprox_textbook/monitoring/plotting.py
++++ b/resnet50_fedprox_textbook/monitoring/plotting.py
+@@ -351,7 +351,7 @@ def plot_subgroup_bar(subgroup_csv_path: str, metric_col: str, title: str, out_p
+ 
+ def plot_all_subgroup_bars(metrics_dir: str, out_dir: str) -> List[str]:
+     """
+-    Reads results/metrics/{skin_type,image_type,confirm_type}_metrics.csv
++    Reads results/metrics/{skin_type,image_type}_metrics.csv
+     (written by evaluate.py) and produces the sensitivity/AUROC bar charts
+     Requirement 7 names explicitly.
+     """
+@@ -361,8 +361,6 @@ def plot_all_subgroup_bars(metrics_dir: str, out_dir: str) -> List[str]:
+         ("skin_type_metrics.csv", "roc_auc", "ROC-AUC by Fitzpatrick Skin Type", "subgroup_fitzpatrick_auroc.png"),
+         ("image_type_metrics.csv", "sensitivity", "Sensitivity by Imaging Modality", "subgroup_modality_sensitivity.png"),
+         ("image_type_metrics.csv", "roc_auc", "ROC-AUC by Imaging Modality", "subgroup_modality_auroc.png"),
+-        ("confirm_type_metrics.csv", "sensitivity", "Sensitivity by Diagnosis Confirmation Type", "subgroup_diagnosis_sensitivity.png"),
+-        ("confirm_type_metrics.csv", "roc_auc", "ROC-AUC by Diagnosis Confirmation Type", "subgroup_diagnosis_auroc.png"),
+     ]
+     for csv_name, metric, title, out_name in specs:
+         if plot_subgroup_bar(os.path.join(metrics_dir, csv_name), metric, title, os.path.join(out_dir, out_name)):
+diff --git a/resnet50_fedprox_textbook/monitoring/subgroup_metrics.py b/resnet50_fedprox_textbook/monitoring/subgroup_metrics.py
+index dba8774..3d81834 100644
+--- a/resnet50_fedprox_textbook/monitoring/subgroup_metrics.py
++++ b/resnet50_fedprox_textbook/monitoring/subgroup_metrics.py
+@@ -13,9 +13,9 @@ metadata_train.csv/metadata_test.csv schema:
+     fitzpatrick_skin_type  -> I, II, III, IV, V, VI
+     image_type             -> dermoscopic, clinical: close-up,
+                                clinical: overview
+-    diagnosis_confirm_type -> histopathology, serial imaging showing no
+-                               change, single image expert consensus,
+-                               single contributor clinical assessment
++
++diagnosis_confirm_type is not used as a subgroup axis: it leaks the label (every malignant
++image is histopathology-confirmed).
+ 
+ Metric reuse: per-subgroup metrics are computed by calling
+ evaluate.compute_metrics() (unmodified) on the boolean-masked subset,
+@@ -44,7 +44,6 @@ from client.dataset import MelanomaDataset
+ SUBGROUP_AXES: Dict[str, Sequence[str]] = {
+     "skin_type": list(MelanomaDataset._SKIN_TYPES),
+     "image_type": list(MelanomaDataset._IMAGE_TYPES),
+-    "confirm_type": list(MelanomaDataset._CONFIRM_TYPES),
+ }
+ 
+ # Metrics that are mathematically undefined when the subgroup has zero
+@@ -158,7 +157,6 @@ def compute_all_subgroup_axes(
+     column_by_axis = {
+         "skin_type": "fitzpatrick_skin_type",
+         "image_type": "image_type",
+-        "confirm_type": "diagnosis_confirm_type",
+     }
+     results: Dict[str, pd.DataFrame] = {}
+     for axis, categories in SUBGROUP_AXES.items():
+@@ -278,11 +276,10 @@ def local_all_axes_confusion_counts(
+     metadata_df: pd.DataFrame,
+     positive_class_idx: int = 1,
+ ) -> Dict[str, Dict[str, Dict[str, int]]]:
+-    """CLIENT-SIDE convenience: confusion counts for all three metadata axes at once."""
++    """CLIENT-SIDE convenience: confusion counts for every metadata axis at once."""
+     column_by_axis = {
+         "skin_type": "fitzpatrick_skin_type",
+         "image_type": "image_type",
+-        "confirm_type": "diagnosis_confirm_type",
+     }
+     out: Dict[str, Dict[str, Dict[str, int]]] = {}
+     for axis, categories in SUBGROUP_AXES.items():
+@@ -379,7 +376,7 @@ def compute_worst_group(
+     """
+     Worst-group value of *metric_col* among subgroups where it is defined
+     -- the blueprint's WGA = min_g metric(g) (Section 5.3), applied here
+-    per metadata axis (skin_type / image_type / confirm_type) rather than
++    per metadata axis (skin_type / image_type) rather than
+     per-hospital "client type" grouping, since the centralized evaluation
+     pipeline's held-out set is not currently tagged by originating
+     hospital. This is a documented scope choice, not a redefinition of
+diff --git a/resnet50_fedprox_textbook/runtime/image_cache.py b/resnet50_fedprox_textbook/runtime/image_cache.py
+index 777453e..3747b72 100644
+--- a/resnet50_fedprox_textbook/runtime/image_cache.py
++++ b/resnet50_fedprox_textbook/runtime/image_cache.py
+@@ -99,5 +99,11 @@ def build_cached_dataset(partitions_root: str, cache_dir: str, hospital: str, sp
+ 
+ 
+ def build_loader(dataset, batch_size: int, shuffle: bool, workers: int, pin_memory: bool) -> DataLoader:
+-    """Same batch size and shuffle flags as client/client.py build_hospital_dataloaders."""
+-    return DataLoader(dataset, batch_size=batch_size, shuffle=shuffle, num_workers=workers, pin_memory=pin_memory)
++    """Same batch size and shuffle flags as client/client.py build_hospital_dataloaders.
++
++    A training split whose size leaves a final batch of one row drops that row each epoch: BatchNorm1d in the
++    metadata MLP cannot train on a single sample. Splits of every other size are unaffected.
++    """
++    drop_last = shuffle and len(dataset) % batch_size == 1
++    return DataLoader(dataset, batch_size=batch_size, shuffle=shuffle, num_workers=workers, pin_memory=pin_memory,
++                      drop_last=drop_last)
+diff --git a/resnet50_fedprox_textbook/runtime/resources.py b/resnet50_fedprox_textbook/runtime/resources.py
+index b85acf1..38f24a9 100644
+--- a/resnet50_fedprox_textbook/runtime/resources.py
++++ b/resnet50_fedprox_textbook/runtime/resources.py
+@@ -1,4 +1,7 @@
+-"""GPU, RAM and Windows commit sampling, the low-commit safe stop, and keeping the PC awake."""
++"""GPU, RAM and commit sampling, the low-commit safe stop, and keeping the PC awake.
++
++Cross-platform (2026-11-19, for running on a remote Linux GPU server): on Windows the values are the original Windows
++commit figures; elsewhere commit = RAM + swap from psutil. No effect on the algorithm."""
+ from __future__ import annotations
+ 
+ import csv
+@@ -24,6 +27,10 @@ class _MemoryStatus(ctypes.Structure):
+ 
+ 
+ def memory_snapshot() -> Dict[str, float]:
++    if os.name != "nt":
++        vm, sw, gb = psutil.virtual_memory(), psutil.swap_memory(), 2**30
++        return {"ram_free_gb": vm.available / gb, "commit_limit_gb": (vm.total + sw.total) / gb,
++                "commit_free_gb": (vm.available + sw.free) / gb}
+     status = _MemoryStatus()
+     status.dwLength = ctypes.sizeof(_MemoryStatus)
+     ctypes.windll.kernel32.GlobalMemoryStatusEx(ctypes.byref(status))
+@@ -41,7 +48,9 @@ def gpu_snapshot() -> Dict[str, float]:
+ 
+ 
+ def keep_awake(enable: bool) -> None:
+-    """Stop Windows from sleeping during the run; released when the process ends."""
++    """Stop Windows from sleeping during the run; released when the process ends. No-op elsewhere."""
++    if os.name != "nt":
++        return
+     flags = ES_CONTINUOUS | (ES_SYSTEM_REQUIRED if enable else 0)
+     ctypes.windll.kernel32.SetThreadExecutionState(flags)
+ 
+diff --git a/resnet50_fedprox_textbook/server/server.py b/resnet50_fedprox_textbook/server/server.py
+index 6005ce5..2e9085f 100644
+--- a/resnet50_fedprox_textbook/server/server.py
++++ b/resnet50_fedprox_textbook/server/server.py
+@@ -221,7 +221,7 @@ def server_fn(context: Context) -> ServerAppComponents:
+     from server.strategy import FedMelanomaStrategy, HospitalConfig
+     from monitoring.experiment_logging import ExperimentLogger, new_run_id
+ 
+-    hospital_names, hospital_records, global_fitz, global_mod, global_conf = (
++    hospital_names, hospital_records, global_fitz, global_mod = (
+         build_hospital_registry(partitions_root)
+     )
+     if not hospital_records:
+@@ -252,7 +252,6 @@ def server_fn(context: Context) -> ServerAppComponents:
+         hospital_configs=hospital_configs,
+         global_fitzpatrick=global_fitz,
+         global_modality=global_mod,
+-        global_confirmation=global_conf,
+         n_select=min(clients_per_round, len(hospital_configs)),
+         initial_parameters=initial_parameters,
+         local_epochs=local_epochs,
+diff --git a/resnet50_fedprox_textbook/server/strategy.py b/resnet50_fedprox_textbook/server/strategy.py
+index 392b294..fb3a716 100644
+--- a/resnet50_fedprox_textbook/server/strategy.py
++++ b/resnet50_fedprox_textbook/server/strategy.py
+@@ -135,17 +135,14 @@ class HospitalConfig:
+     latency_sigma: float
+     fitzpatrick_dist: Sequence[float]
+     modality_dist: Sequence[float]
+-    confirmation_dist: Sequence[float]
+ 
+ 
+ def compute_normalized_diversity_priors(
+     hospital_configs: Sequence[HospitalConfig],
+     global_fitzpatrick: Sequence[float],
+     global_modality: Sequence[float],
+-    global_confirmation: Sequence[float],
+     fitz_weight: float = 0.40,
+     modality_weight: float = 0.35,
+-    confirmation_weight: float = 0.25,
+ ) -> List[float]:
+     """
+     ADAPTER: calls the UNMODIFIED EarthMoverDistance.compute_diversity_score
+@@ -170,11 +167,8 @@ def compute_normalized_diversity_priors(
+             client_fitzpatrick=hc.fitzpatrick_dist,
+             global_modality=global_modality,
+             client_modality=hc.modality_dist,
+-            global_confirmation=global_confirmation,
+-            client_confirmation=hc.confirmation_dist,
+             fitz_weight=fitz_weight,
+             modality_weight=modality_weight,
+-            confirmation_weight=confirmation_weight,
+         )
+         raw_scores.append(result["raw_diversity_score"])
+ 
+@@ -204,7 +198,6 @@ class FedMelanomaStrategy(Strategy):
+         hospital_configs: Sequence[HospitalConfig],
+         global_fitzpatrick: Sequence[float],
+         global_modality: Sequence[float],
+-        global_confirmation: Sequence[float],
+         n_select: Optional[int] = None,
+         initial_parameters: Optional[List[np.ndarray]] = None,
+         selector: Optional[Selector] = None,
+@@ -252,7 +245,7 @@ class FedMelanomaStrategy(Strategy):
+         # computed once at client registration ... and remain fixed
+         # throughout training" (Blueprint Section 3.2.6 / Phase 6).
+         diversity_priors: List[float] = compute_normalized_diversity_priors(
+-            self._hospital_configs, global_fitzpatrick, global_modality, global_confirmation,
++            self._hospital_configs, global_fitzpatrick, global_modality,
+         )
+ 
+         # ---- RESEARCH MODULE CALL (unmodified): selector.Client ----
+diff --git a/resnet50_fedprox_textbook/tests/test_01_model_and_data.py b/resnet50_fedprox_textbook/tests/test_01_model_and_data.py
+index 128adb1..d42daa7 100644
+--- a/resnet50_fedprox_textbook/tests/test_01_model_and_data.py
++++ b/resnet50_fedprox_textbook/tests/test_01_model_and_data.py
+@@ -25,17 +25,16 @@ def model():
+ def batch(n=4):
+     g = torch.Generator().manual_seed(1)
+     image = torch.randn(n, 3, 224, 224, generator=g)
+-    meta = torch.zeros(n, 13)
++    meta = torch.zeros(n, MelanomaDataset.METADATA_DIM)
+     rows = torch.arange(n)
+     meta[rows, rows % 6] = 1              # varied rows: identical rows have zero BatchNorm variance
+     meta[rows, 6 + rows % 3] = 1
+-    meta[rows, 9 + rows % 4] = 1
+     return image, meta
+ 
+ 
+ def test_01_model_initialisation(model):
+     assert len(model.state_dict()) == 329
+-    assert sum(p.numel() for p in model.parameters()) == 23_515_298
++    assert sum(p.numel() for p in model.parameters()) == 23_515_042   # 9 metadata inputs (no confirm type)
+     assert all(p.requires_grad for p in model.parameters())
+     assert model.classifier.in_features == 2080 and model.classifier.out_features == 2
+     assert model.dropout.p == 0.3
+@@ -62,7 +61,7 @@ def test_03_metadata_mlp(model):
+     assert out.shape == (4, 32) and (out >= 0).all()
+     layers = [type(m).__name__ for m in MetadataMLP().network]
+     assert layers == ["Linear", "BatchNorm1d", "ReLU", "Linear", "ReLU"]
+-    assert model.metadata_mlp.network[0].in_features == 13
++    assert model.metadata_mlp.network[0].in_features == MelanomaDataset.METADATA_DIM == 9
+     assert model.metadata_mlp.network[0].out_features == 64
+     assert model.metadata_mlp.network[3].out_features == 32
+ 
+diff --git a/resnet50_fedprox_textbook/tests/test_03_real_round.py b/resnet50_fedprox_textbook/tests/test_03_real_round.py
+index 7425b49..02cf100 100644
+--- a/resnet50_fedprox_textbook/tests/test_03_real_round.py
++++ b/resnet50_fedprox_textbook/tests/test_03_real_round.py
+@@ -86,7 +86,7 @@ def test_17_checkpoint_reload_and_resume(planned):
+     other = FedMelanomaModel()
+     other.load_state_dict(OrderedDict(zip(other.state_dict().keys(), [torch.tensor(a) for a in arrays])), strict=True)
+     model.eval(), other.eval()
+-    image, meta = torch.randn(2, 3, 224, 224), torch.zeros(2, 13)
++    image, meta = torch.randn(2, 3, 224, 224), torch.zeros(2, 9)
+     with torch.no_grad():
+         assert torch.equal(model(image, meta), other(image, meta))
+ 
+@@ -104,7 +104,7 @@ def test_18_evaluation_outputs_exist_and_agree():
+                  "final_test_results.txt", "threshold_analysis_requested.csv", "threshold_confusion_requested.csv",
+                  "test_predictions.csv", "metrics.json", "results/metrics/overall_metrics.csv",
+                  "results/metrics/skin_type_metrics.csv", "results/metrics/image_type_metrics.csv",
+-                 "results/metrics/confirm_type_metrics.csv", "results/metrics/hospital_metrics.csv",
++                 "results/metrics/hospital_metrics.csv",
+                  "results/metrics/fairness_summary.txt"):
+         assert os.path.getsize(os.path.join(out, name)) > 0, name
+     predictions = pd.read_csv(f"{out}/test_predictions.csv")

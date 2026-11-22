@@ -1,0 +1,19 @@
+{
+  "checkpoint": "/workspace/six_models_dgmm/src_resnet_50_fedstrag/checkpoints/fedstrag-dgmm-seed42/final_global_model.pth",
+  "accuracy": 0.9448391140827413,
+  "precision": 0.8701298701298701,
+  "recall": 0.8033573141486811,
+  "f1": 0.8354114713216958,
+  "roc_auc": 0.9515699181545453,
+  "sensitivity": 0.8033573141486811,
+  "specificity": 0.9746963562753036,
+  "ppv": 0.8701298701298701,
+  "npv": 0.9591633466135459,
+  "balanced_accuracy": 0.8890268352119923,
+  "mcc": 0.8032649818988301,
+  "pr_auc": 0.878625253493387,
+  "tn": 1926.0,
+  "fp": 50.0,
+  "fn": 82.0,
+  "tp": 335.0
+}

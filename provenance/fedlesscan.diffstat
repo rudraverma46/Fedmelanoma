@@ -1,0 +1,12 @@
+ resnet50_fedlesscan/client/client.py               |  6 ++--
+ resnet50_fedlesscan/client/dataset.py              | 39 ++++++++--------------
+ resnet50_fedlesscan/configs/experiment_config.yaml |  6 ++--
+ resnet50_fedlesscan/evaluate.py                    |  9 +++--
+ .../evaluation/evaluate_checkpoint.py              |  5 ++-
+ resnet50_fedlesscan/models/model.py                | 10 ++++--
+ resnet50_fedlesscan/monitoring/plotting.py         |  4 +--
+ resnet50_fedlesscan/monitoring/subgroup_metrics.py | 13 +++-----
+ resnet50_fedlesscan/runtime/image_cache.py         | 10 ++++--
+ .../tests/test_01_model_and_data.py                |  7 ++--
+ resnet50_fedlesscan/tests/test_03_real_round.py    |  4 +--
+ 11 files changed, 54 insertions(+), 59 deletions(-)
